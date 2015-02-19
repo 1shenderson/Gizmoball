@@ -1,28 +1,24 @@
 import java.util.Observer;
 
 public interface Game {
-
-	public void start();
-
-	public void stop();
-
+	
 	public void tick();
 
 	public void trigger(int keyID);
 
-	public void addGizmo(int x, int y, int gizmoType);
+	public void addGizmo(int x, int y, String gizmoType, String gizmoID);
 
 	public void removeGizmo(int x, int y);
 
-	public void removeGizmo(int gizmoID);
+	public void removeGizmo(String gizmoID);
 
-	public void addTriggerKey(int gizmoID, int keyID);
+	public void addTriggerKey(String gizmoID, int keyID);
 
-	public void addTriggerGizmo(int gizmoID, int gizmoTriggerID);
+	public void addTriggerGizmo(String gizmoID, String gizmoTriggerID);
 
-	public void removeTriggerKey(int gizmoID, int keyID);
+	public void removeTriggerKey(String gizmoID, int keyID);
 
-	public void removeTriggerGizmo(int gizmoID, int gizmoTriggerID);
+	public void removeTriggerGizmo(String gizmoID, String gizmoTriggerID);
 
 	public int[][] getMap();
 
