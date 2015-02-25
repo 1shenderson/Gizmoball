@@ -1,15 +1,9 @@
-
-
-package controller;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
 import javax.swing.JFileChooser;
 import javax.swing.Timer;
-
-import model.Model;
 
 /**
  * @author Murray Wood Demonstration of MVC and MIT Physics Collisions 2014
