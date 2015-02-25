@@ -1,14 +1,10 @@
 package model;
-
-import java.io.File;
+// API
 import java.util.ArrayList;
 import java.util.Observable;
-
+// Local
 import controller.FileHandling;
-import model.Ball;
-import model.CollisionDetails;
-import model.VerticalLine;
-import model.Walls;
+// Physics framework
 import physics.Circle;
 import physics.Geometry;
 import physics.LineSegment;
@@ -113,20 +109,6 @@ public class Model extends Observable {
         return new CollisionDetails(shortestTime, newVelo);
     }
 
-    public void saveBoard(File filed, String fileName){
-        file.save(gizmoList, filed, fileName);
-    }
-
-    public void loadBoard(File filed){
-        ArrayList<ArrayList<Object>> gizmoLoad = file.load(filed);
-
-        ArrayList<Object> gizmoInfo = new ArrayList<Object>();
-        for(int i = 0; i < gizmoLoad.size(); i++){
-            gizmoInfo = gizmoLoad.get(i);
-            addLine(new VerticalLine((String) gizmoInfo.get(0), (String)gizmoInfo.get(1), (int)gizmoInfo.get(2), (int)gizmoInfo.get(3), (int)gizmoInfo.get(4)));
-        }
-    }
-
     public Ball getBall() {
         return ball;
     }
@@ -137,7 +119,6 @@ public class Model extends Observable {
 
     public void addLine(VerticalLine l) {
         lines.add(l);
-        gizmoList.add(l.getGizmoInfo());
     }
 
     public void setBallSpeed(int x, int y) {

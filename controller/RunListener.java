@@ -1,11 +1,10 @@
 package controller;
-
+// API
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-
 import javax.swing.JFileChooser;
 import javax.swing.Timer;
+// Local
 import model.Model;
 
 /**
@@ -41,23 +40,6 @@ public class RunListener implements ActionListener {
                     break;
                 case "Tick":
                     model.moveBall();
-                    break;
-                case "Save":
-                    fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-                    returnVal = fc.showSaveDialog(null);
-                    if (returnVal == JFileChooser.APPROVE_OPTION) {
-                        File file = fc.getSelectedFile();
-                        String fileName = file + ".txt";
-                        model.saveBoard(file, fileName);
-                    }
-                    break;
-                case "Load":
-                    fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-                    returnVal = fc.showOpenDialog(null);
-                    if (returnVal == JFileChooser.APPROVE_OPTION) {
-                        File file = fc.getSelectedFile();
-                        model.loadBoard(file);
-                    }
                     break;
                 case "Quit":
                     System.exit(0);
