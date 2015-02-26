@@ -1,6 +1,7 @@
 package model;
 
 import java.awt.Color;
+import java.util.ArrayList;
 
 import physics.Circle;
 import physics.Vect;
@@ -16,17 +17,24 @@ public class Ball {
 	private double xpos;
 	private double ypos;
 	private Color colour;
+	private ArrayList<Object> gizmoInfo;
 
 	private boolean stopped;
 
 	// x, y coordinates and x,y velocity
-	public Ball(double x, double y, double xv, double yv) {
+	public Ball(String gizmoType, String id, double x, double y, double xv, double yv) {
 		xpos = x; // Centre coordinates
 		ypos = y;
 		colour = Color.BLUE;
 		velocity = new Vect(xv, yv);
 		radius = 10;
 		stopped = false;
+		
+		gizmoInfo = new ArrayList<Object>();
+		gizmoInfo.add(gizmoType);
+		gizmoInfo.add(id);
+		gizmoInfo.add(x);
+		gizmoInfo.add(y);
 	}
 
 	public Vect getVelo() {
@@ -77,6 +85,10 @@ public class Ball {
 
 	public Color getColour() {
 		return colour;
+	}
+	
+	public ArrayList<Object> getBallInfo(){
+		return gizmoInfo;
 	}
 
 }

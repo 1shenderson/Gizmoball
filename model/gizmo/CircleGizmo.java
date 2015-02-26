@@ -2,6 +2,8 @@ package model.gizmo;
 
 
 import java.awt.Color;
+import java.util.ArrayList;
+
 import physics.Circle;
 
 public class CircleGizmo {
@@ -10,8 +12,15 @@ public class CircleGizmo {
 	private int yPos;
 	private int radius;
 	private Color colour;
+	private ArrayList<Object> gizmoInfo;
 
-	public CircleGizmo(int x, int y){
+	public CircleGizmo(String gizmoType, String id, int x, int y){
+		gizmoInfo = new ArrayList<Object>();
+		gizmoInfo.add(gizmoType);
+		gizmoInfo.add(id);
+		gizmoInfo.add(x);
+		gizmoInfo.add(y);
+		
 		xPos = x;
 		yPos = y;
 		radius = 10;
@@ -36,6 +45,10 @@ public class CircleGizmo {
 
 	public Color getColour() {
 		return colour;
+	}
+	
+	public ArrayList<Object> getCircleInfo(){
+		return gizmoInfo;
 	}
 
 }

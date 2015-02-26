@@ -4,8 +4,10 @@ import java.awt.Color;
 
 
 import java.util.ArrayList;
+
 import physics.LineSegment;
 import physics.Circle;
+
 public class SquareGizmo {
 
 	private int width;
@@ -16,9 +18,13 @@ public class SquareGizmo {
 	private int botRCornerX;
 	private int botRCornerY;
 
+	private ArrayList<Object> gizmoInfo;
+
 	private Color colour;
 
-	public SquareGizmo(int x, int y){
+	public SquareGizmo(String gizmoType, String id, int x, int y){
+		gizmoInfo = new ArrayList<Object>();
+		
 		xPos = x;
 		yPos = y;
 		width = 20;
@@ -27,7 +33,13 @@ public class SquareGizmo {
 		botRCornerX = xPos + (width/2);
 		botRCornerY = yPos + (width/2);
 		colour = Color.BLUE;
-
+		
+		gizmoInfo.add(gizmoType);
+		gizmoInfo.add(id);
+		gizmoInfo.add(x);
+		gizmoInfo.add(y);
+		
+		
 	}
 
 	public int getWidth() {
@@ -82,9 +94,10 @@ public class SquareGizmo {
 		circleList.add(botLeft);
 		circleList.add(botRight);
 		return circleList;
-
-
 	}
-
+	
+	public ArrayList<Object> getSquareInfo(){
+		return gizmoInfo;
+	}
 
 }

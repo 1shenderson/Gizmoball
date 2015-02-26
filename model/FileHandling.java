@@ -1,5 +1,5 @@
 
-package controller;
+package model;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -51,16 +51,31 @@ public class FileHandling {
 				ArrayList<Object> gizmoInfo = new ArrayList<Object>();
 				String type = sc.next();
 				String id = sc.next();
-				int x = sc.nextInt();
-				int y = sc.nextInt();
-				int w = sc.nextInt();
-				
 				gizmoInfo.add(type);
 				gizmoInfo.add(id);
-				gizmoInfo.add(x);
-				gizmoInfo.add(y);
-				gizmoInfo.add(w);
 				
+				
+				
+				if(type.equals("Ball")){
+					double x = sc.nextDouble();
+					double y = sc.nextDouble();
+					double xv = sc.nextDouble();
+					double yv = sc.nextDouble();
+					gizmoInfo.add(x);
+					gizmoInfo.add(y);
+					gizmoInfo.add(xv);
+					gizmoInfo.add(yv);
+				}
+				else{
+					int x = sc.nextInt();
+					int y = sc.nextInt();
+					gizmoInfo.add(x);
+					gizmoInfo.add(y);
+				}
+				if(type.equals("Line")){
+					int w = sc.nextInt();
+					gizmoInfo.add(w);
+				}
 				gizmoList.add(gizmoInfo);
 			}
 			sc.close();
