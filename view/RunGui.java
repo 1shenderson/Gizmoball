@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -13,6 +14,7 @@ import javax.swing.JPanel;
 
 import model.Model;
 import controller.RunListener;
+import controller.keyListen;
 
 /**
  * @author Murray Wood Demonstration of MVC and MIT Physics Collisions 2014
@@ -23,6 +25,7 @@ public class RunGui {
 	private Model model;
 	private JFrame frame;
 	private ActionListener listener;
+	private KeyListener keyList;
 	private Board board;
 
 	public RunGui(Model m) {
@@ -30,22 +33,31 @@ public class RunGui {
 
 		// RunListener catches all GUI events. In reality might have many listeners.
 		listener = new RunListener(m);
+		keyList = new keyListen(m);
+
 	}
 
 	public void createAndShowGUI() {
 
 		frame = new JFrame("Murray's MIT Ball and VerticalLine Collision Demo");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.addKeyListener(keyList);
+
 
 		// Board is passed the Model so it can act as Observer
 		board = new Board(500, 500, model);
+		board.addKeyListener(keyList);
+
 
 		Container cp = frame.getContentPane();
+		cp.addKeyListener(keyList);
 
 		Font gf = new Font("Arial", Font.BOLD, 12);
 
 		JPanel buttons = new JPanel();
 		buttons.setLayout(new GridLayout(4, 1));
+		buttons.addKeyListener(keyList);
+
 
 		JButton button1 = new JButton("Start");
 		button1.setFont(gf);
@@ -82,6 +94,13 @@ public class RunGui {
 		loadButton.addActionListener(listener);
 		loadButton.setMaximumSize(new Dimension(100, 100));
 		buttons.add(loadButton);
+		
+		
+		button1.addKeyListener(keyList);
+		button2.addKeyListener(keyList);
+		button3.addKeyListener(keyList);
+		button4.addKeyListener(keyList);
+
 
 		cp.add(buttons, BorderLayout.LINE_START);
 		cp.add(board, BorderLayout.CENTER);

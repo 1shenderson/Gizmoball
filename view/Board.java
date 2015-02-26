@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 import model.Ball;
 import model.Model;
 import model.VerticalLine;
+import model.gizmo.FlipperLeft;
 
 /**
  * @author Murray Wood Demonstration of MVC and MIT Physics Collisions 2014
@@ -56,6 +57,16 @@ public  class Board extends JPanel implements Observer {
 			int y = (int) (b.getExactY() - b.getRadius());
 			int width = (int) (2 * b.getRadius());
 			g2.fillOval(x, y, width, width);
+		}
+		
+		FlipperLeft f = gm.getFlipper();
+		if (f != null){
+			g2.setColor(f.getColour());
+			int x = (int) f.getX();
+			int y = (int) f.getY();
+			g2.drawLine(x, y, f.getx2(), f.gety2());
+		    //g2.rotate(Math.toRadians(60),f.getX(),f.getY());
+			g2.fillRoundRect(x, y, f.getWidth(), f.getLength(), 25, 25);
 		}
 	}
 

@@ -9,6 +9,7 @@ import model.Ball;
 import model.CollisionDetails;
 import model.VerticalLine;
 import model.Walls;
+import model.gizmo.*;
 import physics.Circle;
 import physics.Geometry;
 import physics.LineSegment;
@@ -24,6 +25,8 @@ public class Model extends Observable {
     private Ball ball;
     private Walls gws;
     private FileHandling file;
+	private FlipperLeft flipper;
+
     private ArrayList<ArrayList<Object>> gizmoList;
 
     public Model() {
@@ -34,6 +37,9 @@ public class Model extends Observable {
         // Wall size 500 x 500 pixels
         gws = new Walls(0, 0, 500, 500);
 
+		flipper = new FlipperLeft(200,200,"demo",25,100,180);
+
+        
         // Lines added in Main
         lines = new ArrayList<VerticalLine>();
 
@@ -110,6 +116,15 @@ public class Model extends Observable {
                 newVelo = Geometry.reflectWall(ls, ball.getVelo(), 1.0);
             }
         }
+        
+		// time until flipper collision
+		LineSegment ls = flipper.getLineSeg();
+		time = Geometry.timeUntilWallCollision(ls, ballCircle, ballVelocity);
+		if (time < shortestTime) {
+			shortestTime = time;
+			newVelo = Geometry.reflectWall(ls, ball.getVelo(), 1.0);
+		}
+		
         return new CollisionDetails(shortestTime, newVelo);
     }
 
@@ -143,4 +158,18 @@ public class Model extends Observable {
     public void setBallSpeed(int x, int y) {
         ball.setVelo(new Vect(x, y));
     }
+    
+	public void changeFlipperColour(){
+		flipper.setColour();
+	}
+	
+	public void rotateFlip(){
+		flipper.rotateFlipper();
+	}
+	
+	public FlipperLeft getFlipper(){
+		return flipper;
+	}
+	
+	
 }
