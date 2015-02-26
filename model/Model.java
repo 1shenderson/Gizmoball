@@ -44,6 +44,7 @@ public class Model extends Observable {
 		Ball ball4 = new Ball(450, 256, 100, 100);
 		Ball ball5 = new Ball(230, 370, 100, 100);
 		Ball ball6 = new Ball(150, 256, 100, 100);
+		Ball ball7 = new Ball(350, 250, 100, 100);
 
 		circle = new CircleGizmo(180,47);
 		circle2 = new CircleGizmo(140,50);
@@ -57,6 +58,13 @@ public class Model extends Observable {
 		square3 = new SquareGizmo(160,180);
 		square4 = new SquareGizmo(300,270);
 		square5 = new SquareGizmo(400,260);
+		SquareGizmo square6 = new SquareGizmo(400,270);
+		SquareGizmo square7 = new SquareGizmo(400,280);
+		SquareGizmo square8 = new SquareGizmo(400,290);
+		SquareGizmo square9 = new SquareGizmo(400,300);
+
+
+		
 
 		circlesList.add(circle);
 		circlesList.add(circle2);
@@ -71,6 +79,7 @@ public class Model extends Observable {
 		ballsList.add(ball4);
 		ballsList.add(ball5);
 		ballsList.add(ball6);
+		ballsList.add(ball7);
 
 
 		squaresList.add(square);
@@ -78,6 +87,11 @@ public class Model extends Observable {
 		squaresList.add(square3);
 		squaresList.add(square4);
 		squaresList.add(square5);
+		squaresList.add(square6);
+		squaresList.add(square7);
+		squaresList.add(square8);
+		squaresList.add(square9);
+
 
 
 		// Wall size 500 x 500 pixels
@@ -157,9 +171,10 @@ public class Model extends Observable {
 			time = Geometry.timeUntilCircleCollision(currCircle, ballCircle, ballVelocity);
 			if (time < shortestTime) {
 				shortestTime = time;
-				newVelo = Geometry.reflectCircle(Vect.ZERO, currBall.getVelo(), currBall.getVelo(), 1.0);
+				newVelo = Geometry.reflectCircle(currCircle.getCenter(), ballCircle.getCenter(), currBall.getVelo(), 1.0);
 			}
 		}
+		
 
 		// time to collide with squares
 		for (SquareGizmo square:squaresList){
@@ -176,7 +191,7 @@ public class Model extends Observable {
 				time = Geometry.timeUntilCircleCollision(corner,ballCircle,ballVelocity);
 				if (time < shortestTime) {
 					shortestTime = time;
-					newVelo = Geometry.reflectCircle(Vect.ZERO, currBall.getVelo(), currBall.getVelo(), 1.0);
+					newVelo = Geometry.reflectCircle(corner.getCenter(), ballCircle.getCenter(), currBall.getVelo(),1.0);
 				}
 			}
 		}

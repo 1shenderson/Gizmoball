@@ -1,12 +1,12 @@
-package Model;
-
+import java.util.List;
 import java.util.Map;
+
 import physics.Vect;
 
 public interface Gizmo {
-	
+
 	public Vect getVect();
-	
+
 	public int getX();
 
 	public int getY();
