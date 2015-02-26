@@ -70,6 +70,18 @@ public class RunGui {
 		button3.addActionListener(listener);
 		button3.setMaximumSize(new Dimension(100, 100));
 		buttons.add(button3);
+		
+		JButton saveButton = new JButton("Save");
+		saveButton.setFont(gf);
+		saveButton.addActionListener(listener);
+		saveButton.setMaximumSize(new Dimension(100, 100));
+		buttons.add(saveButton);
+		
+		JButton loadButton = new JButton("Load");
+		loadButton.setFont(gf);
+		loadButton.addActionListener(listener);
+		loadButton.setMaximumSize(new Dimension(100, 100));
+		buttons.add(loadButton);
 
 		cp.add(buttons, BorderLayout.LINE_START);
 		cp.add(board, BorderLayout.CENTER);
