@@ -2,9 +2,11 @@ package model;
 
 
 import java.awt.Color;
+
+import model.gizmo.AbstractGizmo;
 import physics.Circle;
 
-public class CircleGizmo {
+public class CircleGizmo{
 
 	private int xPos;
 	private int yPos;

@@ -30,13 +30,16 @@ public class Model extends Observable {
 	private Walls gws;
 	private List<Ball> ballsList;
 	private List<CircleGizmo> circlesList;
-	public List<SquareGizmo> squaresList;
+	private List<SquareGizmo> squaresList;
+	private List<TriangleGizmo> triangleList;
+
 
 	public Model() {
 
 		ballsList = new ArrayList<Ball>();
 		circlesList = new ArrayList<CircleGizmo>();
 		squaresList = new ArrayList<SquareGizmo>();
+		triangleList = new ArrayList<TriangleGizmo>();
 		// Ball position (25, 25) in pixels. Ball velocity (100, 100) pixels per tick
 		ball = new Ball(25, 25, 100, 100);
 		ball2 = new Ball(300, 300, 100, 100);
@@ -53,7 +56,6 @@ public class Model extends Observable {
 		CircleGizmo circle5 = new CircleGizmo(362,390);
 
 		square = new SquareGizmo(244,90);
-		
 		square2 = new SquareGizmo(300,120);
 		square3 = new SquareGizmo(160,180);
 		square4 = new SquareGizmo(300,270);
@@ -63,16 +65,28 @@ public class Model extends Observable {
 		SquareGizmo square8 = new SquareGizmo(400,290);
 		SquareGizmo square9 = new SquareGizmo(400,300);
 
+		TriangleGizmo triangle = new TriangleGizmo(240, 300);
+		TriangleGizmo triangle2 = new TriangleGizmo(270, 100);
+		TriangleGizmo triangle3 = new TriangleGizmo(150, 460);
+		TriangleGizmo triangle4 = new TriangleGizmo(390, 260);
+		TriangleGizmo triangle5 = new TriangleGizmo(120, 170);
 
-		
 
-		circlesList.add(circle);
+
+		triangleList.add(triangle);
+		triangleList.add(triangle2);
+		triangleList.add(triangle3);
+		triangleList.add(triangle4);
+		triangleList.add(triangle5);
+
+
+/*		circlesList.add(circle);
 		circlesList.add(circle2);
 		circlesList.add(circle3);
 		circlesList.add(circle4);
 		circlesList.add(circle5);
+*/
 
-		
 		ballsList.add(ball);
 		ballsList.add(ball2);
 		ballsList.add(ball3);
@@ -82,7 +96,7 @@ public class Model extends Observable {
 		ballsList.add(ball7);
 
 
-		squaresList.add(square);
+/*		squaresList.add(square);
 		squaresList.add(square2);
 		squaresList.add(square3);
 		squaresList.add(square4);
@@ -90,7 +104,7 @@ public class Model extends Observable {
 		squaresList.add(square6);
 		squaresList.add(square7);
 		squaresList.add(square8);
-		squaresList.add(square9);
+		squaresList.add(square9);*/
 
 
 
@@ -174,20 +188,40 @@ public class Model extends Observable {
 				newVelo = Geometry.reflectCircle(currCircle.getCenter(), ballCircle.getCenter(), currBall.getVelo(), 1.0);
 			}
 		}
-		
+
 
 		// time to collide with squares
 		for (SquareGizmo square:squaresList){
-			ArrayList<LineSegment> sides = square.getSides();
-			ArrayList<Circle> corners = square.getCorners();
-			for (LineSegment currSide:sides){
+			List<LineSegment> squareSides = square.getSides();
+			List<Circle> squareCorners = square.getCorners();
+			for (LineSegment currSide:squareSides){
 				time = Geometry.timeUntilWallCollision(currSide,ballCircle,ballVelocity);
 				if (time < shortestTime) {
 					shortestTime = time;
-					newVelo = Geometry.reflectWall(currSide, currBall.getVelo(), 1.0);	
+					newVelo = Geometry.reflectWall(currSide, currBall.getVelo(), 1.0);
 				}
 			}
-			for (Circle corner:corners){
+			for (Circle corner:squareCorners){
+				time = Geometry.timeUntilCircleCollision(corner,ballCircle,ballVelocity);
+				if (time < shortestTime) {
+					shortestTime = time;
+					newVelo = Geometry.reflectCircle(corner.getCenter(), ballCircle.getCenter(), currBall.getVelo(),1.0);
+				}
+			}
+		}
+
+		//time to collide with triangles
+		for (TriangleGizmo triangle: triangleList){
+			List<LineSegment> triangleSides = triangle.getSides();
+			List<Circle> triangleCorners = triangle.getCorners();
+			for (LineSegment currSide:triangleSides){
+				time = Geometry.timeUntilWallCollision(currSide,ballCircle,ballVelocity);
+				if (time < shortestTime) {
+					shortestTime = time;
+					newVelo = Geometry.reflectWall(currSide, currBall.getVelo(), 1.0);
+				}
+			}
+			for (Circle corner:triangleCorners){
 				time = Geometry.timeUntilCircleCollision(corner,ballCircle,ballVelocity);
 				if (time < shortestTime) {
 					shortestTime = time;
@@ -237,5 +271,9 @@ public class Model extends Observable {
 
 	public List<SquareGizmo> getSquareList(){
 		return squaresList;
+	}
+
+	public List<TriangleGizmo> getTriangleList(){
+		return triangleList;
 	}
 }

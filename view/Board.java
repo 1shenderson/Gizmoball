@@ -15,6 +15,7 @@ import physics.LineSegment;
 import model.Ball;
 import model.Model;
 import model.SquareGizmo;
+import model.TriangleGizmo;
 import model.VerticalLine;
 import model.CircleGizmo;
 import model.SquareGizmo;
@@ -51,6 +52,7 @@ public  class Board extends JPanel implements Observer {
 		List<Ball> ballList = gm.getBallList();
 		List<CircleGizmo> circleList = gm.getCircleList();
 		List<SquareGizmo> squareList = gm.getSquareList();
+		List<TriangleGizmo> triangleList = gm.getTriangleList();
 
 		// Draw all the vertical lines
 		for (VerticalLine vl : gm.getLines()) {
@@ -82,12 +84,24 @@ public  class Board extends JPanel implements Observer {
 		}
 
 		//draw all squares
-
 		for (int i = 0; i < squareList.size(); i++){
 			SquareGizmo currSquare = squareList.get(i);
 			g2.setColor(currSquare.getColour());
-			//g2.fillRect(currSquare.getxPos(), currSquare.getyPos(), currSquare.getWidth(), currSquare.getWidth());
-			g2.fillRect(currSquare.getTLeftX() ,currSquare.getTLeftY(),currSquare.getWidth(),currSquare.getWidth());
+			int xPos = currSquare.getX() - (currSquare.getLength()/2);
+			int yPos = currSquare.getY() - (currSquare.getLength()/2);
+			g2.fillRect(xPos ,yPos,currSquare.getLength()+1,currSquare.getLength()+1);
+		}
+
+		//draw all triangles
+		for (int i = 0; i < triangleList.size(); i++){
+			TriangleGizmo currTriangle = triangleList.get(i);
+			int xPos = currTriangle.getX();
+			int yPos = currTriangle.getY();
+			int length = currTriangle.getLength();
+			int[] xCoordinates = {xPos + (length/2)+1, xPos - (length/2), xPos - (length/2)};
+			int[] yCoordinates = {yPos + (length/2)+1, yPos + (length/2)+1, yPos - (length/2)-1};
+			g2.setColor(currTriangle.getColour());
+			g2.fillPolygon(xCoordinates, yCoordinates, 3);
 		}
 
 	}

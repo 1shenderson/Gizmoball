@@ -5,54 +5,42 @@ import java.awt.Color;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import physics.Vect;
 import physics.LineSegment;
 import physics.Circle;
 public class SquareGizmo {
 
-	private int width;
+	private int length;
 	private int xPos;
 	private int yPos;
+	private Color colour;
 	private int topLCornerX;
 	private int topLCornerY;
 	private int botRCornerX;
 	private int botRCornerY;
 
-	private Color colour;
-
 	public SquareGizmo(int x, int y){
 		xPos = x;
 		yPos = y;
-		width = 20;
-		topLCornerX = xPos - (width/2);
-		topLCornerY = yPos - (width/2);
-		botRCornerX = xPos + (width/2);
-		botRCornerY = yPos + (width/2);
+		length = 40;
 		colour = Color.BLUE;
-
+		topLCornerX = xPos - (length/2);
+		topLCornerY = yPos - (length/2);
+		botRCornerX = xPos + (length/2);
+		botRCornerY = yPos + (length/2);
 	}
 
-	public int getWidth() {
-		return width;
+	public int getLength() {
+		return length;
 	}
 
 
-	public int getxPos() {
+	public int getX() {
 		return xPos;
 	}
 
 
-	public int getyPos() {
+	public int getY() {
 		return yPos;
-	}
-
-	public int getTLeftX(){
-		return topLCornerX;
-	}
-
-	public int getTLeftY(){
-		return topLCornerY;
 	}
 
 
@@ -61,8 +49,8 @@ public class SquareGizmo {
 	}
 
 
-	public ArrayList<LineSegment> getSides(){
-		ArrayList<LineSegment> sides = new ArrayList<LineSegment>();
+	public List<LineSegment> getSides(){
+		List<LineSegment> sides = new ArrayList<LineSegment>();
 		LineSegment tSide = new LineSegment(topLCornerX, topLCornerY, botRCornerX, topLCornerY);
 		LineSegment lSide = new LineSegment(topLCornerX, topLCornerY, topLCornerX, botRCornerY);
 		LineSegment rSide = new LineSegment(botRCornerX, topLCornerY, botRCornerX, botRCornerY);
@@ -74,11 +62,11 @@ public class SquareGizmo {
 		return sides;
 	}
 
-	public ArrayList<Circle> getCorners(){
-		ArrayList<Circle> circleList = new ArrayList<Circle>();
+	public List<Circle> getCorners(){
+		List<Circle> circleList = new ArrayList<Circle>();
 		Circle topLeft = new Circle(topLCornerX, topLCornerY, 0);
-		Circle topRight = new Circle(topLCornerX + width, topLCornerY,0);
-		Circle botLeft = new Circle(topLCornerX, topLCornerY + width,0);
+		Circle topRight = new Circle(topLCornerX + length, topLCornerY,0);
+		Circle botLeft = new Circle(topLCornerX, topLCornerY + length,0);
 		Circle botRight = new Circle(botRCornerX, botRCornerY,0);
 		circleList.add(topLeft);
 		circleList.add(topRight);
