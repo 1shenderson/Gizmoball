@@ -21,155 +21,172 @@ import physics.Vect;
 
 public class Model extends Observable {
 
-    private ArrayList<VerticalLine> lines;
-    private Ball ball;
-    private Walls gws;
-    private FileHandling file;
+	private ArrayList<VerticalLine> lines;
+	private ArrayList<AbstractFlipper> flips;
+
+	private Ball ball;
+	private Walls gws;
+	private FileHandling file;
 	private FlipperLeft flipper;
+	private FlipperRight flipperR;
 
-    private ArrayList<ArrayList<Object>> gizmoList;
+	private ArrayList<ArrayList<Object>> gizmoList;
 
-    public Model() {
+	public Model() {
 
-        // Ball position (25, 25) in pixels. Ball velocity (100, 100) pixels per tick
-        ball = new Ball(25, 25, 100, 100);
+		// Ball position (25, 25) in pixels. Ball velocity (100, 100) pixels per tick
+		ball = new Ball(25, 25, 100, 100);
 
-        // Wall size 500 x 500 pixels
-        gws = new Walls(0, 0, 500, 500);
+		// Wall size 500 x 500 pixels
+		gws = new Walls(0, 0, 500, 500);
 
-		flipper = new FlipperLeft(200,200,"demo",25,100,180);
+		flips = new ArrayList<AbstractFlipper>();
 
-        
-        // Lines added in Main
-        lines = new ArrayList<VerticalLine>();
+		flipper = new FlipperLeft(100,200,"demo");
+		flips.add(flipper);
+		flipperR = new FlipperRight(300,200,"demoR");
+		flips.add(flipperR);
 
-        file = new FileHandling();
 
-        gizmoList = new ArrayList<ArrayList<Object>>();
-    }
 
-    public void moveBall() {
+		// Lines added in Main
+		lines = new ArrayList<VerticalLine>();
 
-        double moveTime = 0.05; // 0.05 = 20 times per second as per Gizmoball
+		file = new FileHandling();
 
-        if (ball != null && !ball.stopped()) {
+		gizmoList = new ArrayList<ArrayList<Object>>();
+	}
 
-            CollisionDetails cd = timeUntilCollision();
-            double tuc = cd.getTuc();
-            if (tuc > moveTime) {
-                // No collision ...
-                ball = movelBallForTime(ball, moveTime);
-            } else {
-                // We've got a collision in tuc
-                ball = movelBallForTime(ball, tuc);
-                // Post collision velocity ...
-                ball.setVelo(cd.getVelo());
-            }
+	public void moveBall() {
 
-            // Notify observers ... redraw updated view
-            this.setChanged();
-            this.notifyObservers();
-        }
+		double moveTime = 0.05; // 0.05 = 20 times per second as per Gizmoball
 
-    }
+		if (ball != null && !ball.stopped()) {
 
-    private Ball movelBallForTime(Ball ball, double time) {
+			CollisionDetails cd = timeUntilCollision();
+			double tuc = cd.getTuc();
+			if (tuc > moveTime) {
+				// No collision ...
+				ball = movelBallForTime(ball, moveTime);
+			} else {
+				// We've got a collision in tuc
+				ball = movelBallForTime(ball, tuc);
+				// Post collision velocity ...
+				ball.setVelo(cd.getVelo());
+			}
 
-        double newX = 0.0;
-        double newY = 0.0;
-        double xVel = ball.getVelo().x();
-        double yVel = ball.getVelo().y();
-        newX = ball.getExactX() + (xVel * time);
-        newY = ball.getExactY() + (yVel * time);
-        ball.setExactX(newX);
-        ball.setExactY(newY);
-        return ball;
-    }
-
-    private CollisionDetails timeUntilCollision() {
-        // Find Time Until Collision and also, if there is a collision, the new speed vector.
-        // Create a physics.Circle from Ball
-        Circle ballCircle = ball.getCircle();
-        Vect ballVelocity = ball.getVelo();
-        Vect newVelo = new Vect(0, 0);
-
-        // Now find shortest time to hit a vertical line or a wall line
-        double shortestTime = Double.MAX_VALUE;
-        double time = 0.0;
-
-        // Time to collide with 4 walls
-        ArrayList<LineSegment> lss = gws.getLineSegments();
-        for (LineSegment line : lss) {
-            time = Geometry.timeUntilWallCollision(line, ballCircle, ballVelocity);
-            if (time < shortestTime) {
-                shortestTime = time;
-                newVelo = Geometry.reflectWall(line, ball.getVelo(), 1.0);
-            }
-        }
-
-        // Time to collide with any vertical lines
-        for (VerticalLine line : lines) {
-            LineSegment ls = line.getLineSeg();
-            time = Geometry.timeUntilWallCollision(ls, ballCircle, ballVelocity);
-            if (time < shortestTime) {
-                shortestTime = time;
-                newVelo = Geometry.reflectWall(ls, ball.getVelo(), 1.0);
-            }
-        }
-        
-		// time until flipper collision
-		LineSegment ls = flipper.getLineSeg();
-		time = Geometry.timeUntilWallCollision(ls, ballCircle, ballVelocity);
-		if (time < shortestTime) {
-			shortestTime = time;
-			newVelo = Geometry.reflectWall(ls, ball.getVelo(), 1.0);
+			// Notify observers ... redraw updated view
+			this.setChanged();
+			this.notifyObservers();
 		}
-		
-        return new CollisionDetails(shortestTime, newVelo);
-    }
 
-    public void saveBoard(File filed, String fileName){
-        file.save(gizmoList, filed, fileName);
-    }
+	}
 
-    public void loadBoard(File filed){
-        ArrayList<ArrayList<Object>> gizmoLoad = file.load(filed);
+	private Ball movelBallForTime(Ball ball, double time) {
 
-        ArrayList<Object> gizmoInfo = new ArrayList<Object>();
-        for(int i = 0; i < gizmoLoad.size(); i++){
-            gizmoInfo = gizmoLoad.get(i);
-            addLine(new VerticalLine((String) gizmoInfo.get(0), (String)gizmoInfo.get(1), (int)gizmoInfo.get(2), (int)gizmoInfo.get(3), (int)gizmoInfo.get(4)));
-        }
-    }
+		double newX = 0.0;
+		double newY = 0.0;
+		double xVel = ball.getVelo().x();
+		double yVel = ball.getVelo().y();
+		newX = ball.getExactX() + (xVel * time);
+		newY = ball.getExactY() + (yVel * time);
+		ball.setExactX(newX);
+		ball.setExactY(newY);
+		return ball;
+	}
 
-    public Ball getBall() {
-        return ball;
-    }
+	private CollisionDetails timeUntilCollision() {
+		// Find Time Until Collision and also, if there is a collision, the new speed vector.
+		// Create a physics.Circle from Ball
+		Circle ballCircle = ball.getCircle();
+		Vect ballVelocity = ball.getVelo();
+		Vect newVelo = new Vect(0, 0);
 
-    public ArrayList<VerticalLine> getLines() {
-        return lines;
-    }
+		// Now find shortest time to hit a vertical line or a wall line
+		double shortestTime = Double.MAX_VALUE;
+		double time = 0.0;
 
-    public void addLine(VerticalLine l) {
-        lines.add(l);
-        gizmoList.add(l.getGizmoInfo());
-    }
+		// Time to collide with 4 walls
+		ArrayList<LineSegment> lss = gws.getLineSegments();
+		for (LineSegment line : lss) {
+			time = Geometry.timeUntilWallCollision(line, ballCircle, ballVelocity);
+			if (time < shortestTime) {
+				shortestTime = time;
+				newVelo = Geometry.reflectWall(line, ball.getVelo(), 1.0);
+			}
+		}
 
-    public void setBallSpeed(int x, int y) {
-        ball.setVelo(new Vect(x, y));
-    }
-    
+		// Time to collide with any vertical lines
+		for (VerticalLine line : lines) {
+			LineSegment ls = line.getLineSeg();
+			time = Geometry.timeUntilWallCollision(ls, ballCircle, ballVelocity);
+			if (time < shortestTime) {
+				shortestTime = time;
+				newVelo = Geometry.reflectWall(ls, ball.getVelo(), 1.0);
+			}
+		}
+		for (AbstractFlipper fl : flips){
+			// time until flipper collision
+			LineSegment ls = fl.getLineSeg();
+			time = Geometry.timeUntilWallCollision(ls, ballCircle, ballVelocity);
+			if (time < shortestTime) {
+				shortestTime = time;
+				newVelo = Geometry.reflectWall(ls, ball.getVelo(), 1.0);
+			}
+		}
+
+		return new CollisionDetails(shortestTime, newVelo);
+	}
+
+	public void saveBoard(File filed, String fileName){
+		file.save(gizmoList, filed, fileName);
+	}
+
+	public void loadBoard(File filed){
+		ArrayList<ArrayList<Object>> gizmoLoad = file.load(filed);
+
+		ArrayList<Object> gizmoInfo = new ArrayList<Object>();
+		for(int i = 0; i < gizmoLoad.size(); i++){
+			gizmoInfo = gizmoLoad.get(i);
+			//            addLine(new VerticalLine((String) gizmoInfo.get(0), (String)gizmoInfo.get(1), (int)gizmoInfo.get(2), (int)gizmoInfo.get(3), (int)gizmoInfo.get(4)));
+		}
+	}
+
+	public Ball getBall() {
+		return ball;
+	}
+
+	public ArrayList<VerticalLine> getLines() {
+		return lines;
+	}
+
+	public void addLine(VerticalLine l) {
+		lines.add(l);
+		gizmoList.add(l.getGizmoInfo());
+	}
+
+	public void setBallSpeed(int x, int y) {
+		ball.setVelo(new Vect(x, y));
+	}
+
 	public void changeFlipperColour(){
 		flipper.setColour();
 	}
-	
-	public void rotateFlip(){
-		flipper.rotateFlipper();
+
+	public void rotateFlip(boolean t){
+		flipper.trigger(t);
 	}
-	
+
+	public void rotateFlipR(boolean t){
+		flipperR.trigger(t);
+	}
+
 	public FlipperLeft getFlipper(){
 		return flipper;
 	}
-	
-	
+
+	public FlipperRight getFlipperR(){
+		return flipperR;
+	}
+
 }
