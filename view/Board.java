@@ -14,6 +14,7 @@ import model.Ball;
 import model.Model;
 import model.VerticalLine;
 import model.gizmo.FlipperLeft;
+import model.gizmo.FlipperRight;
 
 /**
  * @author Murray Wood Demonstration of MVC and MIT Physics Collisions 2014
@@ -66,7 +67,32 @@ public  class Board extends JPanel implements Observer {
 			int y = (int) f.getY();
 			g2.drawLine(x, y, f.getx2(), f.gety2());
 		    //g2.rotate(Math.toRadians(60),f.getX(),f.getY());
-			g2.fillRoundRect(x, y, f.getWidth(), f.getLength(), 25, 25);
+			//g2.fillRoundRect(x, y, f.getWidth(), f.getLength(), 25, 25);
+		}
+		
+		FlipperRight fr = gm.getFlipperR();
+		if (fr != null){
+			g2.setColor(fr.getColour());
+			int x = (int) fr.getX();
+			int y = (int) fr.getY();
+			int xArray[] = new int [4];
+			int yArray[] = new int [4];
+			xArray[0] = x;
+			xArray[1] = x+25;
+			xArray[2] = fr.getx2() + 25;
+			xArray[3] = fr.getx2();
+			
+			
+			yArray[0] = y;
+			yArray[1] = y;
+			yArray[2] = fr.gety2();
+			yArray[3] = fr.gety2();
+			
+			g2.drawLine(x, y, fr.getx2(), fr.gety2());
+
+			//g2.fillPolygon(xArray, yArray, 4);
+		    //g2.rotate(Math.toRadians(60),f.getX(),f.getY());
+			//g2.fillRoundRect(x, y, f.getWidth(), f.getLength(), 25, 25);
 		}
 	}
 
