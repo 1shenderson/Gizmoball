@@ -5,12 +5,12 @@ import physics.Vect;
 import java.util.List;
 
 public interface Gizmo {
-	
-	public Vect getVect();
-	
-	public double getX();
 
-	public double getY();
+	public Vect getVect();
+
+	public int getX();
+
+	public int getY();
 
     public String getID();
 

@@ -16,10 +16,14 @@ public abstract class AbstractGizmo implements Gizmo {
     private String id;
     private Vect vector;
     private List<Gizmo> triggerList;
+    private int xPos;
+    private int yPos;
 
     public AbstractGizmo(int x, int y, String id) {
         this.vector = new Vect(x, y);
         this.id = id;
+        xPos = x;
+        yPos = y;
     }
 
     @Override
@@ -28,13 +32,13 @@ public abstract class AbstractGizmo implements Gizmo {
     }
 
     @Override
-    public double getX() {
-        return vector.x();
+    public int getX() {
+        return xPos;
     }
 
     @Override
-    public double getY() {
-        return vector.y();
+    public int getY() {
+        return yPos;
     }
 
     @Override
