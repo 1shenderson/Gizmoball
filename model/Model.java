@@ -20,8 +20,9 @@ public class Model extends Observable {
 
 	private ArrayList<VerticalLine> lines;
 	private FileHandling file;
-
-
+    private static final double friction1 = 0.025; // Per second
+    private static final double friction2 = 0.025; // Per L
+    private static final double gravity = 625; // TODO Make gravity a 25L variable, not a 625 constant.
 	private Walls gws;
 	private List<Ball> ballsList;
 	private List<CircleGizmo> circlesList;
@@ -34,6 +35,8 @@ public class Model extends Observable {
 		circlesList = new ArrayList<CircleGizmo>();
 		squaresList = new ArrayList<SquareGizmo>();
 		// Ball position (25, 25) in pixels. Ball velocity (100, 100) pixels per tick
+        Ball ball = new Ball("GIZMOTYPE", "ID", 475, 475, 0, -625);
+        ballsList.add(ball);
 
 		file = new FileHandling();
 
@@ -48,42 +51,59 @@ public class Model extends Observable {
 	}
     
 	public void moveBall() {
-
 		double moveTime = 0.05; // 0.05 = 20 times per second as per Gizmoball
-
-
-		for (int i = 0; i < ballsList.size(); i++){
-			Ball currentBall = ballsList.get(i);
-			currentBall.getExactX();
-			if (currentBall != null && !currentBall.stopped()) {
-				CollisionDetails cd = timeUntilCollision(currentBall);
+		for (Ball ball: ballsList){
+			ball.getExactX();
+			if (!ball.stopped()) {
+				CollisionDetails cd = timeUntilCollision(ball);
 				double tuc = cd.getTuc();
 				if (tuc > moveTime) {
 					// No collision ...
-					currentBall = movelBallForTime(currentBall, moveTime);
+					ball = movelBallForTime(ball, moveTime);
 				} else {
+                    System.out.printf("\nCOLLISION DETECTED");
+                    debugPrintVelocity(ball); // TODO Remove debug
 					// We've got a collision in tuc
-					currentBall = movelBallForTime(currentBall, tuc);
+					ball = movelBallForTime(ball, tuc);
+                    debugPrintVelocity(ball); // TODO Remove debug
 					// Post collision velocity ...
-					currentBall.setVelo(cd.getVelo());
-
+					ball.setVelo(cd.getVelo());
+                    debugPrintVelocity(ball); // TODO Remove debug
 				}
-
 				// Notify observers ... redraw updated view
 				this.setChanged();
-				this.notifyObservers();
 			}
+            this.notifyObservers(); // Will only notify observers if setChanged was called this frame
 		}
 	}
 
-	private Ball movelBallForTime(Ball ball, double time) {
+    /**
+     * Debug method
+     * Will print the velocity of the ball formatted to be easier to read if a lot of such lines are printed in series.
+     * @param ball Ball which you want to print info about
+     */
+    private void debugPrintVelocity(Ball ball) {
+        System.out.printf("\nVelocity after:  X: %+-8.2f Y: %+-8.2f", ball.getVelo().x(), ball.getVelo().y());
+    }
 
+	private Ball movelBallForTime(Ball ball, double time) {
+        // Initiate position variables
 		double newX = 0.0;
 		double newY = 0.0;
+        // Initiate velocity variables
 		double xVel = ball.getVelo().x();
 		double yVel = ball.getVelo().y();
+        // Calculate gravity
+        yVel = yVel + (gravity * time);
+        // Calculate friction
+        xVel = xVel * ((1 - (friction1 * time)) - (Math.abs(xVel) * (friction2 / 25) * time)); // TODO Change 25 constant to variable L
+        yVel = yVel * ((1 - (friction1 * time)) - (Math.abs(yVel) * (friction2 / 25) * time)); // TODO Change 25 constant to variable L
+        // Find out where the ball should end up next frame
 		newX = ball.getExactX() + (xVel * time);
 		newY = ball.getExactY() + (yVel * time);
+        // Set new velocity values
+        ball.setVelo(new Vect(xVel, yVel));
+        // Set new position values
 		ball.setExactX(newX);
 		ball.setExactY(newY);
 		return ball;
@@ -121,7 +141,7 @@ public class Model extends Observable {
 			}
 		}
 
-		// time to collide with squares
+		// Time to collide with squares
 		for (SquareGizmo square:squaresList){
 			ArrayList<LineSegment> sides = square.getSides();
 			ArrayList<Circle> corners = square.getCorners();
@@ -141,7 +161,6 @@ public class Model extends Observable {
 			}
 		}
 
-
 		// Time to collide with any vertical lines
 		for (VerticalLine line : lines) {
 			LineSegment ls = line.getLineSeg();
@@ -160,10 +179,7 @@ public class Model extends Observable {
 
     public void loadBoard(File filed){
         ArrayList<ArrayList<Object>> gizmoLoad = file.load(filed);
-
-        ArrayList<Object> gizmoInfo = new ArrayList<Object>();
-        for(int i = 0; i < gizmoLoad.size(); i++){
-            gizmoInfo = gizmoLoad.get(i);
+        for(ArrayList<Object> gizmoInfo : gizmoLoad){
             
             if(gizmoInfo.get(0).equals("Line")){
             	addLine(new VerticalLine((String) gizmoInfo.get(0), (String)gizmoInfo.get(1), (int)gizmoInfo.get(2), (int)gizmoInfo.get(3), (int)gizmoInfo.get(4)));
@@ -205,8 +221,8 @@ public class Model extends Observable {
     }
 
 	public void setBallSpeed(int x, int y) {
-		for (int i = 0; i < ballsList.size(); i++){
-			ballsList.get(i).setVelo(new Vect(x, y));
+		for (Ball ball : ballsList){
+			ball.setVelo(new Vect(x, y));
 		}
 	}
 
