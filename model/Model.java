@@ -102,8 +102,8 @@ public class Model extends Observable implements Game {
         // Calculate gravity
         yVel = yVel + (gravity * time);
         // Calculate friction
-        xVel = xVel * ((1 - (friction1 * time)) - (Math.abs(xVel) * (friction2) * time)); // TODO Change 25 constant to variable L
-        yVel = yVel * ((1 - (friction1 * time)) - (Math.abs(yVel) * (friction2) * time)); // TODO Change 25 constant to variable L
+        xVel = xVel * ((1 - (friction1 * time)) - (Math.abs(xVel) * (friction2) * time));
+        yVel = yVel * ((1 - (friction1 * time)) - (Math.abs(yVel) * (friction2) * time));
         // Find out where the ball should end up next frame
 		newX = ball.getExactX() + (xVel * time);
 		newY = ball.getExactY() + (yVel * time);
@@ -248,65 +248,69 @@ public class Model extends Observable implements Game {
     @Override
     public void addGizmo(int x, int y, String gizmoType, String gizmoID) {
         Gizmo gizmo;
-        if (gizmoType.equals("Square")) {
-            gizmo = new SquareBumper(x, y, 1, 1, gizmoID);
-        } else
-        if (gizmoType.equals("Triangle")) {
-            gizmo = new TriangleBumper(x, y, gizmoID);
-        } else
-        if (gizmoType.equals("Circle")) {
-            gizmo = new CircleBumper(x, y, gizmoID);
-        } else
-        if (gizmoType.equals("RightFlipper")) {
-            gizmo = new FlipperRight(x, y, gizmoID);
-        } else
-        if (gizmoType.equals("LeftFlipper")) {
-            gizmo = new FlipperLeft(x, y, gizmoID);
-        } else
-        if (gizmoType.equals("Absorber")) {
-            throw new IllegalArgumentException("Absorber  needs a width and a height as arguments in addition to the rest.");
-        } else {
-            throw new IllegalArgumentException("Unrecognized gizmo type" + gizmoType + " passed as an argument to addGizmo");
+        switch (gizmoType) {
+            case "Square":
+                gizmo = new SquareBumper(x, y, 1, 1, gizmoID);
+                break;
+            case "Triangle":
+                gizmo = new TriangleBumper(x, y, gizmoID);
+                break;
+            case "Circle":
+                gizmo = new CircleBumper(x, y, gizmoID);
+                break;
+            case "RightFlipper":
+                gizmo = new FlipperRight(x, y, gizmoID);
+                break;
+            case "LeftFlipper":
+                gizmo = new FlipperLeft(x, y, gizmoID);
+                break;
+            case "Absorber":
+                throw new IllegalArgumentException("Absorber  needs a width and a height as arguments in addition to the rest.");
+            default:
+                throw new IllegalArgumentException("Unrecognized gizmo type" + gizmoType + " passed as an argument to addGizmo");
         }
+        gizmoList.add(gizmo);
     }
 
     @Override
     public void addAbsorber(int x, int y, int width, int height, String gizmoID) {
         Gizmo absorber = new Absorber(x, y, width, height, 0, 30*L, this, gizmoID);
+        gizmoList.add(absorber);
     }
 
     @Override
     public void removeGizmo(int x, int y) {
-
+        // TODO Code for removing a gizmo from a location
     }
 
     @Override
     public void removeGizmo(String gizmoID) {
-
+        // TODO Code for removing a gizmo with a certain ID
     }
 
     @Override
     public void addTriggerKey(String gizmoID, int keyID) {
-
+        // TODO Code for adding a key as a trigger for a gizmo
     }
 
     @Override
     public void addTriggerGizmo(String gizmoID, String gizmoTriggerID) {
-
+        // TODO Code for making a gizmo trigger another gizmo
     }
 
     @Override
     public void removeTriggerKey(String gizmoID, int keyID) {
-
+        // TODO Code for removing a key trigger from a gizmo
     }
 
     @Override
     public void removeTriggerGizmo(String gizmoID, String gizmoTriggerID) {
-
+        // TODO Code for removing a gizmo trigger from a gizmo
     }
 
     @Override
     public int[][] getMap() {
+        // TODO Code for returning the map. NOTE: I think this is redundant as we don't store gizmos in an array.
         return new int[0][];
     }
 }
