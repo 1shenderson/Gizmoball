@@ -62,13 +62,13 @@ public class Model extends Observable {
 					ball = movelBallForTime(ball, moveTime);
 				} else {
                     System.out.printf("\nCOLLISION DETECTED");
-                    debugPrintVelocity(ball); // TODO Remove debug
+                    debugPrintVelocity("before", ball); // TODO Remove debug
 					// We've got a collision in tuc
 					ball = movelBallForTime(ball, tuc);
-                    debugPrintVelocity(ball); // TODO Remove debug
+                    debugPrintVelocity("during", ball); // TODO Remove debug
 					// Post collision velocity ...
 					ball.setVelo(cd.getVelo());
-                    debugPrintVelocity(ball); // TODO Remove debug
+                    debugPrintVelocity("after", ball); // TODO Remove debug
 				}
 				// Notify observers ... redraw updated view
 				this.setChanged();
@@ -80,10 +80,12 @@ public class Model extends Observable {
     /**
      * Debug method
      * Will print the velocity of the ball formatted to be easier to read if a lot of such lines are printed in series.
+     * @param stage What to print after "Velocity" and before ":". Can be an empty string, shouldn't be longer than 6 chars.
      * @param ball Ball which you want to print info about
      */
-    private void debugPrintVelocity(Ball ball) {
-        System.out.printf("\nVelocity after:  X: %+-8.2f Y: %+-8.2f", ball.getVelo().x(), ball.getVelo().y());
+    private void debugPrintVelocity(String stage, Ball ball) {
+        stage += ":";
+        System.out.printf("\nVelocity %-7s  X: %+-8.2f Y: %+-8.2f", stage, ball.getVelo().x(), ball.getVelo().y());
     }
 
 	private Ball movelBallForTime(Ball ball, double time) {
