@@ -5,8 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 
-import model.gizmo.CircleGizmo;
-import model.gizmo.SquareGizmo;
+import model.gizmo.*;
 import physics.Circle;
 import physics.Geometry;
 import physics.LineSegment;
@@ -16,44 +15,48 @@ import physics.Vect;
  * @author Murray Wood Demonstration of MVC and MIT Physics Collisions 2014
  */
 
-public class Model extends Observable {
+public class Model extends Observable implements Game {
 
 	private ArrayList<VerticalLine> lines;
 	private FileHandling file;
-    private static final double friction1 = 0.025; // Per second
-    private static final double friction2 = 0.025; // Per L
-    private static final double gravity = 625; // TODO Make gravity a 25L variable, not a 625 constant.
+    private static int L;
+    private static double friction1;
+    private static double friction2;
+    private static double gravity;
 	private Walls gws;
 	private List<Ball> ballsList;
-	private List<CircleGizmo> circlesList;
-	private List<SquareGizmo> squaresList;
-	private ArrayList<ArrayList<Object>> gizmoList;
+	private ArrayList<Gizmo> gizmoList;
 
 	public Model() {
+        L = 25; // TODO Assign L through the constructor
+        gravity = 25 * L;
+        friction1 = 0.025;
+        friction2 = 0.025 / L;
 
 		ballsList = new ArrayList<Ball>();
-		circlesList = new ArrayList<CircleGizmo>();
-		squaresList = new ArrayList<SquareGizmo>();
 		// Ball position (25, 25) in pixels. Ball velocity (100, 100) pixels per tick
-        Ball ball = new Ball("GIZMOTYPE", "ID", 475, 475, 0, -625);
+        Ball ball = new Ball("GIZMOTYPE", "ID", 19.75*L, 19.75*L, 0, -30 * L);
         ballsList.add(ball);
 
 		file = new FileHandling();
 
-		// Wall size 500 x 500 pixels
-		gws = new Walls(0, 0, 500, 500);
+		// Wall size is 20 by 20 squares (each square is L in width and L in height)
+		gws = new Walls(0, 0, (int) (20 * L), (int) (20 * L));
 
 		// Lines added in Main
 		lines = new ArrayList<VerticalLine>();
 		
-		gizmoList = new ArrayList<ArrayList<Object>>();
-		
+		gizmoList = new ArrayList<Gizmo>();
+
+        L = 25; // TODO Assign L through the constructor
+        gravity = 25 * L;
+        friction1 = 0.025;
+        friction2 = 0.025 / L;
 	}
     
-	public void moveBall() {
+	public void tick() {
 		double moveTime = 0.05; // 0.05 = 20 times per second as per Gizmoball
 		for (Ball ball: ballsList){
-			ball.getExactX();
 			if (!ball.stopped()) {
 				CollisionDetails cd = timeUntilCollision(ball);
 				double tuc = cd.getTuc();
@@ -61,31 +64,32 @@ public class Model extends Observable {
 					// No collision ...
 					ball = movelBallForTime(ball, moveTime);
 				} else {
-                    System.out.printf("\nCOLLISION DETECTED");
-                    debugPrintVelocity("before", ball); // TODO Remove debug
+                    System.out.printf("\n\nCOLLISION DETECTED");
+                    debugPrintVelocity("before", ball.getVelo()); // TODO Remove debug
 					// We've got a collision in tuc
 					ball = movelBallForTime(ball, tuc);
-                    debugPrintVelocity("during", ball); // TODO Remove debug
+                    debugPrintVelocity("during", ball.getVelo()); // TODO Remove debug
+                    cd = timeUntilCollision(ball); // Update the velocity of the ball, since it changed
 					// Post collision velocity ...
 					ball.setVelo(cd.getVelo());
-                    debugPrintVelocity("after", ball); // TODO Remove debug
+                    debugPrintVelocity("after", ball.getVelo()); // TODO Remove debug
 				}
-				// Notify observers ... redraw updated view
+				// Ball position changed
 				this.setChanged();
 			}
-            this.notifyObservers(); // Will only notify observers if setChanged was called this frame
+            this.notifyObservers(); // Will only notify observers if setChanged was called in this frame
 		}
 	}
 
     /**
      * Debug method
-     * Will print the velocity of the ball formatted to be easier to read if a lot of such lines are printed in series.
+     * Will print the velocity formatted to be easier to read if a lot of such lines are printed in series.
      * @param stage What to print after "Velocity" and before ":". Can be an empty string, shouldn't be longer than 6 chars.
-     * @param ball Ball which you want to print info about
+     * @param velo Ball which you want to print info about
      */
-    private void debugPrintVelocity(String stage, Ball ball) {
+    private void debugPrintVelocity(String stage, Vect velo) {
         stage += ":";
-        System.out.printf("\nVelocity %-7s  X: %+-8.2f Y: %+-8.2f", stage, ball.getVelo().x(), ball.getVelo().y());
+        System.out.printf("\nVelocity %-7s  X: %+-8.2f Y: %+-8.2f", stage, velo.x(), velo.y());
     }
 
 	private Ball movelBallForTime(Ball ball, double time) {
@@ -98,8 +102,8 @@ public class Model extends Observable {
         // Calculate gravity
         yVel = yVel + (gravity * time);
         // Calculate friction
-        xVel = xVel * ((1 - (friction1 * time)) - (Math.abs(xVel) * (friction2 / 25) * time)); // TODO Change 25 constant to variable L
-        yVel = yVel * ((1 - (friction1 * time)) - (Math.abs(yVel) * (friction2 / 25) * time)); // TODO Change 25 constant to variable L
+        xVel = xVel * ((1 - (friction1 * time)) - (Math.abs(xVel) * (friction2) * time)); // TODO Change 25 constant to variable L
+        yVel = yVel * ((1 - (friction1 * time)) - (Math.abs(yVel) * (friction2) * time)); // TODO Change 25 constant to variable L
         // Find out where the ball should end up next frame
 		newX = ball.getExactX() + (xVel * time);
 		newY = ball.getExactY() + (yVel * time);
@@ -132,36 +136,48 @@ public class Model extends Observable {
 			}
 		}
 
-
-		// Time to collide with Circles
-		for (CircleGizmo circle: circlesList){
-			Circle currCircle = circle.getCircle();
-			time = Geometry.timeUntilCircleCollision(currCircle, ballCircle, ballVelocity);
-			if (time < shortestTime) {
-				shortestTime = time;
-				newVelo = Geometry.reflectCircle(Vect.ZERO, currBall.getVelo(), currBall.getVelo(), 1.0);
-			}
-		}
-
-		// Time to collide with squares
-		for (SquareGizmo square:squaresList){
-			ArrayList<LineSegment> sides = square.getSides();
-			ArrayList<Circle> corners = square.getCorners();
-			for (LineSegment currSide:sides){
-				time = Geometry.timeUntilWallCollision(currSide,ballCircle,ballVelocity);
-				if (time < shortestTime) {
-					shortestTime = time;
-					newVelo = Geometry.reflectWall(currSide, currBall.getVelo(), 1.0);	
-				}
-			}
-			for (Circle corner:corners){
-				time = Geometry.timeUntilCircleCollision(corner,ballCircle,ballVelocity);
-				if (time < shortestTime) {
-					shortestTime = time;
-					newVelo = Geometry.reflectCircle(Vect.ZERO, currBall.getVelo(), currBall.getVelo(), 1.0);
-				}
-			}
-		}
+        // Time to collide with gizmos
+        for (Gizmo gizmo : gizmoList) {
+            if (gizmo instanceof CircleBumper) {
+                // Gizmo is a circle bumper
+                Circle circle = ((CircleBumper) gizmo).getCircle();
+                time = Geometry.timeUntilCircleCollision(circle, ballCircle, ballVelocity);
+                if (time < shortestTime) {
+                    newVelo = Geometry.reflectCircle(Vect.ZERO, currBall.getVelo(), currBall.getVelo(), 1.0);
+                }
+            } else if (gizmo instanceof TriangleBumper) {
+                // Gizmo is a triangle bumper
+                // TODO Add handling of triangle collisions
+            } else if (gizmo instanceof SquareBumper) {
+                // Gizmo is a square bumper
+                SquareBumper square = (SquareBumper) gizmo;
+                ArrayList<LineSegment> sides = square.getSides();
+                ArrayList<Circle> corners = square.getCorners();
+                for (LineSegment side : sides){
+                    time = Geometry.timeUntilWallCollision(side,ballCircle,ballVelocity);
+                    if (time < shortestTime) {
+                        shortestTime = time;
+                        newVelo = Geometry.reflectWall(side, currBall.getVelo(), 1.0);
+                    }
+                }
+                for (Circle corner : corners){
+                    time = Geometry.timeUntilCircleCollision(corner,ballCircle,ballVelocity);
+                    if (time < shortestTime) {
+                        shortestTime = time;
+                        newVelo = Geometry.reflectCircle(Vect.ZERO, currBall.getVelo(), currBall.getVelo(), 1.0);
+                    }
+                }
+            } else if (gizmo instanceof AbstractFlipper) {
+                // Gizmo is either a left or a right flipper
+                // TODO Add handling of flipper collisions
+            } else if (gizmo instanceof Absorber) {
+                // Gizmo is an absorber. Gizmos do not collide with absorbers; instead, they get absorbed by them.
+                // TODO Add handling of absorber "collisions"
+            } else {
+                // Gizmo is unrecognized - we have no handling for that gizmo. This should not happen unless we forgot something.
+                throw new RuntimeException("Unrecognized gizmo detected in the list of gizmos.");
+            }
+        }
 
 		// Time to collide with any vertical lines
 		for (VerticalLine line : lines) {
@@ -175,28 +191,28 @@ public class Model extends Observable {
 		return new CollisionDetails(shortestTime, newVelo);
 	}
 	
-	public void saveBoard(File filed, String fileName){
-        file.save(gizmoList, filed, fileName);
-    }
+//	public void saveBoard(File filed, String fileName){
+//        file.save(gizmoList, filed, fileName);
+//    }
 
-    public void loadBoard(File filed){
-        ArrayList<ArrayList<Object>> gizmoLoad = file.load(filed);
-        for(ArrayList<Object> gizmoInfo : gizmoLoad){
-            
-            if(gizmoInfo.get(0).equals("Line")){
-            	addLine(new VerticalLine((String) gizmoInfo.get(0), (String)gizmoInfo.get(1), (int)gizmoInfo.get(2), (int)gizmoInfo.get(3), (int)gizmoInfo.get(4)));
-            }
-            else if(gizmoInfo.get(0).equals("Circle")){
-            	addCircle(new CircleGizmo((String) gizmoInfo.get(0), (String)gizmoInfo.get(1), (int)gizmoInfo.get(2), (int)gizmoInfo.get(3)));
-            }
-            else if(gizmoInfo.get(0).equals("Ball")){
-            	addBall(new Ball((String) gizmoInfo.get(0), (String)gizmoInfo.get(1), (double)gizmoInfo.get(2), (double)gizmoInfo.get(3), (double)gizmoInfo.get(4), (double)gizmoInfo.get(5)));
-            }
-            else{
-            	addSquare(new SquareGizmo((String) gizmoInfo.get(0), (String)gizmoInfo.get(1), (int)gizmoInfo.get(2), (int)gizmoInfo.get(3)));
-            }
-        }
-    }
+//    public void loadBoard(File filed){
+//        ArrayList<ArrayList<Object>> gizmoLoad = file.load(filed);
+//        for(ArrayList<Object> gizmoInfo : gizmoLoad){
+//
+//            if(gizmoInfo.get(0).equals("Line")){
+//            	addLine(new VerticalLine((String) gizmoInfo.get(0), (String)gizmoInfo.get(1), (int)gizmoInfo.get(2), (int)gizmoInfo.get(3), (int)gizmoInfo.get(4)));
+//            }
+//            else if(gizmoInfo.get(0).equals("Circle")){
+//            	addCircle(new CircleGizmo((String) gizmoInfo.get(0), (String)gizmoInfo.get(1), (int)gizmoInfo.get(2), (int)gizmoInfo.get(3)));
+//            }
+//            else if(gizmoInfo.get(0).equals("Ball")){
+//            	addBall(new Ball((String) gizmoInfo.get(0), (String)gizmoInfo.get(1), (double)gizmoInfo.get(2), (double)gizmoInfo.get(3), (double)gizmoInfo.get(4), (double)gizmoInfo.get(5)));
+//            }
+//            else{
+//            	addSquare(new SquareGizmo((String) gizmoInfo.get(0), (String)gizmoInfo.get(1), (int)gizmoInfo.get(2), (int)gizmoInfo.get(3)));
+//            }
+//        }
+//    }
 
 	public ArrayList<VerticalLine> getLines() {
 		return lines;
@@ -204,22 +220,10 @@ public class Model extends Observable {
 
 	public void addLine(VerticalLine l) {
         lines.add(l);
-        gizmoList.add(l.getGizmoInfo());
-    }
-	
-	public void addCircle(CircleGizmo c) {
-        circlesList.add(c);
-        gizmoList.add(c.getCircleInfo());
-    }
-	
-	public void addSquare(SquareGizmo s) {
-        squaresList.add(s);
-        gizmoList.add(s.getSquareInfo());
     }
 	
 	public void addBall(Ball b) {
         ballsList.add(b);
-        gizmoList.add(b.getBallInfo());
     }
 
 	public void setBallSpeed(int x, int y) {
@@ -232,13 +236,79 @@ public class Model extends Observable {
 		return ballsList;
 	}
 
-	public List<CircleGizmo> getCircleList(){
-		return circlesList;
-	}
+    public List<Gizmo> getGizmoList() {
+        return gizmoList;
+    }
 
-	public List<SquareGizmo> getSquareList(){
-		return squaresList;
-	}
+    @Override
+    public void trigger(int keyID) {
+
+    }
+
+    @Override
+    public void addGizmo(int x, int y, String gizmoType, String gizmoID) {
+        Gizmo gizmo;
+        if (gizmoType.equals("Square")) {
+            gizmo = new SquareBumper(x, y, 1, 1, gizmoID);
+        } else
+        if (gizmoType.equals("Triangle")) {
+            gizmo = new TriangleBumper(x, y, gizmoID);
+        } else
+        if (gizmoType.equals("Circle")) {
+            gizmo = new CircleBumper(x, y, gizmoID);
+        } else
+        if (gizmoType.equals("RightFlipper")) {
+            gizmo = new FlipperRight(x, y, gizmoID);
+        } else
+        if (gizmoType.equals("LeftFlipper")) {
+            gizmo = new FlipperLeft(x, y, gizmoID);
+        } else
+        if (gizmoType.equals("Absorber")) {
+            throw new IllegalArgumentException("Absorber  needs a width and a height as arguments in addition to the rest.");
+        } else {
+            throw new IllegalArgumentException("Unrecognized gizmo type" + gizmoType + " passed as an argument to addGizmo");
+        }
+    }
+
+    @Override
+    public void addAbsorber(int x, int y, int width, int height, String gizmoID) {
+        Gizmo absorber = new Absorber(x, y, width, height, 0, 30*L, this, gizmoID);
+    }
+
+    @Override
+    public void removeGizmo(int x, int y) {
+
+    }
+
+    @Override
+    public void removeGizmo(String gizmoID) {
+
+    }
+
+    @Override
+    public void addTriggerKey(String gizmoID, int keyID) {
+
+    }
+
+    @Override
+    public void addTriggerGizmo(String gizmoID, String gizmoTriggerID) {
+
+    }
+
+    @Override
+    public void removeTriggerKey(String gizmoID, int keyID) {
+
+    }
+
+    @Override
+    public void removeTriggerGizmo(String gizmoID, String gizmoTriggerID) {
+
+    }
+
+    @Override
+    public int[][] getMap() {
+        return new int[0][];
+    }
 }
 
 

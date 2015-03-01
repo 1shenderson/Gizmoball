@@ -27,7 +27,7 @@ public class Ball {
 		ypos = y;
 		colour = Color.BLUE;
 		velocity = new Vect(xv, yv);
-		radius = 10;
+		radius = 7; // TODO Change constant 7 to quarter of L as per specification
 		stopped = false;
 		
 		gizmoInfo = new ArrayList<Object>();

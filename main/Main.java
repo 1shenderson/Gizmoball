@@ -22,8 +22,8 @@ public class Main {
 
 		Model model = new Model();
 
-		model.setBallSpeed(200, 200);
-		
+//		model.setBallSpeed(200, 200);
+
 		
 		// Vertical line at (100,100), width 300
 		//model.addLine(new VerticalLine("Line", "l1", 100, 100, 300));

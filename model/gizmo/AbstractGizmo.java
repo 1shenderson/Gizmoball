@@ -2,6 +2,7 @@ package model.gizmo;
 
 import physics.Vect;
 
+import java.awt.*;
 import java.util.List;
 
 /**
@@ -13,6 +14,8 @@ import java.util.List;
  * @author Grzegorz Sebastian Korkosz
  */
 public abstract class AbstractGizmo implements Gizmo {
+    int L;
+    Color color;
     private String id;
     private Vect vector;
     private List<Gizmo> triggerList;
@@ -20,10 +23,15 @@ public abstract class AbstractGizmo implements Gizmo {
     private int yPos;
 
     public AbstractGizmo(int x, int y, String id) {
+        if (x < 0 || y < 0) {
+            throw new IllegalArgumentException((x<0?"x":"y") + " is less than 0 in "
+                    + this.getClass() + " constructor");
+        }
+        this.L = 25; // TODO Change from constant 25 to a variable in constructor
         this.vector = new Vect(x, y);
         this.id = id;
-        xPos = x;
-        yPos = y;
+        this.xPos = x;
+        this.yPos = y;
     }
 
     @Override
@@ -49,6 +57,11 @@ public abstract class AbstractGizmo implements Gizmo {
     @Override
     public String getID() {
         return id;
+    }
+
+    @Override
+    public Color getColour() {
+        return color;
     }
 
     @Override

@@ -2,6 +2,7 @@ package model.gizmo;
 
 import physics.Vect;
 
+import java.awt.*;
 import java.util.List;
 
 public interface Gizmo {
@@ -15,6 +16,8 @@ public interface Gizmo {
     public String getID();
 
 	public List<Gizmo> getTriggers();
+
+    public Color getColour();
 
     public void rotateLeft();
 

@@ -2,10 +2,10 @@ package controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-
 import javax.swing.JFileChooser;
 import javax.swing.Timer;
+
+import model.Game;
 import model.Model;
 
 /**
@@ -13,14 +13,13 @@ import model.Model;
  */
 
 public class RunListener implements ActionListener {
-
     private Timer timer;
-    private Model model;
+    private Game game;
+    private int L = 25;   // Physics constant
 
     public RunListener(Model m) {
-        model = m;
+        game = m;
         timer = new Timer(50, this);
-
     }
 
     @Override
@@ -30,7 +29,7 @@ public class RunListener implements ActionListener {
         int returnVal;
 
         if (e.getSource() == timer) {
-            model.moveBall();
+            game.tick();
         } else
             switch (e.getActionCommand()) {
                 case "Start":
@@ -40,25 +39,25 @@ public class RunListener implements ActionListener {
                     timer.stop();
                     break;
                 case "Tick":
-                    model.moveBall();
+                    game.tick();
                     break;
                 case "Save":
-                    fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-                    returnVal = fc.showSaveDialog(null);
-                    if (returnVal == JFileChooser.APPROVE_OPTION) {
-                        File file = fc.getSelectedFile();
-                        String fileName = file + ".txt";
-                        model.saveBoard(file, fileName);
-                    }
-                    break;
-                case "Load":
-                    fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-                    returnVal = fc.showOpenDialog(null);
-                    if (returnVal == JFileChooser.APPROVE_OPTION) {
-                        File file = fc.getSelectedFile();
-                        model.loadBoard(file);
-                    }
-                    break;
+//                    fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+//                    returnVal = fc.showSaveDialog(null);
+//                    if (returnVal == JFileChooser.APPROVE_OPTION) {
+//                        File file = fc.getSelectedFile();
+//                        String fileName = file + ".txt";
+//                        game.saveBoard(file, fileName);
+//                    }
+//                    break;
+//                case "Load":
+//                    fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+//                    returnVal = fc.showOpenDialog(null);
+//                    if (returnVal == JFileChooser.APPROVE_OPTION) {
+//                        File file = fc.getSelectedFile();
+//                        game.loadBoard(file);
+//                    }
+//                    break;
                 case "Quit":
                     System.exit(0);
                     break;

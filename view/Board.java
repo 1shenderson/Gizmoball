@@ -11,12 +11,11 @@ import java.util.Observer;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
+import model.gizmo.*;
 import physics.LineSegment;
 import model.Ball;
 import model.Model;
-import model.gizmo.SquareGizmo;
 import model.VerticalLine;
-import model.gizmo.CircleGizmo;
 
 /**
  * @author Murray Wood Demonstration of MVC and MIT Physics Collisions 2014
@@ -48,8 +47,7 @@ public  class Board extends JPanel implements Observer {
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D) g;
 		List<Ball> ballList = gm.getBallList();
-		List<CircleGizmo> circleList = gm.getCircleList();
-		List<SquareGizmo> squareList = gm.getSquareList();
+        List<Gizmo> gizmoList = gm.getGizmoList();
 
 		// Draw all the vertical lines
 		for (VerticalLine vl : gm.getLines()) {
@@ -69,25 +67,43 @@ public  class Board extends JPanel implements Observer {
 		}
 
 		//Draw all Circles
-		for (int i = 0; i < circleList.size(); i++){
-			CircleGizmo c = circleList.get(i);
-			if (c != null){
-				g2.setColor(c.getColour());
-				int x = (int) (c.getX() - c.getRadius());
-				int y = (int) (c.getY() - c.getRadius());
-				int width = (int) (2 * c.getRadius());
-				g2.fillOval(x, y, width, width);
-			}
-		}
+//		for (int i = 0; i < circleList.size(); i++){
+//			CircleGizmo c = circleList.get(i);
+//			if (c != null){
+//				g2.setColor(c.getColour());
+//				int x = (int) (c.getX() - c.getRadius());
+//				int y = (int) (c.getY() - c.getRadius());
+//				int width = (int) (2 * c.getRadius());
+//				g2.fillOval(x, y, width, width);
+//			}
+//		}
+//
+//		//draw all squares
+//
+//		for (int i = 0; i < squareList.size(); i++){
+//			SquareGizmo currSquare = squareList.get(i);
+//			g2.setColor(currSquare.getColour());
+//			//g2.fillRect(currSquare.getxPos(), currSquare.getyPos(), currSquare.getEndX(), currSquare.getEndX());
+//			g2.fillRect(currSquare.getTLeftX() ,currSquare.getTLeftY(),currSquare.getWidth(),currSquare.getWidth());
+//		}
 
-		//draw all squares
-
-		for (int i = 0; i < squareList.size(); i++){
-			SquareGizmo currSquare = squareList.get(i);
-			g2.setColor(currSquare.getColour());
-			//g2.fillRect(currSquare.getxPos(), currSquare.getyPos(), currSquare.getWidth(), currSquare.getWidth());
-			g2.fillRect(currSquare.getTLeftX() ,currSquare.getTLeftY(),currSquare.getWidth(),currSquare.getWidth());
-		}
+        // Draw all gizmos
+        for (Gizmo gizmo : gizmoList) {
+            if (gizmo instanceof CircleBumper) {
+                // Gizmo is a circle
+                CircleBumper circle = (CircleBumper) gizmo;
+                g2.setColor(circle.getColour());
+                int x = (int) (circle.getX() - circle.getRadius());
+                int y = (int) (circle.getY() - circle.getRadius());
+                int width = (int) (2 * circle.getRadius());
+                g2.fillOval(x, y, width, width);
+            } else {
+                // Gizmo is a square (didn't take triangles into account at the moment)
+                AbstractSquare square = (AbstractSquare) gizmo;
+                g2.setColor(square.getColour());
+                g2.fillRect(square.getTopLeftX(), square.getTopLeftY(), square.getWidth(), square.getWidth());
+            }
+        }
 
 	}
 

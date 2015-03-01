@@ -10,6 +10,8 @@ public interface Game {
 
 	public void addGizmo(int x, int y, String gizmoType, String gizmoID);
 
+    public void addAbsorber(int x, int y, int width, int height, String gizmoID);
+
 	public void removeGizmo(int x, int y);
 
 	public void removeGizmo(String gizmoID);
