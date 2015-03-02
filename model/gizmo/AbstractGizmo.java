@@ -22,7 +22,7 @@ public abstract class AbstractGizmo implements Gizmo {
     private int xPos;
     private int yPos;
 
-    public AbstractGizmo(int x, int y, String id) {
+    public AbstractGizmo(String gizmoType, String id, int x, int y) {
         if (x < 0 || y < 0) {
             throw new IllegalArgumentException((x<0?"x":"y") + " is less than 0 in "
                     + this.getClass() + " constructor");

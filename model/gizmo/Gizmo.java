@@ -28,4 +28,6 @@ public interface Gizmo {
 	public void trigger();
 
     public void sendTrigger();
+
+	public String getType();
 }

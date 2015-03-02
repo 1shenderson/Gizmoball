@@ -17,12 +17,11 @@ public class TriangleBumper extends AbstractGizmo {
 	private int bottomY;
 	private int rightX;
 
-
-    public TriangleBumper(int x, int y, int height, int width, String id) {
-        super(x, y, id);
+    public TriangleBumper(String gizmoType, String id, int x, int y) {
+        super(gizmoType, id, x, y);
         color = Color.BLUE;
-        height = height * L;
-        width = width * L;
+        int height = L;
+        int width = L;
         this.x = x * L;
         this.y = y * L;
         bottomY = this.y + height;
@@ -70,5 +69,9 @@ public class TriangleBumper extends AbstractGizmo {
 		return corners;
 	}
 
-
+	@Override
+	public String getType() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

@@ -2,9 +2,13 @@ package controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+
 import javax.swing.JFileChooser;
 import javax.swing.Timer;
 
+import view.Display;
+import view.RunGui;
 import model.Game;
 import model.Model;
 
@@ -15,19 +19,17 @@ import model.Model;
 public class RunListener implements ActionListener {
     private Timer timer;
     private Game game;
+    private Display gui;
     private int L = 25;   // Physics constant
 
-    public RunListener(Model m) {
+    public RunListener(Model m, RunGui gui) {
         game = m;
+        this.gui = gui;
         timer = new Timer(50, this);
     }
 
     @Override
     public final void actionPerformed(final ActionEvent e) {
-
-        final JFileChooser fc = new JFileChooser();
-        int returnVal;
-
         if (e.getSource() == timer) {
             game.tick();
         } else
@@ -42,22 +44,11 @@ public class RunListener implements ActionListener {
                     game.tick();
                     break;
                 case "Save":
-//                    fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-//                    returnVal = fc.showSaveDialog(null);
-//                    if (returnVal == JFileChooser.APPROVE_OPTION) {
-//                        File file = fc.getSelectedFile();
-//                        String fileName = file + ".txt";
-//                        game.saveBoard(file, fileName);
-//                    }
-//                    break;
-//                case "Load":
-//                    fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-//                    returnVal = fc.showOpenDialog(null);
-//                    if (returnVal == JFileChooser.APPROVE_OPTION) {
-//                        File file = fc.getSelectedFile();
-//                        game.loadBoard(file);
-//                    }
-//                    break;
+                	game.saveBoard(gui.save());
+                	break;
+                case "Load":
+                	game.loadBoard(gui.load());
+                	break;
                 case "Quit":
                     System.exit(0);
                     break;

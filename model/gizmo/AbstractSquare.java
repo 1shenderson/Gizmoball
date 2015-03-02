@@ -11,15 +11,15 @@ import java.util.ArrayList;
  * @author Grzegorz Sebastian Korkosz
  */
 public class AbstractSquare extends AbstractGizmo {
-    int width;
-    int height;
+    int width = 1;
+    int height = 1;
     int topLeftX;
     int topLeftY;
     int botRightX;
     int botRightY;
 
-    public AbstractSquare(int x, int y, int width, int height, String id) {
-        super(x, y, id);
+    public AbstractSquare(String gizmoType, String id, int x, int y) {
+        super(gizmoType, id, x, y);
         if (width < 1 || height < 1) {
             throw new IllegalArgumentException((width<0?"width":"height") + " is less than 1 in "
                     + this.getClass() + " constructor");
@@ -33,7 +33,7 @@ public class AbstractSquare extends AbstractGizmo {
         color = Color.RED;
     }
 
-    public int getWidth() {
+	public int getWidth() {
         return width;
     }
 
@@ -82,4 +82,10 @@ public class AbstractSquare extends AbstractGizmo {
         circleList.add(botRight);
         return circleList;
     }
+
+	@Override
+	public String getType() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
