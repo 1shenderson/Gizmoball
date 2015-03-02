@@ -3,6 +3,7 @@ package model.gizmo;
 import physics.Circle;
 import physics.LineSegment;
 
+import java.awt.Color;
 import java.util.ArrayList;
 
 /**
@@ -23,12 +24,13 @@ public class AbstractSquare extends AbstractGizmo {
             throw new IllegalArgumentException((width<0?"width":"height") + " is less than 1 in "
                     + this.getClass() + " constructor");
         }
-        this.width = width;
-        this.height = height;
+        this.width = width * L;
+        this.height = height * L;
         this.topLeftX = x * L;
         this.topLeftY = y * L;
         this.botRightX = topLeftX + (width * L);
         this.botRightY = topLeftY + (height * L);
+        color = Color.RED;
     }
 
     public int getWidth() {

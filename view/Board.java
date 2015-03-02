@@ -93,15 +93,22 @@ public  class Board extends JPanel implements Observer {
                 // Gizmo is a circle
                 CircleBumper circle = (CircleBumper) gizmo;
                 g2.setColor(circle.getColour());
-                int x = (int) (circle.getX() - circle.getRadius());
-                int y = (int) (circle.getY() - circle.getRadius());
+                int x = (int) (circle.getX());
+                int y = (int) (circle.getY());
                 int width = (int) (2 * circle.getRadius());
                 g2.fillOval(x, y, width, width);
-            } else {
+            } else if (gizmo instanceof SquareBumper){
                 // Gizmo is a square (didn't take triangles into account at the moment)
                 AbstractSquare square = (AbstractSquare) gizmo;
                 g2.setColor(square.getColour());
                 g2.fillRect(square.getTopLeftX(), square.getTopLeftY(), square.getWidth(), square.getWidth());
+            } else {
+            	TriangleBumper triangle = (TriangleBumper) gizmo;
+            	g2.setColor(triangle.getColour());
+            	int[] xCoordinates = triangle.getAllXPos();
+            	int[] yCoordinates = triangle.getAllYPos();
+            	g2.fillPolygon(xCoordinates, yCoordinates, 3);
+
             }
         }
 

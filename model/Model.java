@@ -45,15 +45,18 @@ public class Model extends Observable implements Game {
 
 		// Lines added in Main
 		lines = new ArrayList<VerticalLine>();
-		
+
 		gizmoList = new ArrayList<Gizmo>();
+		//addGizmo(19,19,"Circle","circle");
+		addGizmo(19,14,"Square","square");
+		//addGizmo(19,19,"Triangle", "triangel1");
 
         L = 25; // TODO Assign L through the constructor
         gravity = 25 * L;
         friction1 = 0.025;
         friction2 = 0.025 / L;
 	}
-    
+
 	public void tick() {
 		double moveTime = 0.05; // 0.05 = 20 times per second as per Gizmoball
 		for (Ball ball: ballsList){
@@ -143,11 +146,31 @@ public class Model extends Observable implements Game {
                 Circle circle = ((CircleBumper) gizmo).getCircle();
                 time = Geometry.timeUntilCircleCollision(circle, ballCircle, ballVelocity);
                 if (time < shortestTime) {
-                    newVelo = Geometry.reflectCircle(Vect.ZERO, currBall.getVelo(), currBall.getVelo(), 1.0);
+                	System.out.println("circle hit");
+                	shortestTime = time;
+                    newVelo = Geometry.reflectCircle(circle.getCenter(), ballCircle.getCenter(), currBall.getVelo(), 1.0);
                 }
+            
             } else if (gizmo instanceof TriangleBumper) {
                 // Gizmo is a triangle bumper
-                // TODO Add handling of triangle collisions
+            	TriangleBumper triangle = (TriangleBumper) gizmo;
+            	List<LineSegment> sides = triangle.getSides();
+            	List<Circle> corners = triangle.getCorners();
+            	for (LineSegment side : sides){
+                    time = Geometry.timeUntilWallCollision(side,ballCircle,ballVelocity);
+                    if (time < shortestTime) {
+                        shortestTime = time;
+                        newVelo = Geometry.reflectWall(side, currBall.getVelo(), 1.0);
+                    }   
+            	}
+            	for (Circle corner : corners){
+                    time = Geometry.timeUntilCircleCollision(corner,ballCircle,ballVelocity);
+                    if (time < shortestTime) {
+                        shortestTime = time;
+                        newVelo = Geometry.reflectCircle(corner.getCenter(), ballCircle.getCenter(), currBall.getVelo(), 1.0);
+                    }
+            	}
+            	
             } else if (gizmo instanceof SquareBumper) {
                 // Gizmo is a square bumper
                 SquareBumper square = (SquareBumper) gizmo;
@@ -164,7 +187,7 @@ public class Model extends Observable implements Game {
                     time = Geometry.timeUntilCircleCollision(corner,ballCircle,ballVelocity);
                     if (time < shortestTime) {
                         shortestTime = time;
-                        newVelo = Geometry.reflectCircle(Vect.ZERO, currBall.getVelo(), currBall.getVelo(), 1.0);
+                        newVelo = Geometry.reflectCircle(corner.getCenter(), ballCircle.getCenter(), currBall.getVelo(), 1.0);
                     }
                 }
             } else if (gizmo instanceof AbstractFlipper) {
@@ -190,7 +213,7 @@ public class Model extends Observable implements Game {
 		}
 		return new CollisionDetails(shortestTime, newVelo);
 	}
-	
+
 //	public void saveBoard(File filed, String fileName){
 //        file.save(gizmoList, filed, fileName);
 //    }
@@ -221,7 +244,7 @@ public class Model extends Observable implements Game {
 	public void addLine(VerticalLine l) {
         lines.add(l);
     }
-	
+
 	public void addBall(Ball b) {
         ballsList.add(b);
     }
@@ -253,7 +276,7 @@ public class Model extends Observable implements Game {
                 gizmo = new SquareBumper(x, y, 1, 1, gizmoID);
                 break;
             case "Triangle":
-                gizmo = new TriangleBumper(x, y, gizmoID);
+                gizmo = new TriangleBumper(x, y, 1, 1, gizmoID);
                 break;
             case "Circle":
                 gizmo = new CircleBumper(x, y, gizmoID);
