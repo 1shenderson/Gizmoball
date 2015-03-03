@@ -1,5 +1,6 @@
 package model;
 
+import model.gizmo.Gizmo;
 import physics.Vect;
 
 /**
@@ -9,11 +10,17 @@ import physics.Vect;
 public  class CollisionDetails {
 	private double tuc;
 	private Vect velo;
+    private Gizmo gizmo; // Gizmo we will collide with
 
 	public CollisionDetails(double t, Vect v) {
 		tuc = t;
 		velo = v;
 	}
+
+    public CollisionDetails(double t, Vect v, Gizmo gizmo) {
+        this(t, v);
+        this.gizmo = gizmo;
+    }
 
 	public double getTuc() {
 		return tuc;
@@ -22,5 +29,9 @@ public  class CollisionDetails {
 	public Vect getVelo() {
 		return velo;
 	}
+
+    public Gizmo getGizmo() {
+        return gizmo;
+    }
 
 }

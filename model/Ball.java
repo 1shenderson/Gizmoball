@@ -1,7 +1,6 @@
 package model;
 
 import java.awt.Color;
-import java.util.ArrayList;
 
 import physics.Circle;
 import physics.Vect;
@@ -17,7 +16,7 @@ public class Ball {
 	private double xpos;
 	private double ypos;
 	private Color colour;
-	private ArrayList<Object> gizmoInfo;
+    private boolean ignoreAbsorber;
 
 	private boolean stopped;
 
@@ -29,12 +28,7 @@ public class Ball {
 		velocity = new Vect(xv, yv);
 		radius = 7; // TODO Change constant 7 to quarter of L as per specification
 		stopped = false;
-		
-		gizmoInfo = new ArrayList<Object>();
-		gizmoInfo.add(gizmoType);
-		gizmoInfo.add(id);
-		gizmoInfo.add(x);
-		gizmoInfo.add(y);
+        ignoreAbsorber = false;
 	}
 
 	public Vect getVelo() {
@@ -51,8 +45,15 @@ public class Ball {
 
 	public Circle getCircle() {
 		return new Circle(xpos, ypos, radius);
-
 	}
+
+    public void setIgnoreAbsorber(boolean b) {
+        this.ignoreAbsorber = b;
+    }
+
+    public boolean ignoreAbsorber() {
+        return this.ignoreAbsorber;
+    }
 
 	// Ball specific methods that deal with double precision.
 	public double getExactX() {
@@ -85,10 +86,6 @@ public class Ball {
 
 	public Color getColour() {
 		return colour;
-	}
-	
-	public ArrayList<Object> getBallInfo(){
-		return gizmoInfo;
 	}
 
 }

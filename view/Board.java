@@ -97,7 +97,7 @@ public  class Board extends JPanel implements Observer {
                 int y = (int) (circle.getY());
                 int width = (int) (2 * circle.getRadius());
                 g2.fillOval(x, y, width, width);
-            } else if (gizmo instanceof SquareBumper){
+            } else if (gizmo instanceof AbstractSquare){
                 // Gizmo is a square (didn't take triangles into account at the moment)
                 AbstractSquare square = (AbstractSquare) gizmo;
                 g2.setColor(square.getColour());

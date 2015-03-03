@@ -3,6 +3,7 @@ package model.gizmo;
 import physics.Vect;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,6 +30,7 @@ public abstract class AbstractGizmo implements Gizmo {
         }
         this.L = 25; // TODO Change from constant 25 to a variable in constructor
         this.vector = new Vect(x, y);
+        this.triggerList = new ArrayList<Gizmo>();
         this.id = id;
         this.xPos = x;
         this.yPos = y;

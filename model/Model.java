@@ -1,6 +1,5 @@
 package model;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
@@ -35,7 +34,7 @@ public class Model extends Observable implements Game {
 
 		ballsList = new ArrayList<Ball>();
 		// Ball position (25, 25) in pixels. Ball velocity (100, 100) pixels per tick
-        Ball ball = new Ball("GIZMOTYPE", "ID", 19.75*L, 19.75*L, 0, -30 * L);
+        Ball ball = new Ball("GIZMOTYPE", "ID", 19.50*L, 18.75*L, 0, -30 * L);
         ballsList.add(ball);
 
 		file = new FileHandling();
@@ -48,8 +47,9 @@ public class Model extends Observable implements Game {
 
 		gizmoList = new ArrayList<Gizmo>();
 		//addGizmo(19,19,"Circle","circle");
-		addGizmo(19,14,"Square","square");
+//		addGizmo(19,19,"Square","square");
 		//addGizmo(19,19,"Triangle", "triangel1");
+//        addAbsorber(0, 19, 20, 1, "ABSORBER1");
 
         L = 25; // TODO Assign L through the constructor
         gravity = 25 * L;
@@ -59,23 +59,42 @@ public class Model extends Observable implements Game {
 
 	public void tick() {
 		double moveTime = 0.05; // 0.05 = 20 times per second as per Gizmoball
-		for (Ball ball: ballsList){
+		for (int i = 0; i < ballsList.size(); i++){
+            Ball ball = ballsList.get(i);
 			if (!ball.stopped()) {
 				CollisionDetails cd = timeUntilCollision(ball);
 				double tuc = cd.getTuc();
 				if (tuc > moveTime) {
 					// No collision ...
+                    if (ball.ignoreAbsorber()) {
+                        ball.setIgnoreAbsorber(false);
+                    }
 					ball = movelBallForTime(ball, moveTime);
 				} else {
-                    System.out.printf("\n\nCOLLISION DETECTED");
-                    debugPrintVelocity("before", ball.getVelo()); // TODO Remove debug
+//                    System.out.printf("\n\nCOLLISION DETECTED");    // TODO Remove debug
+//                    debugPrintVelocity("before", ball.getVelo());   // TODO Remove debug
 					// We've got a collision in tuc
 					ball = movelBallForTime(ball, tuc);
-                    debugPrintVelocity("during", ball.getVelo()); // TODO Remove debug
+//                    debugPrintVelocity("during", ball.getVelo());   // TODO Remove debug
                     cd = timeUntilCollision(ball); // Update the velocity of the ball, since it changed
 					// Post collision velocity ...
+                    if (cd.getGizmo() != null) {
+                        // Ball is going to bounce off a gizmo. Here, we can have different cases for different gizmos
+                        Gizmo gizmo = cd.getGizmo();
+                        if (gizmo instanceof Absorber) {
+                            // Going to collide with an absorber
+                            if (!ball.ignoreAbsorber()) {
+                                // Ball is going to be absorbed by the absorber
+                                ballsList.remove(i); i--;
+                                Absorber absorber = (Absorber) gizmo;
+                                absorber.absorb();
+                            }
+                        }
+                        // Now trigger all gizmos this gizmo is supposed to trigger.
+                        gizmo.sendTrigger();
+                    }
 					ball.setVelo(cd.getVelo());
-                    debugPrintVelocity("after", ball.getVelo()); // TODO Remove debug
+//                    debugPrintVelocity("after", ball.getVelo());    // TODO Remove debug
 				}
 				// Ball position changed
 				this.setChanged();
@@ -124,6 +143,7 @@ public class Model extends Observable implements Game {
 		Circle ballCircle = currBall.getCircle();
 		Vect ballVelocity = currBall.getVelo();
 		Vect newVelo = new Vect(0, 0);
+        Gizmo target = null; // Gizmo we will collide with
 
 		// Now find shortest time to hit a vertical line or a wall line
 		double shortestTime = Double.MAX_VALUE;
@@ -139,6 +159,16 @@ public class Model extends Observable implements Game {
 			}
 		}
 
+        // Time to collide with any vertical lines
+        for (VerticalLine line : lines) {
+            LineSegment ls = line.getLineSeg();
+            time = Geometry.timeUntilWallCollision(ls, ballCircle, ballVelocity);
+            if (time < shortestTime) {
+                shortestTime = time;
+                newVelo = Geometry.reflectWall(ls, currBall.getVelo(), 1.0);
+            }
+        }
+
         // Time to collide with gizmos
         for (Gizmo gizmo : gizmoList) {
             if (gizmo instanceof CircleBumper) {
@@ -149,6 +179,7 @@ public class Model extends Observable implements Game {
                 	System.out.println("circle hit");
                 	shortestTime = time;
                     newVelo = Geometry.reflectCircle(circle.getCenter(), ballCircle.getCenter(), currBall.getVelo(), 1.0);
+                    target = gizmo;
                 }
             
             } else if (gizmo instanceof TriangleBumper) {
@@ -161,6 +192,7 @@ public class Model extends Observable implements Game {
                     if (time < shortestTime) {
                         shortestTime = time;
                         newVelo = Geometry.reflectWall(side, currBall.getVelo(), 1.0);
+                        target = gizmo;
                     }   
             	}
             	for (Circle corner : corners){
@@ -168,6 +200,7 @@ public class Model extends Observable implements Game {
                     if (time < shortestTime) {
                         shortestTime = time;
                         newVelo = Geometry.reflectCircle(corner.getCenter(), ballCircle.getCenter(), currBall.getVelo(), 1.0);
+                        target = gizmo;
                     }
             	}
             	
@@ -181,6 +214,7 @@ public class Model extends Observable implements Game {
                     if (time < shortestTime) {
                         shortestTime = time;
                         newVelo = Geometry.reflectWall(side, currBall.getVelo(), 1.0);
+                        target = gizmo;
                     }
                 }
                 for (Circle corner : corners){
@@ -188,6 +222,7 @@ public class Model extends Observable implements Game {
                     if (time < shortestTime) {
                         shortestTime = time;
                         newVelo = Geometry.reflectCircle(corner.getCenter(), ballCircle.getCenter(), currBall.getVelo(), 1.0);
+                        target = gizmo;
                     }
                 }
             } else if (gizmo instanceof AbstractFlipper) {
@@ -195,47 +230,38 @@ public class Model extends Observable implements Game {
                 // TODO Add handling of flipper collisions
             } else if (gizmo instanceof Absorber) {
                 // Gizmo is an absorber. Gizmos do not collide with absorbers; instead, they get absorbed by them.
+                Absorber absorber = (Absorber) gizmo;
+                ArrayList<LineSegment> sides = absorber.getSides();
+                ArrayList<Circle> corners = absorber.getCorners();
+                for (LineSegment side : sides){
+                    time = Geometry.timeUntilWallCollision(side,ballCircle,ballVelocity);
+                    if (time < shortestTime) {
+                        shortestTime = time;
+                        newVelo = Geometry.reflectWall(side, currBall.getVelo(), 1.0);
+                        target = gizmo;
+                    }
+                }
+                for (Circle corner : corners){
+                    time = Geometry.timeUntilCircleCollision(corner,ballCircle,ballVelocity);
+                    if (time < shortestTime) {
+                        shortestTime = time;
+                        newVelo = Geometry.reflectCircle(corner.getCenter(), ballCircle.getCenter(), currBall.getVelo(), 1.0);
+                        target = gizmo;
+                    }
+                }
                 // TODO Add handling of absorber "collisions"
             } else {
                 // Gizmo is unrecognized - we have no handling for that gizmo. This should not happen unless we forgot something.
                 throw new RuntimeException("Unrecognized gizmo detected in the list of gizmos.");
             }
         }
+        if (target == null) {
+            return new CollisionDetails(shortestTime, newVelo);
+        } else {
+            return new CollisionDetails(shortestTime, newVelo, target);
+        }
 
-		// Time to collide with any vertical lines
-		for (VerticalLine line : lines) {
-			LineSegment ls = line.getLineSeg();
-			time = Geometry.timeUntilWallCollision(ls, ballCircle, ballVelocity);
-			if (time < shortestTime) {
-				shortestTime = time;
-				newVelo = Geometry.reflectWall(ls, currBall.getVelo(), 1.0);
-			}
-		}
-		return new CollisionDetails(shortestTime, newVelo);
 	}
-
-//	public void saveBoard(File filed, String fileName){
-//        file.save(gizmoList, filed, fileName);
-//    }
-
-//    public void loadBoard(File filed){
-//        ArrayList<ArrayList<Object>> gizmoLoad = file.load(filed);
-//        for(ArrayList<Object> gizmoInfo : gizmoLoad){
-//
-//            if(gizmoInfo.get(0).equals("Line")){
-//            	addLine(new VerticalLine((String) gizmoInfo.get(0), (String)gizmoInfo.get(1), (int)gizmoInfo.get(2), (int)gizmoInfo.get(3), (int)gizmoInfo.get(4)));
-//            }
-//            else if(gizmoInfo.get(0).equals("Circle")){
-//            	addCircle(new CircleGizmo((String) gizmoInfo.get(0), (String)gizmoInfo.get(1), (int)gizmoInfo.get(2), (int)gizmoInfo.get(3)));
-//            }
-//            else if(gizmoInfo.get(0).equals("Ball")){
-//            	addBall(new Ball((String) gizmoInfo.get(0), (String)gizmoInfo.get(1), (double)gizmoInfo.get(2), (double)gizmoInfo.get(3), (double)gizmoInfo.get(4), (double)gizmoInfo.get(5)));
-//            }
-//            else{
-//            	addSquare(new SquareGizmo((String) gizmoInfo.get(0), (String)gizmoInfo.get(1), (int)gizmoInfo.get(2), (int)gizmoInfo.get(3)));
-//            }
-//        }
-//    }
 
 	public ArrayList<VerticalLine> getLines() {
 		return lines;
@@ -248,12 +274,6 @@ public class Model extends Observable implements Game {
 	public void addBall(Ball b) {
         ballsList.add(b);
     }
-
-	public void setBallSpeed(int x, int y) {
-		for (Ball ball : ballsList){
-			ball.setVelo(new Vect(x, y));
-		}
-	}
 
 	public List<Ball> getBallList(){
 		return ballsList;
@@ -297,7 +317,7 @@ public class Model extends Observable implements Game {
 
     @Override
     public void addAbsorber(int x, int y, int width, int height, String gizmoID) {
-        Gizmo absorber = new Absorber(x, y, width, height, 0, 30*L, this, gizmoID);
+        Gizmo absorber = new Absorber(x, y, width, height, 0, -30*L, this, gizmoID);
         gizmoList.add(absorber);
     }
 
