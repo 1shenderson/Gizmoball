@@ -1,2 +1,2 @@
 # CS308_Gizmoball
-It's like better, but pinball.
+It's like Pinball, but shit.

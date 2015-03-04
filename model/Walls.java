@@ -18,10 +18,10 @@ public class Walls {
 	// Walls are the enclosing Rectangle - defined by top left corner and bottom
 	// right
 	public Walls(int x1, int y1, int x2, int y2) {
-		xpos1 = x1; //topl 0
-		ypos1 = y1; //topl 0
- 		xpos2 = x2; //botr 500
-		ypos2 = y2; //botr 500
+		xpos1 = x1; //pos 0
+		ypos1 = y1; //pos 0
+ 		xpos2 = x2; //pos 500
+		ypos2 = y2; //pos 500
 	}
 
 	public ArrayList<LineSegment> getLineSegments() {
