@@ -15,7 +15,7 @@ public class FlipperLeft extends AbstractFlipper {
 		super(gizmoType, id, x, y);
 		getEndPoint();
 		ls = new LineSegment(x,y, x2, y2);
-		System.out.println(ls.p1().x());
+		//System.out.println(ls.p1().x());
 	}
 
 	@Override

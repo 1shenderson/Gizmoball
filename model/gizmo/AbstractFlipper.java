@@ -13,10 +13,10 @@ import physics.LineSegment;
 public class AbstractFlipper extends AbstractGizmo {
 
 	private List<Gizmo> triggerList;
-	private int width = 100;
-	private int length = 25;
+	private double width = 12.5;
+	private double length = 37.5;
 	private int angle = 360;
-	private Color colour = Color.GREEN;
+	private Color colour = Color.ORANGE;
 	private int x;
 	private int y;
 	private int x2;
@@ -28,8 +28,8 @@ public class AbstractFlipper extends AbstractGizmo {
 
 	public AbstractFlipper(String gizmoType, String id, int x, int y) {
 		super(gizmoType, id, x, y);
-		this.x = x * L;
-		this.y = y * L;
+		this.x = x * L + 6;
+		this.y = (y * L) + 6;
 		getEndPoint();
 		gizmoInfo = new ArrayList<Object>();
 		gizmoInfo.add(gizmoType);
@@ -43,7 +43,7 @@ public class AbstractFlipper extends AbstractGizmo {
 	}
 
 	public void setColour(){
-		colour = Color.YELLOW;
+		colour = Color.ORANGE;
 	}
 
 	public void getEndPoint(){
@@ -72,11 +72,11 @@ public class AbstractFlipper extends AbstractGizmo {
 		return y2;
 	}
 
-	public int getWidth() {
+	public double getWidth() {
 		return width;
 	}
 
-	public int getLength(){
+	public double getLength(){
 		return length;
 	}
 

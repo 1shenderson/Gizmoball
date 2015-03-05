@@ -1,23 +1,21 @@
 package view;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.io.File;
+import java.awt.Stroke;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.BorderFactory;
-import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 
 import model.gizmo.*;
-import physics.LineSegment;
 import model.Ball;
 import model.Model;
-import model.VerticalLine;
 
 /**
  * @author Murray Wood Demonstration of MVC and MIT Physics Collisions 2014
@@ -38,6 +36,7 @@ public  class Board extends JPanel implements Observer {
 		height = h;
 		gm = m;
 		this.setBorder(BorderFactory.createLineBorder(Color.black));
+		setBackground(Color.BLACK);
 	}
 
 	// Fix onscreen size
@@ -51,10 +50,6 @@ public  class Board extends JPanel implements Observer {
 		List<Ball> ballList = gm.getBallList();
         List<Gizmo> gizmoList = gm.getGizmoList();
 
-		// Draw all the vertical lines
-		for (VerticalLine vl : gm.getLines()) {
-			g2.fillRect(vl.getX(), vl.getY(), vl.getWidth(), 1);
-		}
 
 		//Draws all balls
 		for (int i = 0; i < ballList.size(); i++){
@@ -111,35 +106,29 @@ public  class Board extends JPanel implements Observer {
             	g2.fillPolygon(xCoordinates, yCoordinates, 3);
             } else if (gizmo instanceof FlipperLeft){
             	FlipperLeft fl = (FlipperLeft) gizmo;
-    			g2.setColor(fl.getColour());
+            	g2.setColor(fl.getColour());
     			int x = (int) fl.getX();
     			int y = (int) fl.getY();
+    			// rendering hints
+    			// anti alliases
+    			Stroke s = new BasicStroke(12.5f, BasicStroke.CAP_ROUND, 0);
+    			g2.setStroke(s);
     			g2.drawLine(x, y, fl.getx2(), fl.gety2());
-    		    //g2.rotate(Math.toRadians(60),f.getX(),f.getY());
-    			//g2.fillRoundRect(x, y, f.getWidth(), f.getLength(), 25, 25);
     		} else if (gizmo instanceof FlipperRight){
             	FlipperRight fr = (FlipperRight) gizmo;
             	g2.setColor(fr.getColour());
     			int x = (int) fr.getX();
     			int y = (int) fr.getY();
-    			int xArray[] = new int [4];
-    			int yArray[] = new int [4];
-    			xArray[0] = x;
-    			xArray[1] = x+25;
-    			xArray[2] = fr.getx2() + 25;
-    			xArray[3] = fr.getx2();
-    			
-    			
-    			yArray[0] = y;
-    			yArray[1] = y;
-    			yArray[2] = fr.gety2();
-    			yArray[3] = fr.gety2();
-    			
+    			// rendering hints
+    			// anti alliases
+    			Stroke s = new BasicStroke(12.5f, BasicStroke.CAP_ROUND, 0);
+    			g2.setStroke(s);
     			g2.drawLine(x, y, fr.getx2(), fr.gety2());
-
-    			//g2.fillPolygon(xArray, yArray, 4);
-    		    //g2.rotate(Math.toRadians(60),f.getX(),f.getY());
-    			//g2.fillRoundRect(x, y, f.getWidth(), f.getLength(), 25, 25);
+    		}
+    		else if (gizmo instanceof Absorber){
+                Absorber ab = (Absorber) gizmo;
+                g2.setColor(ab.getColour());
+                g2.fillRect(ab.getTopLeftX(), ab.getTopLeftY(), ab.getBotRightX(), ab.getBotRightY());
     		}
     	}
 	}

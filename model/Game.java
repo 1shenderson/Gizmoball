@@ -3,6 +3,8 @@ package model;
 import java.io.File;
 import java.util.Observer;
 
+import model.gizmo.Absorber;
+
 public interface Game {
 	
 	public void tick();
@@ -11,7 +13,7 @@ public interface Game {
 
 	public void addGizmo(String gizmoType, String gizmoID, int x, int y);
 
-    public void addAbsorber(int x, int y, int width, int height, String gizmoID);
+    public void addAbsorber(Absorber ab);
 
 	public void removeGizmo(int x, int y);
 

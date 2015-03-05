@@ -23,8 +23,8 @@ public class Ball {
 
 	// x, y coordinates and x,y velocity
 	public Ball(String gizmoType, String id, double x, double y, double xv, double yv) {
-		xpos = x; // Centre coordinates
-		ypos = y;
+		xpos = x * 25; // Centre coordinates
+		ypos = y * 25;
 		colour = Color.BLUE;
 		velocity = new Vect(xv, yv);
 		radius = 7; // TODO Change constant 7 to quarter of L as per specification

@@ -61,7 +61,29 @@ public class FileHandling {
 					gizmoInfo.add(xv);
 					gizmoInfo.add(yv);
 				}
-				else{
+				else if(type.equals("Absorber")){
+					int x = sc.nextInt();
+					int y = sc.nextInt();
+					int x2 = sc.nextInt();
+					int y2 = sc.nextInt();
+					gizmoInfo.add(x);
+					gizmoInfo.add(y);
+					gizmoInfo.add(x2);
+					gizmoInfo.add(y2);
+				}
+				else if(type.equals("KeyConnect")){
+					int keyNumber = sc.nextInt();
+					String direction = sc.next();
+					String gizmoID = sc.next();
+					gizmoInfo.add(keyNumber);
+					gizmoInfo.add(direction);
+					gizmoInfo.add(gizmoID);
+				}
+				else if(type.equals("Connect")){
+					String gizmoID = sc.next();
+					gizmoInfo.add(gizmoID);
+				}
+				else if(!type.equalsIgnoreCase("Rotate")){
 					int x = sc.nextInt();
 					int y = sc.nextInt();
 					gizmoInfo.add(x);

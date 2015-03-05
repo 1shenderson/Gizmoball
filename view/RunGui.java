@@ -37,7 +37,7 @@ public class RunGui implements Display {
 
 	public void createAndShowGUI() {
 
-		frame = new JFrame("Murray's MIT Ball and VerticalLine Collision Demo");
+		frame = new JFrame("Hit load to select text file and hit start!");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		// Board is passed the Model so it can act as Observer

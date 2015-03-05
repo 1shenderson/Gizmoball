@@ -17,7 +17,6 @@ import physics.Vect;
 
 public class Model extends Observable implements Game {
 
-	private ArrayList<VerticalLine> lines;
 	private FileHandling file;
     private static int L;
     private static double friction1;
@@ -35,23 +34,20 @@ public class Model extends Observable implements Game {
 
 		ballsList = new ArrayList<Ball>();
 		// Ball position (25, 25) in pixels. Ball velocity (100, 100) pixels per tick
-        Ball ball = new Ball("GIZMOTYPE", "ID", 19.75*L, 19.75*L, 0, -30 * L);
-        ballsList.add(ball);
+        //Ball ball = new Ball("GIZMOTYPE", "ID", 19.75*L, 19.75*L, 0, -30 * L);
+        //ballsList.add(ball);
 
 		file = new FileHandling();
 
 		// Wall size is 20 by 20 squares (each square is L in width and L in height)
 		gws = new Walls(0, 0, (int) (20 * L), (int) (20 * L));
 
-		// Lines added in Main
-		lines = new ArrayList<VerticalLine>();
-
 		gizmoList = new ArrayList<Gizmo>();
 
         L = 25; // TODO Assign L through the constructor
-        gravity = 25 * L;
-        friction1 = 0.025;
-        friction2 = 0.025 / L;
+       // gravity = 25 * L;
+      // friction1 = 0.025;
+       //friction2 = 0.025 / L;
 	}
 
 	public void tick() {
@@ -62,17 +58,17 @@ public class Model extends Observable implements Game {
 				double tuc = cd.getTuc();
 				if (tuc > moveTime) {
 					// No collision ...
-					ball = movelBallForTime(ball, moveTime);
+					//ball = movelBallForTime(ball, moveTime);
 				} else {
-                    System.out.printf("\n\nCOLLISION DETECTED");
-                    debugPrintVelocity("before", ball.getVelo()); // TODO Remove debug
+                    //System.out.printf("\n\nCOLLISION DETECTED");
+                    //debugPrintVelocity("before", ball.getVelo()); // TODO Remove debug
 					// We've got a collision in tuc
-					ball = movelBallForTime(ball, tuc);
-                    debugPrintVelocity("during", ball.getVelo()); // TODO Remove debug
-                    cd = timeUntilCollision(ball); // Update the velocity of the ball, since it changed
+					//ball = movelBallForTime(ball, tuc);
+                    //debugPrintVelocity("during", ball.getVelo()); // TODO Remove debug
+                    //cd = timeUntilCollision(ball); // Update the velocity of the ball, since it changed
 					// Post collision velocity ...
-					ball.setVelo(cd.getVelo());
-                    debugPrintVelocity("after", ball.getVelo()); // TODO Remove debug
+					//ball.setVelo(cd.getVelo());
+                   // debugPrintVelocity("after", ball.getVelo()); // TODO Remove debug
 				}
 				// Ball position changed
 				this.setChanged();
@@ -198,16 +194,6 @@ public class Model extends Observable implements Game {
                 throw new RuntimeException("Unrecognized gizmo detected in the list of gizmos.");
             }
         }
-
-		// Time to collide with any vertical lines
-		for (VerticalLine line : lines) {
-			LineSegment ls = line.getLineSeg();
-			time = Geometry.timeUntilWallCollision(ls, ballCircle, ballVelocity);
-			if (time < shortestTime) {
-				shortestTime = time;
-				newVelo = Geometry.reflectWall(ls, currBall.getVelo(), 1.0);
-			}
-		}
 		return new CollisionDetails(shortestTime, newVelo);
 	}
 	
@@ -219,17 +205,38 @@ public class Model extends Observable implements Game {
     	ArrayList<ArrayList<Object>> gizmoInfo = file.load(filed);
         for(int i = 0; i < gizmoInfo.size(); i++){
         	ArrayList<Object> gizmoLoad = gizmoInfo.get(i);
-        	addGizmo((String) gizmoLoad.get(0), (String) gizmoLoad.get(1), (int) gizmoLoad.get(2), (int) gizmoLoad.get(3));
+        	if(gizmoLoad.get(0).equals("Ball")){
+        		addBall(new Ball((String) gizmoLoad.get(0), (String) gizmoLoad.get(1), (double) gizmoLoad.get(2), (double) gizmoLoad.get(3), (double) gizmoLoad.get(4), (double) gizmoLoad.get(5)));
+        	}
+        	else if(gizmoLoad.get(0).equals("Rotate")){
+        		rotate((String) gizmoLoad.get(1));
+        	}
+        	else if(gizmoLoad.get(0).equals("Absorber")){
+        		addAbsorber(new Absorber((String) gizmoLoad.get(0), (String) gizmoLoad.get(1), (int) gizmoLoad.get(2), (int) gizmoLoad.get(3), (int) gizmoLoad.get(4), (int) gizmoLoad.get(5)));
+        	}
+        	else if(gizmoLoad.get(0).equals("KeyConnect")){
+        		System.out.println("Recognised KeyConnect for " + (String) gizmoLoad.get(1) + " " + (int) gizmoLoad.get(2) + " " + (String) gizmoLoad.get(3) + " " + (String) gizmoLoad.get(4));
+        	}
+        	else if(gizmoLoad.get(0).equals("Connect")){
+        		System.out.println("Recognised Connect for " + (String) gizmoLoad.get(1) + " " + (String) gizmoLoad.get(2));
+        	}
+        	else {
+        		addGizmo((String) gizmoLoad.get(0), (String) gizmoLoad.get(1), (int) gizmoLoad.get(2), (int) gizmoLoad.get(3));
+        	}
         }
     }
     
-	public ArrayList<VerticalLine> getLines() {
-		return lines;
-	}
-
-	public void addLine(VerticalLine l) {
-        lines.add(l);
+    public void rotate(String id){
+    	for(Gizmo gizmo: gizmoList){
+    		if(gizmo.getID().equals(id)){
+    			gizmo.rotateRight();
+    		}
+    	}
     }
+    
+	public void addAbsorber(Absorber ab) {
+		gizmoList.add(ab);
+	}
 
 	public void addBall(Ball b) {
         ballsList.add(b);
@@ -281,11 +288,11 @@ public class Model extends Observable implements Game {
         gizmoList.add(gizmo);
     }
 
-    @Override
-    public void addAbsorber(int x, int y, int width, int height, String gizmoID) {
+   // @Override
+   /* public void addAbsorber(int x, int y, int width, int height, String gizmoID) {
        // Gizmo absorber = new Absorber(x, y, width, height, 0, 30*L, this, gizmoID);
       //  gizmoList.add(absorber);
-    }
+    }*/
 
     @Override
     public void removeGizmo(int x, int y) {

@@ -16,16 +16,28 @@ public class TriangleBumper extends AbstractGizmo {
 	private int y;
 	private int bottomY;
 	private int rightX;
+	private int topCornerX;
+	private int topCornerY;
+	private int leftCornerX;
+	private int leftCornerY;
+	private int rightCornerX;
+	private int rightCornerY;
+	private int height;
+	private int width;
+
 
     public TriangleBumper(String gizmoType, String id, int x, int y) {
         super(gizmoType, id, x, y);
         color = Color.BLUE;
-        int height = L;
-        int width = L;
+        this.height = L;
+        this.width = L;
         this.x = x * L;
         this.y = y * L;
-        bottomY = this.y + height;
-        rightX = this.x + width;
+        bottomY = this.y + this.height;
+        rightX = this.x + this.width;
+        setTopCorner(this.x, this.y);
+        setLeftCorner(topCornerX, topCornerY + this.height);
+        setRightCorner(topCornerX + this.width, topCornerY);
     }
 
     @Override
@@ -37,21 +49,80 @@ public class TriangleBumper extends AbstractGizmo {
     	return y;
     }
 
+    public void setTopCorner(int pointX, int pointY){
+    	topCornerX = pointX;
+    	topCornerY = pointY;
+    }
+
+    public void setLeftCorner(int pointX, int pointY){
+    	leftCornerX = pointX;
+    	leftCornerY = pointY;
+    }
+
+    public void setRightCorner(int pointX, int pointY){
+    	rightCornerX = pointX;
+    	rightCornerY = pointY;
+    }
+
+
     public int[] getAllXPos(){
-    	int[] xCoordinates = {x,x,rightX};
+    	int[] xCoordinates = {topCornerX, rightCornerX, leftCornerX};
     	return xCoordinates;
     }
 
     public int[] getAllYPos(){
-    	int[] yCoordinates = {y, bottomY, bottomY};
+    	int[] yCoordinates = {topCornerY, rightCornerY, leftCornerY};
     	return yCoordinates;
+    }
+
+    //TODO make a better rotate method
+    @Override
+    public void rotateLeft(){
+    	if (topCornerX == rightX && topCornerY == y){
+    		setTopCorner(topCornerX - width, topCornerY);
+    		setLeftCorner(topCornerX, topCornerY + height);
+    		setRightCorner(topCornerX + width, topCornerY);
+    	} else if (topCornerX == x && topCornerY == y){
+    		setTopCorner(topCornerX, topCornerY + height);
+    		setLeftCorner(topCornerX + width, topCornerY);
+    		setRightCorner(topCornerX, topCornerY - height);
+    	} else if (topCornerX == x && topCornerY == bottomY){
+    		setTopCorner(topCornerX + width, topCornerY);
+    		setLeftCorner(topCornerX, topCornerY - height);
+    		setRightCorner(topCornerX - width, topCornerY);
+    	} else {
+    		setTopCorner(topCornerX, topCornerY - height);
+    		setLeftCorner(topCornerX - width, topCornerY);
+    		setRightCorner(topCornerX, topCornerY + height);
+    	}
+    }
+
+    @Override
+    public void rotateRight(){
+    	if (topCornerX == rightX && topCornerY == y){
+    		setTopCorner(topCornerX, topCornerY + height);
+    		setLeftCorner(topCornerX, topCornerY - height);
+    		setRightCorner(topCornerX - width, topCornerY);
+    	} else if (topCornerX == x && topCornerY == y){
+    		setTopCorner(topCornerX + width, topCornerY);
+    		setLeftCorner(topCornerX - width, topCornerY);
+    		setRightCorner(topCornerX, topCornerY + height);
+    	} else if (topCornerX == x && topCornerY == bottomY){
+    		setTopCorner(topCornerX, topCornerY - height);
+    		setLeftCorner(topCornerX, topCornerY + height);
+    		setRightCorner(topCornerX + width, topCornerY);
+    	} else {
+    		setTopCorner(topCornerX - width, topCornerY);
+    		setLeftCorner(topCornerX + width, topCornerY);
+    		setRightCorner(topCornerX, topCornerY - height);
+    	}
     }
 
 	public List<LineSegment> getSides(){
 		List<LineSegment> sides = new ArrayList<LineSegment>();
-		LineSegment lineAB = new LineSegment(x, y, x, bottomY);
-		LineSegment lineBC = new LineSegment(x, bottomY, rightX, bottomY);
-		LineSegment lineAC = new LineSegment(x, y, rightX, bottomY);
+		LineSegment lineAB = new LineSegment(topCornerX, topCornerY, leftCornerX , leftCornerY);
+		LineSegment lineBC = new LineSegment(leftCornerX, leftCornerY, rightCornerX, rightCornerY);
+		LineSegment lineAC = new LineSegment(rightCornerX, rightCornerY, topCornerX, topCornerY);
 		sides.add(lineAB);
 		sides.add(lineAC);
 		sides.add(lineBC);
@@ -60,11 +131,11 @@ public class TriangleBumper extends AbstractGizmo {
 
 	public List<Circle> getCorners(){
 		List<Circle> corners = new ArrayList<Circle>();
-		Circle topCorner = new Circle(x, y, 0);
-		Circle botLCorner = new Circle(x, bottomY, 0);
+		Circle topLCorner = new Circle(x, y, 0);
+		Circle topRCorner = new Circle(rightX, y, 0);
 		Circle botRCorner = new Circle(rightX, bottomY, 0);
-		corners.add(topCorner);
-		corners.add(botLCorner);
+		corners.add(topLCorner);
+		corners.add(topRCorner);
 		corners.add(botRCorner);
 		return corners;
 	}
@@ -74,4 +145,6 @@ public class TriangleBumper extends AbstractGizmo {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+
 }
