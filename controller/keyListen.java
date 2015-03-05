@@ -2,11 +2,7 @@ package controller;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-
-
-//import model.Flipper;
 import model.Model;
-import model.gizmo.FlipperLeft;
 
 public class keyListen implements KeyListener {
 
@@ -25,6 +21,10 @@ public class keyListen implements KeyListener {
 		if (c == 'r'){
 			model.rotateFlipR(true);
 		}
+		if (c == 'b'){
+			model.rotateFlip(true);
+			model.rotateFlipR(true);
+		}
 
 	}
 
@@ -37,13 +37,15 @@ public class keyListen implements KeyListener {
 		if (c == 'r'){
 			model.rotateFlipR(false);
 		}
+		if (c == 'b'){
+			model.rotateFlip(false);
+			model.rotateFlipR(false);
+		}
 		
 	}
 
 	@Override
 	public void keyTyped(KeyEvent e) {
-		char c = e.getKeyChar();
-		//  System.out.println("Key Release: " + c);
 
 	}
 

@@ -17,7 +17,7 @@ public abstract class AbstractGizmo implements Gizmo {
     private Vect vector;
     private List<Gizmo> triggerList;
 
-    public AbstractGizmo(int x, int y, String id) {
+    public AbstractGizmo(String type,String id, int x, int y) {
         this.vector = new Vect(x, y);
         this.id = id;
     }

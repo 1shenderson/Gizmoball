@@ -39,7 +39,7 @@ public class RunGui {
 
 	public void createAndShowGUI() {
 
-		frame = new JFrame("Murray's MIT Ball and VerticalLine Collision Demo");
+		frame = new JFrame("Flipper prototype - Press l for left flipper, r for right flipper, b for both flippers");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.addKeyListener(keyList);
 

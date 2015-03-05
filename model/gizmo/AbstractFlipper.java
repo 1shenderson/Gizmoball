@@ -11,18 +11,17 @@ import physics.LineSegment;
  */
 public class AbstractFlipper extends AbstractGizmo {
 
-	private List<Gizmo> triggerList;
-	private int width = 50;
-	private int length = 100;
-	private int angle = 360;
+	private int width = 12;
+	private double length = 37.5;
+	private int angle = 0;
 	private Color colour = Color.RED;;
 	private int x2;
 	private int y2;
 
 	private LineSegment ls;
 
-	public AbstractFlipper(int x, int y, String id) {
-		super(x, y, id);
+	public AbstractFlipper(String type,String id, int x, int y) {
+		super(type,id, x, y);
 	}
 
 	public LineSegment getLineSeg() {
@@ -39,6 +38,8 @@ public class AbstractFlipper extends AbstractGizmo {
 		double xrad   = getX() + length * Math.sin(angleRad);
 		y2 = (int) yrad;
 		x2 = (int) xrad;
+		LineSegment newls = new LineSegment(getX(), getY(), x2,y2);
+		ls = newls;
 	}
 
 	public int getx2(){
@@ -53,7 +54,7 @@ public class AbstractFlipper extends AbstractGizmo {
 		return width;
 	}
 
-	public int getLength(){
+	public double getLength(){
 		return length;
 	}
 

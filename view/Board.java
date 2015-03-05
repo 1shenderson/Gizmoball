@@ -1,9 +1,12 @@
 package view;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.Stroke;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -46,11 +49,21 @@ public  class Board extends JPanel implements Observer {
 
 		Graphics2D g2 = (Graphics2D) g;
 		
+		   RenderingHints rh = new RenderingHints(
+		             RenderingHints.KEY_ANTIALIASING,
+		             RenderingHints.VALUE_ANTIALIAS_OFF);
+		  g2.setRenderingHints(rh);
+
+		  rh = new RenderingHints( 
+         RenderingHints.KEY_RENDERING,
+         RenderingHints.VALUE_RENDER_QUALITY);
+		  g2.setRenderingHints(rh);
+		  
 		// Draw all the vertical lines
 		for (VerticalLine vl : gm.getLines()) {
 			g2.fillRect(vl.getX(), vl.getY(), vl.getWidth(), 1);
 		}
-		
+
 		Ball b = gm.getBall();
 		if (b != null) {
 			g2.setColor(b.getColour());
@@ -59,46 +72,35 @@ public  class Board extends JPanel implements Observer {
 			int width = (int) (2 * b.getRadius());
 			g2.fillOval(x, y, width, width);
 		}
-		
+
 		FlipperLeft f = gm.getFlipper();
 		if (f != null){
 			g2.setColor(f.getColour());
 			int x = (int) f.getX();
 			int y = (int) f.getY();
+			Stroke s = new BasicStroke(12.5f, BasicStroke.CAP_ROUND, 0);
+			g2.setStroke(s);
 			g2.drawLine(x, y, f.getx2(), f.gety2());
-		    //g2.rotate(Math.toRadians(60),f.getX(),f.getY());
-			//g2.fillRoundRect(x, y, f.getWidth(), f.getLength(), 25, 25);
+			s = new BasicStroke(1.0f,0,0);
+			g2.setStroke(s);
 		}
-		
+
 		FlipperRight fr = gm.getFlipperR();
 		if (fr != null){
 			g2.setColor(fr.getColour());
 			int x = (int) fr.getX();
 			int y = (int) fr.getY();
-			int xArray[] = new int [4];
-			int yArray[] = new int [4];
-			xArray[0] = x;
-			xArray[1] = x+25;
-			xArray[2] = fr.getx2() + 25;
-			xArray[3] = fr.getx2();
-			
-			
-			yArray[0] = y;
-			yArray[1] = y;
-			yArray[2] = fr.gety2();
-			yArray[3] = fr.gety2();
-			
+			Stroke s = new BasicStroke(12.5f, BasicStroke.CAP_ROUND, 0);	
+			g2.setStroke(s);
 			g2.drawLine(x, y, fr.getx2(), fr.gety2());
-
-			//g2.fillPolygon(xArray, yArray, 4);
-		    //g2.rotate(Math.toRadians(60),f.getX(),f.getY());
-			//g2.fillRoundRect(x, y, f.getWidth(), f.getLength(), 25, 25);
+			s = new BasicStroke(1.0f,0,0);
+			g2.setStroke(s);
 		}
 	}
 
 	@Override
 	public void update(Observable arg0, Object arg1) {
-			repaint();
-		}
-	
+		repaint();
+	}
+
 }

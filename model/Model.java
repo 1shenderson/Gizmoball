@@ -1,10 +1,7 @@
 package model;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Observable;
-
-import controller.FileHandling;
 import model.Ball;
 import model.CollisionDetails;
 import model.VerticalLine;
@@ -26,7 +23,6 @@ public class Model extends Observable {
 
 	private Ball ball;
 	private Walls gws;
-	private FileHandling file;
 	private FlipperLeft flipper;
 	private FlipperRight flipperR;
 
@@ -42,9 +38,9 @@ public class Model extends Observable {
 
 		flips = new ArrayList<AbstractFlipper>();
 
-		flipper = new FlipperLeft(100,200,"demo");
+		flipper = new FlipperLeft("LeftFlipper", "demo",4,8);
 		flips.add(flipper);
-		flipperR = new FlipperRight(300,200,"demoR");
+		flipperR = new FlipperRight("RightFlipper", "demo1",8,8);
 		flips.add(flipperR);
 
 
@@ -52,7 +48,6 @@ public class Model extends Observable {
 		// Lines added in Main
 		lines = new ArrayList<VerticalLine>();
 
-		file = new FileHandling();
 
 		gizmoList = new ArrayList<ArrayList<Object>>();
 	}
@@ -138,20 +133,6 @@ public class Model extends Observable {
 		return new CollisionDetails(shortestTime, newVelo);
 	}
 
-	public void saveBoard(File filed, String fileName){
-		file.save(gizmoList, filed, fileName);
-	}
-
-	public void loadBoard(File filed){
-		ArrayList<ArrayList<Object>> gizmoLoad = file.load(filed);
-
-		ArrayList<Object> gizmoInfo = new ArrayList<Object>();
-		for(int i = 0; i < gizmoLoad.size(); i++){
-			gizmoInfo = gizmoLoad.get(i);
-			//            addLine(new VerticalLine((String) gizmoInfo.get(0), (String)gizmoInfo.get(1), (int)gizmoInfo.get(2), (int)gizmoInfo.get(3), (int)gizmoInfo.get(4)));
-		}
-	}
-
 	public Ball getBall() {
 		return ball;
 	}
@@ -167,10 +148,6 @@ public class Model extends Observable {
 
 	public void setBallSpeed(int x, int y) {
 		ball.setVelo(new Vect(x, y));
-	}
-
-	public void changeFlipperColour(){
-		flipper.setColour();
 	}
 
 	public void rotateFlip(boolean t){

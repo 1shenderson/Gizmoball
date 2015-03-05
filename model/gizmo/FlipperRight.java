@@ -1,6 +1,5 @@
 package model.gizmo;
 
-
 import physics.LineSegment;
 
 /**
@@ -8,42 +7,42 @@ import physics.LineSegment;
  */
 public class FlipperRight extends AbstractFlipper {
 
-	private int x2;
-	private int y2;
+	private int x;
+	private int y;
+	private int L = 25;
 	private LineSegment ls;
 
-	public FlipperRight(int x, int y, String id) {
-		super(x, y, id);
+	public FlipperRight(String gizmoType, String id, int x, int y) {
+		super(gizmoType, id, x, y);
+		this.x = (x * L) + L;
+		this.y = (y * L);
+		setAngle(360);
 		getEndPoint();
-		ls = new LineSegment(getX(), getY(), x2, y2);
+		ls = new LineSegment(this.x, this.y, getx2(), gety2());
 	}
 	
 	@Override
 	public LineSegment getLineSeg() {
 		return ls;
 	}
-
-	public void getEndPoint(){
-		double angleRad = getAngle() * Math.PI / 180;
-		double yrad   = getY() + getLength() * Math.cos(angleRad);
-		double xrad   = getX() + getLength() * Math.sin(angleRad);
-		y2 = (int) yrad;
-		x2 = (int) xrad;
-
+	
+	public double getX(){
+		return x;
 	}
 
-	public int getx2(){
-		return x2;
+	public double getY(){
+		return y;
 	}
 
-	public int gety2(){
-		return y2;
-	}
-
+	// 160 presses for 5 secs
+	// 30 presses per sec
+	// 1080 degrees per sec
+	// 36 degree's per press
+	
 	public void trigger(boolean t) {
 		if (t){
 			if (getAngle() > 270){
-				setAngle(getAngle() - 20);
+				setAngle(getAngle() - 36);
 				if (getAngle() < 270){
 					setAngle(270);
 				}
@@ -53,7 +52,5 @@ public class FlipperRight extends AbstractFlipper {
 			setAngle(360);
 		}
 		getEndPoint();
-	} 
-
+	}
 }
-
