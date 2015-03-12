@@ -6,8 +6,11 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.util.Observable;
 
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -18,7 +21,7 @@ import controller.RunListener;
  * @author Murray Wood Demonstration of MVC and MIT Physics Collisions 2014
  */
 
-public class RunGui {
+public class RunGui implements Display {
 
 	private Model model;
 	private JFrame frame;
@@ -29,12 +32,12 @@ public class RunGui {
 		model = m;
 
 		// RunListener catches all GUI events. In reality might have many listeners.
-		listener = new RunListener(m);
+		listener = new RunListener(m, this);
 	}
 
 	public void createAndShowGUI() {
 
-		frame = new JFrame("Murray's MIT Ball and VerticalLine Collision Demo");
+		frame = new JFrame("Hit load to select text file and hit start!");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		// Board is passed the Model so it can act as Observer
@@ -89,6 +92,67 @@ public class RunGui {
 		frame.pack();
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
+	}
+	
+	@Override
+	public File load(){
+		JFileChooser fc = new JFileChooser();
+		fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+		int returnVal = fc.showOpenDialog(null);
+		if (returnVal == JFileChooser.APPROVE_OPTION) {
+	       File file = fc.getSelectedFile();
+	       return file;
+		}
+		return null;
+	}
+	
+	@Override
+	public String save(){
+		JFileChooser fc = new JFileChooser();
+		fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+        int returnVal = fc.showSaveDialog(null);
+        String fileName = "";
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File file = fc.getSelectedFile();
+            fileName = file + ".txt";
+        }
+        return fileName;
+	}
+
+	@Override
+	public void update(Observable o, Object arg) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void toggleBuild() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void togglePlay() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void help() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void about() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void exit() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

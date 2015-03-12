@@ -1,5 +1,6 @@
 package model;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
@@ -34,8 +35,8 @@ public class Model extends Observable implements Game {
 
 		ballsList = new ArrayList<Ball>();
 		// Ball position (25, 25) in pixels. Ball velocity (100, 100) pixels per tick
-        Ball ball = new Ball("GIZMOTYPE", "ID", 19.50*L, 18.75*L, 0, -30 * L);
-        ballsList.add(ball);
+        //Ball ball = new Ball("GIZMOTYPE", "ID", 19.50*L, 18.75*L, 0, -30 * L);
+       // ballsList.add(ball);
 
 		file = new FileHandling();
 
@@ -46,7 +47,7 @@ public class Model extends Observable implements Game {
 		lines = new ArrayList<VerticalLine>();
 
 		gizmoList = new ArrayList<Gizmo>();
-		buildArena();
+		//buildArena();
 
         L = 25; // TODO Assign L through the constructor
         gravity = 25 * L;
@@ -61,56 +62,9 @@ public class Model extends Observable implements Game {
 		addBall(ball1);
 		addBall(ball2);
 		addBall(ball3);
-
-		addGizmo(1,1,"Square", "sqaur");
-		addGizmo(0,1,"Square", "sqaur");
-		addGizmo(2,2,"Square", "sqaur");
-
-
-
-		addGizmo(2,8,"Circle","circle");
-		addGizmo(3,7,"Circle","circle");
-		addGizmo(4,6,"Circle","Circle");
-		addGizmo(5,5,"Circle","Circle");
-		addGizmo(3,7,"Circle","Circle");
-		addGizmo(3,9,"Circle","Circle");
-		addGizmo(4,10,"Circle","Circle");
-		addGizmo(5,11,"Circle","Circle");
-		addGizmo(6,12,"Circle","Circle");
-		addGizmo(7,13,"Circle","Circle");
-		addGizmo(8,13,"Circle","Circle");
-		addGizmo(9,13,"Circle","circle");
-		addGizmo(10,13,"Circle","Circle");
-		addGizmo(10,13,"Circle","Circle");
-		addGizmo(11,13,"Circle","Circle");
-		addGizmo(12,13,"Circle","Circle");
-		addGizmo(13,12,"Square","square");
-		addGizmo(14,11,"Square","Square");
-		addGizmo(15,10,"Square","Square");
-		addGizmo(16,9,"Square","square");
-		addGizmo(17,8,"Square","square");
-		addGizmo(16,7,"Square","Square");
-		addGizmo(15,6,"Square","Square");
-		addGizmo(14,5,"Circle","Circle");
-		addGizmo(13,5,"Circle","Circle");
-		addGizmo(12,5,"Circle","Circle");
-		addGizmo(11,5,"Circle","Circle");
-		addGizmo(10,5,"Circle","Circle");
-		addGizmo(9,5,"Circle","Circle");
-		addGizmo(8,5,"Circle","Circle");
-		addGizmo(7,5,"Circle","Circle");
-		addGizmo(6,5,"Circle","Circle");
-
-		addGizmo(13,8,"Triangle","triangle");
-		addGizmo(7,8,"Triangle","triangle");
-		addGizmo(15,17,"Triangle","Triangle");
-		addGizmo(13,17,"Triangle","Triangle");
-		addGizmo(11,17,"Triangle","Triangle");
-		addGizmo(7,15,"Triangle","Triangle");
-		addGizmo(5,15,"Triangle","Triangle");
-		addGizmo(5,2,"Square","Triangle");
-		addGizmo(10,2,"Circle","Triangle");
-		addGizmo(15,2,"Square","Triangle");
+		
+		addGizmo("Circle", "q", 3, 4);
+		addGizmo("Triangle", "t", 5, 6);
 
 
 	}
@@ -149,7 +103,7 @@ public class Model extends Observable implements Game {
                             }
                         }
                         // Now trigger all gizmos this gizmo is supposed to trigger.
-                        gizmo.sendTrigger();
+                        //gizmo.sendTrigger();
                     }
 					ball.setVelo(cd.getVelo());
 //                    debugPrintVelocity("after", ball.getVelo());    // TODO Remove debug
@@ -269,6 +223,35 @@ public class Model extends Observable implements Game {
         }
 
 	}
+	
+	public void saveBoard(String fileName){
+        file.save(gizmoList, fileName);
+    }
+
+    public void loadBoard(File filed){
+    	ArrayList<ArrayList<Object>> gizmoInfo = file.load(filed);
+        for(int i = 0; i < gizmoInfo.size(); i++){
+        	ArrayList<Object> gizmoLoad = gizmoInfo.get(i);
+        	if(gizmoLoad.get(0).equals("Ball")){
+        		addBall(new Ball((String) gizmoLoad.get(0), (String) gizmoLoad.get(1), (double) gizmoLoad.get(2), (double) gizmoLoad.get(3), (double) gizmoLoad.get(4), (double) gizmoLoad.get(5)));
+        	}
+        	else if(gizmoLoad.get(0).equals("Rotate")){
+        		rotate((String) gizmoLoad.get(1));
+        	}
+        	else if(gizmoLoad.get(0).equals("Absorber")){
+        		addAbsorber((String) gizmoLoad.get(0), (String) gizmoLoad.get(1), (int) gizmoLoad.get(2), (int) gizmoLoad.get(3), (int) gizmoLoad.get(4), (int) gizmoLoad.get(5));
+        	}
+        	else if(gizmoLoad.get(0).equals("KeyConnect")){
+        		System.out.println("Recognised KeyConnect for " + (String) gizmoLoad.get(1) + " " + (int) gizmoLoad.get(2) + " " + (String) gizmoLoad.get(3) + " " + (String) gizmoLoad.get(4));
+        	}
+        	else if(gizmoLoad.get(0).equals("Connect")){
+        		System.out.println("Recognised Connect for " + (String) gizmoLoad.get(1) + " " + (String) gizmoLoad.get(2));
+        	}
+        	else {
+        		addGizmo((String) gizmoLoad.get(0), (String) gizmoLoad.get(1), (int) gizmoLoad.get(2), (int) gizmoLoad.get(3));
+        	}
+        }
+    }
 
 	public ArrayList<VerticalLine> getLines() {
 		return lines;
@@ -296,23 +279,23 @@ public class Model extends Observable implements Game {
     }
 
     @Override
-    public void addGizmo(int x, int y, String gizmoType, String gizmoID) {
+    public void addGizmo(String gizmoType, String gizmoID, int x, int y) {
         Gizmo gizmo;
         switch (gizmoType) {
             case "Square":
-                gizmo = new SquareBumper(x, y, 1, 1, gizmoID);
+                gizmo = new SquareBumper(gizmoType, gizmoID, x, y);
                 break;
             case "Triangle":
-                gizmo = new TriangleBumper(x, y, 1, 1, gizmoID);
+                gizmo = new TriangleBumper(gizmoType, gizmoID, x, y);
                 break;
             case "Circle":
-                gizmo = new CircleBumper(x, y, gizmoID);
+                gizmo = new CircleBumper(gizmoType, gizmoID, x, y);
                 break;
             case "RightFlipper":
-                gizmo = new FlipperRight(x, y, gizmoID);
+                gizmo = new FlipperRight(gizmoType, gizmoID, x, y);
                 break;
             case "LeftFlipper":
-                gizmo = new FlipperLeft(x, y, gizmoID);
+                gizmo = new FlipperLeft(gizmoType, gizmoID, x, y);
                 break;
             case "Absorber":
                 throw new IllegalArgumentException("Absorber  needs a width and a height as arguments in addition to the rest.");
@@ -321,10 +304,18 @@ public class Model extends Observable implements Game {
         }
         gizmoList.add(gizmo);
     }
-
+    
+    public void rotate(String id){
+    	for(Gizmo gizmo: gizmoList){
+    		if(gizmo.getID().equals(id)){
+    			gizmo.rotateRight();
+    		}
+    	}
+    }
+    
     @Override
-    public void addAbsorber(int x, int y, int width, int height, String gizmoID) {
-        Gizmo absorber = new Absorber(x, y, width, height, 0, -30*L, this, gizmoID);
+    public void addAbsorber(String gizmoType, String id, int x, int y, int width, int height) {
+        Gizmo absorber = new Absorber(gizmoType, id, x, y, width, height);
         gizmoList.add(absorber);
     }
 

@@ -18,12 +18,8 @@ public class AbstractSquare extends AbstractGizmo {
     int botRightX;
     int botRightY;
 
-    public AbstractSquare(int x, int y, int width, int height, String id) {
-        super(x, y, id);
-        if (width < 1 || height < 1) {
-            throw new IllegalArgumentException((width<0?"width":"height") + " is less than 1 in "
-                    + this.getClass() + " constructor");
-        }
+    public AbstractSquare(String gizmoType, String id, int x, int y) {
+        super(gizmoType, id, x, y);
         this.width = width * L;
         this.height = height * L;
         this.topLeftX = x * L;
@@ -93,5 +89,11 @@ public class AbstractSquare extends AbstractGizmo {
 	public int[] getAllYPos() {
 		int[] yPos = {topLeftY, botRightY, botRightY, topLeftY};
 		return yPos;
+	}
+
+	@Override
+	public String getType() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

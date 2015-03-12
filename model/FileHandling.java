@@ -8,25 +8,22 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import model.gizmo.Gizmo;
+
 public class FileHandling {
 
-	public void save(ArrayList<ArrayList<Object>> gizmoList, File file, String fileName){
+	public void save(ArrayList<Gizmo> gizmoList, String fileName){
 
 		String command = "";
-		ArrayList<Object> gizmoInfo = new ArrayList<Object>();
 		
 		try{
 			PrintWriter pw = new PrintWriter(fileName, "UTF-8");
 			for(int i = 0; i < gizmoList.size(); i++){
-				gizmoInfo = gizmoList.get(i);
-				for(int j = 0; j < gizmoInfo.size(); j++){
-					if(j != (gizmoInfo.size() - 1)){
-						command = command + gizmoInfo.get(j) + " ";
-					}
-					else{
-						command = command + gizmoInfo.get(j);
-					}
-				}
+				String gizmoType = gizmoList.get(i).getType();
+				String gizmoID = gizmoList.get(i).getID();
+				int x = gizmoList.get(i).getX();
+				int y = gizmoList.get(i).getY();
+				command = gizmoType + " " + gizmoID + " " + x + " " + y + " ";
 				if(i < gizmoList.size() - 1){
 					pw.println(command);
 				}
@@ -54,8 +51,6 @@ public class FileHandling {
 				gizmoInfo.add(type);
 				gizmoInfo.add(id);
 				
-				
-				
 				if(type.equals("Ball")){
 					double x = sc.nextDouble();
 					double y = sc.nextDouble();
@@ -66,7 +61,29 @@ public class FileHandling {
 					gizmoInfo.add(xv);
 					gizmoInfo.add(yv);
 				}
-				else{
+				else if(type.equals("Absorber")){
+					int x = sc.nextInt();
+					int y = sc.nextInt();
+					int x2 = sc.nextInt();
+					int y2 = sc.nextInt();
+					gizmoInfo.add(x);
+					gizmoInfo.add(y);
+					gizmoInfo.add(x2);
+					gizmoInfo.add(y2);
+				}
+				else if(type.equals("KeyConnect")){
+					int keyNumber = sc.nextInt();
+					String direction = sc.next();
+					String gizmoID = sc.next();
+					gizmoInfo.add(keyNumber);
+					gizmoInfo.add(direction);
+					gizmoInfo.add(gizmoID);
+				}
+				else if(type.equals("Connect")){
+					String gizmoID = sc.next();
+					gizmoInfo.add(gizmoID);
+				}
+				else if(!type.equalsIgnoreCase("Rotate")){
 					int x = sc.nextInt();
 					int y = sc.nextInt();
 					gizmoInfo.add(x);

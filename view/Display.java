@@ -12,13 +12,12 @@ public interface Display extends Observer{
 
 	public File load();
 
-	public void save(File file);
+	public String save();
 
 	public void help();
 
 	public void about();
 
 	public void exit();
-
-
+	
 }

@@ -38,4 +38,6 @@ public interface Gizmo {
     public int[] getAllXPos();
 
     public int[] getAllYPos();
+
+	public String getType();
 }

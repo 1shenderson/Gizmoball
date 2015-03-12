@@ -3,7 +3,6 @@ package model.gizmo;
 import physics.Vect;
 
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,14 +22,13 @@ public abstract class AbstractGizmo implements Gizmo {
     private int xPos;
     private int yPos;
 
-    public AbstractGizmo(int x, int y, String id) {
+    public AbstractGizmo(String gizmoType, String id, int x, int y) {
         if (x < 0 || y < 0) {
             throw new IllegalArgumentException((x<0?"x":"y") + " is less than 0 in "
                     + this.getClass() + " constructor");
         }
         this.L = 25; // TODO Change from constant 25 to a variable in constructor
         this.vector = new Vect(x, y);
-        this.triggerList = new ArrayList<Gizmo>();
         this.id = id;
         this.xPos = x;
         this.yPos = y;

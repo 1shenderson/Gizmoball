@@ -15,12 +15,12 @@ public class CircleBumper extends AbstractGizmo {
     private int radius;
     private int x;
     private int y;
-    public CircleBumper(int x, int y, String id) {
-        super(x , y , id);
+    public CircleBumper(String gizmoType, String id, int x, int y) {
+        super(gizmoType, id, x, y);
         this.radius = L / 2;
         color = Color.GREEN;
-        this.x = x * L + this.radius;
-        this.y = y * L + this.radius;
+        this.x = x * L;
+        this.y = y * L;
     }
 
     @Override
@@ -61,6 +61,12 @@ public class CircleBumper extends AbstractGizmo {
 
 	@Override
 	public int[] getAllYPos() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getType() {
 		// TODO Auto-generated method stub
 		return null;
 	}

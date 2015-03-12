@@ -23,11 +23,10 @@ public class Absorber extends AbstractSquare {
      * @param parent Parent board containing the absorber
      * @param id ID of the gizmo
      */
-    public Absorber(int x, int y, int width, int height, int velX, int velY, Model parent, String id) {
-        super(x, y, width, height, id);
-        this.velX = velX;
-        this.velY = velY;
-        this.parent = parent;
+    public Absorber(String gizmoType, String id, int x, int y, int width, int height) {
+    	super(gizmoType, id, x, y);
+        velX = 0;
+        velY = -50;
         this.absorbed = 0;
 //        this.addTrigger(this);  // TODO Remove this test method. At the moment it will trigger itself when hit.
     }

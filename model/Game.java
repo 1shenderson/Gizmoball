@@ -1,5 +1,6 @@
 package model;
 
+import java.io.File;
 import java.util.Observer;
 
 public interface Game {
@@ -7,10 +8,6 @@ public interface Game {
 	public void tick();
 
 	public void trigger(int keyID);
-
-	public void addGizmo(int x, int y, String gizmoType, String gizmoID);
-
-    public void addAbsorber(int x, int y, int width, int height, String gizmoID);
 
 	public void removeGizmo(int x, int y);
 
@@ -27,5 +24,14 @@ public interface Game {
 	public int[][] getMap();
 
 	public void addObserver(Observer o);
+
+	public void addGizmo(String gizmoType, String gizmoID, int x, int y);
+
+	void addAbsorber(String gizmoType, String id, int x, int y, int width,
+			int height);
+
+	public void saveBoard(String fileName);
+	
+	public void loadBoard(File load);
 
 }
