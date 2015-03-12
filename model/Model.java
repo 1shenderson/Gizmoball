@@ -46,15 +46,73 @@ public class Model extends Observable implements Game {
 		lines = new ArrayList<VerticalLine>();
 
 		gizmoList = new ArrayList<Gizmo>();
-		//addGizmo(19,19,"Circle","circle");
-//		addGizmo(19,19,"Square","square");
-		//addGizmo(19,19,"Triangle", "triangel1");
-//        addAbsorber(0, 19, 20, 1, "ABSORBER1");
+		buildArena();
 
         L = 25; // TODO Assign L through the constructor
         gravity = 25 * L;
         friction1 = 0.025;
         friction2 = 0.025 / L;
+	}
+
+	public void buildArena(){
+		Ball ball1 = new Ball("ball","ball1",10 * L, 20, 100, 100);
+		Ball ball2 = new Ball("ball","ball2",15, 16, 100, 100);
+		Ball ball3 = new Ball("ball","ball3",0, 15, 100, 100);
+		addBall(ball1);
+		addBall(ball2);
+		addBall(ball3);
+
+		addGizmo(1,1,"Square", "sqaur");
+		addGizmo(0,1,"Square", "sqaur");
+		addGizmo(2,2,"Square", "sqaur");
+
+
+
+		addGizmo(2,8,"Circle","circle");
+		addGizmo(3,7,"Circle","circle");
+		addGizmo(4,6,"Circle","Circle");
+		addGizmo(5,5,"Circle","Circle");
+		addGizmo(3,7,"Circle","Circle");
+		addGizmo(3,9,"Circle","Circle");
+		addGizmo(4,10,"Circle","Circle");
+		addGizmo(5,11,"Circle","Circle");
+		addGizmo(6,12,"Circle","Circle");
+		addGizmo(7,13,"Circle","Circle");
+		addGizmo(8,13,"Circle","Circle");
+		addGizmo(9,13,"Circle","circle");
+		addGizmo(10,13,"Circle","Circle");
+		addGizmo(10,13,"Circle","Circle");
+		addGizmo(11,13,"Circle","Circle");
+		addGizmo(12,13,"Circle","Circle");
+		addGizmo(13,12,"Square","square");
+		addGizmo(14,11,"Square","Square");
+		addGizmo(15,10,"Square","Square");
+		addGizmo(16,9,"Square","square");
+		addGizmo(17,8,"Square","square");
+		addGizmo(16,7,"Square","Square");
+		addGizmo(15,6,"Square","Square");
+		addGizmo(14,5,"Circle","Circle");
+		addGizmo(13,5,"Circle","Circle");
+		addGizmo(12,5,"Circle","Circle");
+		addGizmo(11,5,"Circle","Circle");
+		addGizmo(10,5,"Circle","Circle");
+		addGizmo(9,5,"Circle","Circle");
+		addGizmo(8,5,"Circle","Circle");
+		addGizmo(7,5,"Circle","Circle");
+		addGizmo(6,5,"Circle","Circle");
+
+		addGizmo(13,8,"Triangle","triangle");
+		addGizmo(7,8,"Triangle","triangle");
+		addGizmo(15,17,"Triangle","Triangle");
+		addGizmo(13,17,"Triangle","Triangle");
+		addGizmo(11,17,"Triangle","Triangle");
+		addGizmo(7,15,"Triangle","Triangle");
+		addGizmo(5,15,"Triangle","Triangle");
+		addGizmo(5,2,"Square","Triangle");
+		addGizmo(10,2,"Circle","Triangle");
+		addGizmo(15,2,"Square","Triangle");
+
+
 	}
 
 	public void tick() {
@@ -122,10 +180,10 @@ public class Model extends Observable implements Game {
 		double xVel = ball.getVelo().x();
 		double yVel = ball.getVelo().y();
         // Calculate gravity
-        yVel = yVel + (gravity * time);
+        //yVel = yVel + (gravity * time);
         // Calculate friction
-        xVel = xVel * ((1 - (friction1 * time)) - (Math.abs(xVel) * (friction2) * time));
-        yVel = yVel * ((1 - (friction1 * time)) - (Math.abs(yVel) * (friction2) * time));
+        //xVel = xVel * ((1 - (friction1 * time)) - (Math.abs(xVel) * (friction2) * time));
+        //yVel = yVel * ((1 - (friction1 * time)) - (Math.abs(yVel) * (friction2) * time));
         // Find out where the ball should end up next frame
 		newX = ball.getExactX() + (xVel * time);
 		newY = ball.getExactY() + (yVel * time);
@@ -171,90 +229,39 @@ public class Model extends Observable implements Game {
 
         // Time to collide with gizmos
         for (Gizmo gizmo : gizmoList) {
-            if (gizmo instanceof CircleBumper) {
-                // Gizmo is a circle bumper
-                Circle circle = ((CircleBumper) gizmo).getCircle();
-                time = Geometry.timeUntilCircleCollision(circle, ballCircle, ballVelocity);
+        	List<LineSegment> sides = gizmo.getSides();
+        	List<Circle> corners = gizmo.getCorners();
+        	for (Circle corner : corners){
+                time = Geometry.timeUntilCircleCollision(corner,ballCircle,ballVelocity);
                 if (time < shortestTime) {
-                	System.out.println("circle hit");
-                	shortestTime = time;
-                    newVelo = Geometry.reflectCircle(circle.getCenter(), ballCircle.getCenter(), currBall.getVelo(), 1.0);
+                    shortestTime = time;
+                    newVelo = Geometry.reflectCircle(corner.getCenter(), ballCircle.getCenter(), currBall.getVelo(), 1.0);
                     target = gizmo;
                 }
-            
-            } else if (gizmo instanceof TriangleBumper) {
-                // Gizmo is a triangle bumper
-            	TriangleBumper triangle = (TriangleBumper) gizmo;
-            	List<LineSegment> sides = triangle.getSides();
-            	List<Circle> corners = triangle.getCorners();
-            	for (LineSegment side : sides){
-                    time = Geometry.timeUntilWallCollision(side,ballCircle,ballVelocity);
-                    if (time < shortestTime) {
-                        shortestTime = time;
-                        newVelo = Geometry.reflectWall(side, currBall.getVelo(), 1.0);
-                        target = gizmo;
-                    }   
-            	}
-            	for (Circle corner : corners){
-                    time = Geometry.timeUntilCircleCollision(corner,ballCircle,ballVelocity);
-                    if (time < shortestTime) {
-                        shortestTime = time;
-                        newVelo = Geometry.reflectCircle(corner.getCenter(), ballCircle.getCenter(), currBall.getVelo(), 1.0);
-                        target = gizmo;
-                    }
-            	}
-            	
-            } else if (gizmo instanceof SquareBumper) {
-                // Gizmo is a square bumper
-                SquareBumper square = (SquareBumper) gizmo;
-                ArrayList<LineSegment> sides = square.getSides();
-                ArrayList<Circle> corners = square.getCorners();
-                for (LineSegment side : sides){
-                    time = Geometry.timeUntilWallCollision(side,ballCircle,ballVelocity);
-                    if (time < shortestTime) {
-                        shortestTime = time;
-                        newVelo = Geometry.reflectWall(side, currBall.getVelo(), 1.0);
-                        target = gizmo;
-                    }
+        	}
+        	for (LineSegment side : sides){
+                time = Geometry.timeUntilWallCollision(side,ballCircle,ballVelocity);
+                if (time < shortestTime) {
+                    shortestTime = time;
+                    newVelo = Geometry.reflectWall(side, currBall.getVelo(), 1.0);
+                    target = gizmo;
                 }
-                for (Circle corner : corners){
-                    time = Geometry.timeUntilCircleCollision(corner,ballCircle,ballVelocity);
-                    if (time < shortestTime) {
-                        shortestTime = time;
-                        newVelo = Geometry.reflectCircle(corner.getCenter(), ballCircle.getCenter(), currBall.getVelo(), 1.0);
-                        target = gizmo;
-                    }
-                }
-            } else if (gizmo instanceof AbstractFlipper) {
-                // Gizmo is either a left or a right flipper
-                // TODO Add handling of flipper collisions
-            } else if (gizmo instanceof Absorber) {
-                // Gizmo is an absorber. Gizmos do not collide with absorbers; instead, they get absorbed by them.
-                Absorber absorber = (Absorber) gizmo;
-                ArrayList<LineSegment> sides = absorber.getSides();
-                ArrayList<Circle> corners = absorber.getCorners();
-                for (LineSegment side : sides){
-                    time = Geometry.timeUntilWallCollision(side,ballCircle,ballVelocity);
-                    if (time < shortestTime) {
-                        shortestTime = time;
-                        newVelo = Geometry.reflectWall(side, currBall.getVelo(), 1.0);
-                        target = gizmo;
-                    }
-                }
-                for (Circle corner : corners){
-                    time = Geometry.timeUntilCircleCollision(corner,ballCircle,ballVelocity);
-                    if (time < shortestTime) {
-                        shortestTime = time;
-                        newVelo = Geometry.reflectCircle(corner.getCenter(), ballCircle.getCenter(), currBall.getVelo(), 1.0);
-                        target = gizmo;
-                    }
-                }
-                // TODO Add handling of absorber "collisions"
-            } else {
-                // Gizmo is unrecognized - we have no handling for that gizmo. This should not happen unless we forgot something.
-                throw new RuntimeException("Unrecognized gizmo detected in the list of gizmos.");
-            }
+        	}
         }
+
+/*
+        //ball to ball collision
+        for (Ball ball: ballsList){
+        	if (!currBall.equals(ball)){
+        		time = Geometry.timeUntilBallBallCollision(ballCircle, ballVelocity, ball.getCircle(), ball.getVelo());
+        		if (time < shortestTime){
+        			shortestTime = time;
+                    newVelo = Geometry.reflectBalls(ballCircle.getCenter(), 100.0, ballVelocity, ball.getCircle().getCenter(), 100.0, ball.getVelo());
+        		}
+        	}
+        }
+*/
+
         if (target == null) {
             return new CollisionDetails(shortestTime, newVelo);
         } else {

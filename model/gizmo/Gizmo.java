@@ -1,6 +1,8 @@
 package model.gizmo;
 
+import physics.Circle;
 import physics.Vect;
+import physics.LineSegment;
 
 import java.awt.*;
 import java.util.List;
@@ -28,4 +30,12 @@ public interface Gizmo {
 	public void trigger();
 
     public void sendTrigger();
+
+    public List<LineSegment> getSides();
+
+    public List<Circle> getCorners();
+
+    public int[] getAllXPos();
+
+    public int[] getAllYPos();
 }

@@ -82,4 +82,16 @@ public class AbstractSquare extends AbstractGizmo {
         circleList.add(botRight);
         return circleList;
     }
+
+	@Override
+	public int[] getAllXPos() {
+		int[] xPos = {topLeftX, topLeftX, botRightX, botRightX,};
+		return xPos;
+	}
+
+	@Override
+	public int[] getAllYPos() {
+		int[] yPos = {topLeftY, botRightY, botRightY, topLeftY};
+		return yPos;
+	}
 }

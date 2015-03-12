@@ -133,10 +133,10 @@ public class TriangleBumper extends AbstractGizmo {
 		List<Circle> corners = new ArrayList<Circle>();
 		Circle topLCorner = new Circle(x, y, 0);
 		Circle topRCorner = new Circle(rightX, y, 0);
-		Circle botRCorner = new Circle(rightX, bottomY, 0);
+		Circle botLCorner = new Circle(x, bottomY, 0);
 		corners.add(topLCorner);
 		corners.add(topRCorner);
-		corners.add(botRCorner);
+		corners.add(botLCorner);
 		return corners;
 	}
 
