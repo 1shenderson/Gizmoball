@@ -15,28 +15,25 @@ import physics.Vect;
  * @author Murray Wood Demonstration of MVC and MIT Physics Collisions 2014
  */
 
-public class Model extends Observable implements Game {
+public class Model extends Observable implements Board {
 
 	private ArrayList<VerticalLine> lines;
 	private FileHandling file;
-    public static int L;
-    private static double friction1;
-    private static double friction2;
-    private static double gravity;
+    public int L;
+    private double friction1;
+    private double friction2;
+    private double gravity;
 	private Walls gws;
 	private List<Ball> ballsList;
 	private ArrayList<Gizmo> gizmoList;
 
-	public Model() {
-        L = 25; // TODO Assign L through the constructor
+	public Model(int L) {
+        this.L = 25; // TODO Assign L through the constructor
         gravity = 25 * L;
         friction1 = 0.025;
         friction2 = 0.025 / L;
 
 		ballsList = new ArrayList<Ball>();
-		// Ball position (25, 25) in pixels. Ball velocity (100, 100) pixels per tick
-        //Ball ball = new Ball("GIZMOTYPE", "ID", 19.50*L, 18.75*L, 0, -30 * L);
-       // ballsList.add(ball);
 
 		file = new FileHandling();
 
@@ -115,7 +112,7 @@ public class Model extends Observable implements Game {
 	}
 
 	public void tick() {
-		double moveTime = 0.05; // 0.05 = 20 times per second as per Gizmoball
+		double moveTime = 1.0 / 60;
 		for (int i = 0; i < ballsList.size(); i++){
             Ball ball = ballsList.get(i);
 			if (!ball.stopped()) {
@@ -308,6 +305,15 @@ public class Model extends Observable implements Game {
 
 	public void addBall(Ball b) {
         ballsList.add(b);
+        setChanged();
+        notifyObservers();
+    }
+
+    public void addBall(String id, int x, int y) {
+        Ball ball = new Ball("", id, x*L + L/2, y*L + L/2, 0, 0);
+        ballsList.add(ball);
+        setChanged();
+        notifyObservers();
     }
 
 	public List<Ball> getBallList(){
@@ -348,6 +354,8 @@ public class Model extends Observable implements Game {
                 throw new IllegalArgumentException("Unrecognized gizmo type" + gizmoType + " passed as an argument to addGizmo");
         }
         gizmoList.add(gizmo);
+        setChanged();
+        notifyObservers();
     }
     
     public void rotate(String id){
@@ -362,6 +370,8 @@ public class Model extends Observable implements Game {
     public void addAbsorber(String gizmoType, String id, int x, int y, int width, int height) {
         Absorber absorber = new Absorber(gizmoType, id, x, y, width, height, this);
         gizmoList.add(absorber);
+        setChanged();
+        notifyObservers();
     }
 
     @Override

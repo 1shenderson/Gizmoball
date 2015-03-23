@@ -13,31 +13,31 @@ import java.util.Observer;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
+import model.Board;
 import model.gizmo.*;
 import physics.Circle;
 import physics.LineSegment;
 import model.Ball;
-import model.Model;
 import model.VerticalLine;
 
 /**
  * @author Murray Wood Demonstration of MVC and MIT Physics Collisions 2014
  */
 
-public  class Board extends JPanel implements Observer {
+public  class BoardView extends JPanel implements Observer {
 
 	private static final long serialVersionUID = 1L;
 	protected int width;
 	protected int height;
-	protected Model gm;
+	protected Board board;
 
 
-	public Board(int w, int h, Model m) {
+	public BoardView(int w, int h, Board board) {
 		// Observe changes in Model
-		m.addObserver(this);
+		board.addObserver(this);
 		width = w;
 		height = h;
-		gm = m;
+		this.board = board;
 		this.setBorder(BorderFactory.createLineBorder(Color.black));
 	}
 
@@ -49,13 +49,8 @@ public  class Board extends JPanel implements Observer {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D) g;
-		List<Ball> ballList = gm.getBallList();
-		List<Gizmo> gizmoList = gm.getGizmoList();
-
-		// Draw all the vertical lines
-		for (VerticalLine vl : gm.getLines()) {
-			g2.fillRect(vl.getX(), vl.getY(), vl.getWidth(), 1);
-		}
+		List<Ball> ballList = board.getBallList();
+		List<Gizmo> gizmoList = board.getGizmoList();
 
 		//Draws all balls
 		for (int i = 0; i < ballList.size(); i++){

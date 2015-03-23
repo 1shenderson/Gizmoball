@@ -3,8 +3,7 @@ package model.gizmo;
 import java.awt.Color;
 
 import model.Ball;
-import model.Game;
-import model.Model;
+import model.Board;
 
 /**
  * @author Grzegorz Sebastian Korkosz
@@ -13,7 +12,7 @@ public class Absorber extends AbstractSquare {
     private int absorbed;       // Number of absorbed balls. Not a boolean to support multiple balls.
     private double velX;        // Starting X velocity of the ball spawned by this absorber
     private double velY;        // Starting Y velocity of the ball spawned by this absorber
-    private Game parent;       // Parent board where the ball should be spawned
+    private Board parent;       // Parent board where the ball should be spawned
     
     
     
@@ -28,7 +27,7 @@ public class Absorber extends AbstractSquare {
      * @param parent Parent board containing the absorber
      * @param id ID of the gizmo
      */
-    public Absorber(String gizmoType, String id, int x, int y, int width, int height, Game parent) {
+    public Absorber(String gizmoType, String id, int x, int y, int width, int height, Board parent) {
     	super(gizmoType, id, x, y);
     	this.parent = parent;
         velX = 0;

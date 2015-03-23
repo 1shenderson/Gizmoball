@@ -1,9 +1,12 @@
 package model;
 
+import model.gizmo.Gizmo;
+
 import java.io.File;
+import java.util.List;
 import java.util.Observer;
 
-public interface Game {
+public interface Board {
 	
 	public void tick();
 
@@ -36,4 +39,9 @@ public interface Game {
 	
 	public void addBall(Ball ball);
 
+    public void addBall(String id, int x, int y);
+
+    public List<Gizmo> getGizmoList();
+
+    public List<Ball> getBallList();
 }
