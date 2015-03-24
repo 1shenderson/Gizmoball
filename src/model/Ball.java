@@ -54,7 +54,7 @@ public class Ball {
 	}
 
 	public Circle getCircle() {
-		return new Circle(xpos, ypos, radius);
+		return new Circle(xpos + radius, ypos + radius, radius);
 	}
 
     public void setIgnoreAbsorber(boolean b) {

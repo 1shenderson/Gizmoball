@@ -37,7 +37,7 @@ public class CircleBumper extends AbstractGizmo {
     }
 
     public Circle getCircle() {
-        return new Circle(this.getX(), this.getY(), radius);
+        return new Circle(this.getX() + getRadius(), this.getY() + getRadius(), radius);
     }
 
 	@Override
@@ -52,7 +52,7 @@ public class CircleBumper extends AbstractGizmo {
 		circleList.add(circle);
 		return circleList;
 	}
-	
+
     @Override
     public void trigger(){
 		if (color == Color.GREEN){

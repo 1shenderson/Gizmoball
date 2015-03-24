@@ -57,8 +57,8 @@ public  class BoardView extends JPanel implements Observer {
 			Ball b = ballList.get(i);
 			if (b != null) {
 				g2.setColor(b.getColour());
-				int x = (int) (b.getExactX() - b.getRadius());
-				int y = (int) (b.getExactY() - b.getRadius());
+				int x = (int) (b.getExactX());
+				int y = (int) (b.getExactY());
 				int width = (int) (2 * b.getRadius());
 				g2.fillOval(x, y, width, width);
 			}

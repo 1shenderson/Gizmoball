@@ -60,7 +60,7 @@ public class Absorber extends AbstractSquare {
     public void trigger() {
         if (absorbed > 0) {
             double ballX = botRightX - 0.5 * L; // X position of ball to be spawned by the absorber
-            double ballY = topLeftY - 0.25 * L; // Y position of ball to be spawned by the absorber
+            double ballY = topLeftY - 1 * L; // Y position of ball to be spawned by the absorber
             Ball ball = new Ball("", "", ballX, ballY, velX, velY);
             ball.setIgnoreAbsorber(true);
             parent.addBall(ball);
