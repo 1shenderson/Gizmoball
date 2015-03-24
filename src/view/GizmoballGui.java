@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
 import java.io.File;
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ import javax.swing.*;
 
 import model.Board;
 import controller.RunListener;
+import controller.keyListen;
 
 /**
  * @author Murray Wood Demonstration of MVC and MIT Physics Collisions 2014
@@ -26,6 +28,7 @@ public class GizmoballGui implements Display {
 	private Board board;
 	private JFrame frame;
 	private ActionListener listener;
+	private KeyListener keyList;
 	private BoardView boardView;
     private JButton modeButton;
     private JPanel modeButtonPanel;
@@ -34,24 +37,33 @@ public class GizmoballGui implements Display {
 		this.board = board;
         this.L = L;
 		listener = new RunListener(board, this);
+		keyList = new keyListen(board);
+
 	}
 
 	public void createAndShowGUI() {
 
 		frame = new JFrame("Hit load to select text file and hit start!");
 		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		frame.addKeyListener(keyList);
 
 		// Board is passed the Model so it can act as Observer
 		boardView = new BoardView(500, 500, board);
+		boardView.addKeyListener(keyList);
+
         Font gf = new Font("Arial", Font.BOLD, 12);
 		Container contentPane = frame.getContentPane();
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new BorderLayout());
         modeButtonPanel = new JPanel();
+        modeButtonPanel.addKeyListener(keyList);
+
         modeButton = new JButton();
         modeButton.setFont(gf);
         modeButton.addActionListener(listener);
         modeButton.setMaximumSize(new Dimension(200, 100));
+        modeButton.addKeyListener(keyList);
+
         buttonPanel.add(modeButton, BorderLayout.BEFORE_FIRST_LINE);
         buttonPanel.add(modeButtonPanel, BorderLayout.CENTER);
 		contentPane.add(buttonPanel, BorderLayout.LINE_START);

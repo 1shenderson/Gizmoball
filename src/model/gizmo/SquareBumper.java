@@ -10,4 +10,15 @@ public class SquareBumper extends AbstractSquare {
         super(gizmoType, id, x, y);
         color = Color.RED;
     }
+    
+    @Override
+    public void trigger(){
+		if (color == Color.RED){
+			color = Color.GREEN;
+		}
+		else {
+			color = Color.RED;
+		}
+    }
+    
 }

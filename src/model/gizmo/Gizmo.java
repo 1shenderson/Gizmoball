@@ -26,6 +26,8 @@ public interface Gizmo {
     public void rotateRight();
 
     public void addTrigger(Gizmo gizmo);
+    
+    public void removeTrigger(Gizmo gizmo);
 
 	public void trigger();
 
@@ -40,6 +42,8 @@ public interface Gizmo {
     public int[] getAllYPos();
 
 	public String getType();
+	
+	public void trigger(boolean b);
 
 	public int getx2();
 

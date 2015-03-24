@@ -26,6 +26,8 @@ public class Model extends Observable implements Board {
 	private Walls gws;
 	private ArrayList<Ball> ballsList;
 	private ArrayList<Gizmo> gizmoList;
+	private List<Object> triggerKeys;
+
 
 	public Model(int L) {
         this.L = 25; // TODO Assign L through the constructor
@@ -44,72 +46,17 @@ public class Model extends Observable implements Board {
 		lines = new ArrayList<VerticalLine>();
 
 		gizmoList = new ArrayList<Gizmo>();
-		//buildArena();
+		
+		triggerKeys = new ArrayList<Object>();
+
 
         L = 25; // TODO Assign L through the constructor
         friction1 = 0.025;
         friction2 = 0.025 / L;
         
-//        buildArena();
 	}
 
-		public void buildArena(){
-//			Ball ball1 = new Ball("ball","ball",250, 250, 100 ,100);
-//			Ball ball2 = new Ball("ball","ball",10, 20, 100, 100);
-//			Ball ball3 = new Ball("ball","ball",400, 400, 100, 100);
-//			Ball ball = new Ball("ball","ball", 17 * L, 1 * L, -100, 100);
-//
-//			addBall(ball);
-//			addBall(ball1);
-//			addBall(ball2);
-//			addBall(ball3);
-//
-//			addGizmo(2,8,"Circle","circle");
-//			addGizmo(3,7,"Circle","circle");
-//			addGizmo(4,6,"Circle","Circle");
-//			addGizmo(5,5,"Circle","Circle");
-//			addGizmo(3,7,"Circle","Circle");
-//			addGizmo(3,9,"Circle","Circle");
-//			addGizmo(4,10,"Circle","Circle");
-//			addGizmo(5,11,"Circle","Circle");
-//			addGizmo(6,12,"Circle","Circle");
-//			addGizmo(7,13,"Circle","Circle");
-//			addGizmo(8,13,"Circle","Circle");
-//			addGizmo(9,13,"Circle","circle");
-//			addGizmo(10,13,"Circle","Circle");
-//			addGizmo(10,13,"Circle","Circle");
-//			addGizmo(11,13,"Circle","Circle");
-//			addGizmo(12,13,"Circle","Circle");
-//			addGizmo(13,12,"Square","square");
-//			addGizmo(14,11,"Square","Square");
-//			addGizmo(15,10,"Square","Square");
-//			addGizmo(16,9,"Square","square");
-//			addGizmo(17,8,"Square","square");
-//			addGizmo(16,7,"Square","Square");
-//			addGizmo(15,6,"Square","Square");
-//			addGizmo(14,5,"Circle","Circle");
-//			addGizmo(13,5,"Circle","Circle");
-//			addGizmo(12,5,"Circle","Circle");
-//			addGizmo(11,5,"Circle","Circle");
-//			addGizmo(10,5,"Circle","Circle");
-//			addGizmo(9,5,"Circle","Circle");
-//			addGizmo(8,5,"Circle","Circle");
-//			addGizmo(7,5,"Circle","Circle");
-//			addGizmo(6,5,"Circle","Circle");
-//
-//			addGizmo(13,8,"Triangle","triangle");
-//			addGizmo(7,8,"Triangle","triangle");
-//			addGizmo(15,17,"Triangle","Triangle");
-//			addGizmo(13,17,"Triangle","Triangle");
-//			addGizmo(11,17,"Triangle","Triangle");
-//			addGizmo(7,15,"Triangle","Triangle");
-//			addGizmo(5,15,"Triangle","Triangle");
-//			addGizmo(5,2,"Square","Triangle");
-//			addGizmo(10,2,"Circle","Triangle");
-//			addGizmo(15,2,"Square","Triangle");
 
-
-	}
 
 	public void tick() {
 		double moveTime = 1.0 / 60;
@@ -285,9 +232,11 @@ public class Model extends Observable implements Board {
         	}
         	else if(gizmoLoad.get(0).equals("KeyConnect")){
         		System.out.println("Recognised KeyConnect for " + (String) gizmoLoad.get(1) + " " + (int) gizmoLoad.get(2) + " " + (String) gizmoLoad.get(3) + " " + (String) gizmoLoad.get(4));
+				addTriggerKey((String) gizmoLoad.get(4), (int) gizmoLoad.get(2), (String)gizmoLoad.get(3));         	
         	}
         	else if(gizmoLoad.get(0).equals("Connect")){
         		System.out.println("Recognised Connect for " + (String) gizmoLoad.get(1) + " " + (String) gizmoLoad.get(2));
+				addTriggerGizmo((String) gizmoLoad.get(2), (String) gizmoLoad.get(1));
         	}
         	else {
         		addGizmo((String) gizmoLoad.get(0), (String) gizmoLoad.get(1), (int) gizmoLoad.get(2), (int) gizmoLoad.get(3));
@@ -384,31 +333,62 @@ public class Model extends Observable implements Board {
         // TODO Code for removing a gizmo with a certain ID
     }
 
-    @Override
-    public void addTriggerKey(String gizmoID, int keyID) {
-        // TODO Code for adding a key as a trigger for a gizmo
-    }
+	@Override
+	public void addTriggerKey(String gizmoID, int keyID, String keyDirection) {
+		triggerKeys.add(gizmoID);
+		triggerKeys.add(keyDirection);
+		triggerKeys.add(keyID);
+	}
 
-    @Override
-    public void addTriggerGizmo(String gizmoID, String gizmoTriggerID) {
-        // TODO Code for making a gizmo trigger another gizmo
-    }
+	@Override
+	public void removeTriggerKey(String gizmoID, int keyID, String keyDirection) {
+		int index = triggerKeys.indexOf(keyID);
+		triggerKeys.remove(index);
+		triggerKeys.remove(index);
+		triggerKeys.remove(index);
+	}
 
-    @Override
-    public void removeTriggerKey(String gizmoID, int keyID) {
-        // TODO Code for removing a key trigger from a gizmo
-    }
+	@Override
+	public List<Object> getTriggerKeys() {
+		return triggerKeys;
+	}
 
-    @Override
-    public void removeTriggerGizmo(String gizmoID, String gizmoTriggerID) {
-        // TODO Code for removing a gizmo trigger from a gizmo
-    }
 
+	@Override
+	public void addTriggerGizmo(String gizmoID, String gizmoTriggerID) {
+		for(Gizmo gizmoTrig: gizmoList){
+			if(gizmoTrig.getID().equals(gizmoTriggerID)){
+				for(Gizmo gizmo: gizmoList){
+					if(gizmo.getID().equals(gizmoID)){
+						gizmo.addTrigger(gizmoTrig);;
+					}
+				}
+			}
+		}
+	}
+
+
+	@Override
+	public void removeTriggerGizmo(String gizmoID, String gizmoTriggerID) {
+
+		for(Gizmo gizmoTrig: gizmoList){
+			if(gizmoTrig.getID().equals(gizmoTriggerID)){
+				for(Gizmo gizmo: gizmoList){
+					if(gizmo.getID().equals(gizmoID)){
+						gizmo.removeTrigger(gizmoTrig);;
+					}
+				}
+			}
+		}
+	}
+	
     @Override
     public int[][] getMap() {
         // TODO Code for returning the map. NOTE: I think this is redundant as we don't store gizmos in an array.
         return new int[0][];
     }
+
+
 }
 
 

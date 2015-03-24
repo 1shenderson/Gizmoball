@@ -1,10 +1,10 @@
 package model;
 
-import model.gizmo.Gizmo;
-
 import java.io.File;
 import java.util.List;
 import java.util.Observer;
+
+import model.gizmo.Gizmo;
 
 public interface Board {
 	
@@ -16,11 +16,7 @@ public interface Board {
 
 	public void removeGizmo(String gizmoID);
 
-	public void addTriggerKey(String gizmoID, int keyID);
-
 	public void addTriggerGizmo(String gizmoID, String gizmoTriggerID);
-
-	public void removeTriggerKey(String gizmoID, int keyID);
 
 	public void removeTriggerGizmo(String gizmoID, String gizmoTriggerID);
 
@@ -36,12 +32,19 @@ public interface Board {
 	public void saveBoard(String fileName);
 	
 	public void loadBoard(File load);
-	
+
+	public void addTriggerKey(String gizmoID, int keyID, String keyDirection);
+
+	public List<Object> getTriggerKeys();
+
+	public void removeTriggerKey(String gizmoID, int keyID, String keyDirection);
+
 	public void addBall(Ball ball);
 
-    public void addBall(String id, int x, int y);
+	public List<Gizmo> getGizmoList();
 
-    public List<Gizmo> getGizmoList();
+	public List<Ball> getBallList();
 
-    public List<Ball> getBallList();
+	public void addBall(String string, int x, int y);
+
 }

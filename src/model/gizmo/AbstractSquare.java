@@ -2,8 +2,6 @@ package model.gizmo;
 
 import physics.Circle;
 import physics.LineSegment;
-
-import java.awt.Color;
 import java.util.ArrayList;
 
 /**
@@ -105,20 +103,6 @@ public class AbstractSquare extends AbstractGizmo {
 		return yPos;
 	}
 
-	@Override
-	public String getType() {
-		return gizmoType;
-	}
 
-	@Override
-	public int getx2() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
 
-	@Override
-	public int gety2() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
 }

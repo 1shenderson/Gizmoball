@@ -71,8 +71,8 @@ public  class BoardView extends JPanel implements Observer {
 			if (sides.isEmpty()){
 				CircleBumper circle = (CircleBumper) gizmo;
 				g2.setColor(gizmo.getColour());
-				int x = (int) (gizmo.getX() - circle.getRadius());
-				int y = (int) (gizmo.getY() - circle.getRadius());
+				int x = (int) (gizmo.getX());
+				int y = (int) (gizmo.getY());
 				int width = (int) (2 * circle.getRadius());
 				g2.fillOval(x, y, width, width);
 			}

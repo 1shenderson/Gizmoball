@@ -88,12 +88,32 @@ public abstract class AbstractGizmo implements Gizmo {
     public void addTrigger(Gizmo gizmo) {
         triggerList.add(gizmo);
     }
+    
+	@Override
+	public void removeTrigger(Gizmo gizmo) {
+		triggerList.remove(gizmo);
+	}
 
     @Override
     public void trigger() {
         // Do nothing by default, override if gizmo can be triggered.
     }
 
+    
+    public void trigger(boolean t) {
+        // Do nothing by default, override if gizmo can be triggered.
+    }
+    
+	public int getx2() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	public int gety2() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	
     @Override
     public void sendTrigger() {
         for (Gizmo gizmo: triggerList) {

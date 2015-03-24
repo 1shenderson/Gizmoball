@@ -13,7 +13,7 @@ import physics.LineSegment;
  */
 public class AbstractFlipper extends AbstractGizmo {
 
-	private List<Gizmo> triggerList;
+	private List<Gizmo> triggerList = new ArrayList<Gizmo>();
 	private double width = 12.5;
 	private double length = 37.5;
 	private int angle = 0;
@@ -23,14 +23,15 @@ public class AbstractFlipper extends AbstractGizmo {
 	private int x2;
 	private int y2;
 	private int L = 25;
-	private String gizmoType;
 	private ArrayList<Object> gizmoInfo;
+	private boolean active = false;
+	private int angularVelocity = 1080;
+
 
 	public AbstractFlipper(String gizmoType, String id, int x, int y) {
 		super(gizmoType, id, x, y);
 		this.x = (x * L) + 6;
 		this.y = (y * L) + 6;
-		this.gizmoType = gizmoType;
 		getEndPoint();
 		gizmoInfo = new ArrayList<Object>();
 		gizmoInfo.add(gizmoType);
@@ -75,6 +76,11 @@ public class AbstractFlipper extends AbstractGizmo {
 		return length;
 	}
 
+	public void rightFlip(){
+		x = x + 37;
+		x2 = x2 + 37;
+	}
+	
 	public int getAngle(){
 		return angle;
 	}
@@ -91,25 +97,31 @@ public class AbstractFlipper extends AbstractGizmo {
 	} 
 
 	public List<Gizmo> getTriggers() {
-		List<Gizmo> triggerList = null;
 		return triggerList;
 	}
 	
 	public ArrayList<Object> getFlipperInfo(){
 		return gizmoInfo;
 	}
-
-	@Override
-	public String getType() {
-		return gizmoType;
+	
+	public boolean getActive(){
+		return active;
 	}
 
+	public int getAngularVelocity(){
+		return angularVelocity;
+	}
+
+	public void setActive(boolean t){
+		active = t;
+	}
+	
 	@Override
 	public List<LineSegment> getSides() {
 		List<LineSegment> lineList = new ArrayList<LineSegment>();
-		LineSegment newls = new LineSegment(x+6.25, y, x2+6.25,y2);
+		LineSegment newls = new LineSegment(x+6, y, x2+6,y2);
 		lineList.add(newls);
-		LineSegment newls2 = new LineSegment(x-6.25, y, x2-6.25,y2);
+		LineSegment newls2 = new LineSegment(x-6, y, x2-6,y2);
 		lineList.add(newls2);
 		return lineList;
 	}
@@ -134,5 +146,10 @@ public class AbstractFlipper extends AbstractGizmo {
 	public int[] getAllYPos() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public void removeTrigger(Gizmo gizmo) {
+		triggerList.remove(gizmo);
 	}
 }

@@ -15,11 +15,9 @@ public class CircleBumper extends AbstractGizmo {
     private int radius;
     private int x;
     private int y;
-    private String gizmoType;
     public CircleBumper(String gizmoType, String id, int x, int y) {
         super(gizmoType, id, x, y);
         this.radius = L / 2;
-        this.gizmoType = gizmoType;
         color = Color.GREEN;
         this.x = x * L;
         this.y = y * L;
@@ -39,7 +37,7 @@ public class CircleBumper extends AbstractGizmo {
     }
 
     public Circle getCircle() {
-        return new Circle(this.getX() * L, this.getY() * L, radius);
+        return new Circle(this.getX(), this.getY(), radius);
     }
 
 	@Override
@@ -54,6 +52,16 @@ public class CircleBumper extends AbstractGizmo {
 		circleList.add(circle);
 		return circleList;
 	}
+	
+    @Override
+    public void trigger(){
+		if (color == Color.GREEN){
+			color = Color.ORANGE;
+		}
+		else {
+			color = Color.GREEN;
+		}
+    }
 
 	@Override
 	public int[] getAllXPos() {
@@ -67,20 +75,5 @@ public class CircleBumper extends AbstractGizmo {
 		return null;
 	}
 
-	@Override
-	public String getType() {
-		return gizmoType;
-	}
 
-	@Override
-	public int getx2() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int gety2() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
 }
