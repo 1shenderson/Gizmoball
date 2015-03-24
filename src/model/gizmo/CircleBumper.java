@@ -39,7 +39,7 @@ public class CircleBumper extends AbstractGizmo {
     }
 
     public Circle getCircle() {
-        return new Circle(this.getX(), this.getY(), radius);
+        return new Circle(this.getX() * L, this.getY() * L, radius);
     }
 
 	@Override

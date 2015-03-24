@@ -15,8 +15,11 @@ public class Ball {
 	private double radius;
 	private double xpos;
 	private double ypos;
+	private double startingXVelocity;
+	private double startingYVelocity;
 	private Color colour;
     private boolean ignoreAbsorber;
+    private String id;
 
 	private boolean stopped;
 
@@ -24,11 +27,18 @@ public class Ball {
 	public Ball(String gizmoType, String id, double x, double y, double xv, double yv) {
 		xpos = x; // Centre coordinates
 		ypos = y;
+		this.id = id;
+		startingXVelocity = xv;
+		startingYVelocity = yv;
 		colour = Color.BLUE;
 		velocity = new Vect(xv, yv);
 		radius = 7; // TODO Change constant 7 to quarter of L as per specification
 		stopped = false;
         ignoreAbsorber = false;
+	}
+	
+	public String getID(){
+		return id;
 	}
 
 	public Vect getVelo() {
@@ -86,6 +96,14 @@ public class Ball {
 
 	public Color getColour() {
 		return colour;
+	}
+	
+	public double getXVelocity(){
+		return startingXVelocity;
+	}
+	
+	public double getYVelocity(){
+		return startingYVelocity;
 	}
 
 }

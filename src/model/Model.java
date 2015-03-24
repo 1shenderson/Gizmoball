@@ -24,7 +24,7 @@ public class Model extends Observable implements Board {
     private double friction2;
     private double gravity;
 	private Walls gws;
-	private List<Ball> ballsList;
+	private ArrayList<Ball> ballsList;
 	private ArrayList<Gizmo> gizmoList;
 
 	public Model(int L) {
@@ -267,7 +267,7 @@ public class Model extends Observable implements Board {
 	}
 	
 	public void saveBoard(String fileName){
-        file.save(gizmoList, fileName);
+        file.save(gizmoList, ballsList, fileName);
     }
 
     public void loadBoard(File filed){

@@ -36,7 +36,7 @@ public class TriangleBumper extends AbstractGizmo {
         this.gizmoType = gizmoType;
         bottomY = this.y + this.height;
         rightX = this.x + this.width;
-        setTopCorner(this.x, this.y);
+        setTopCorner(this.x * L, this.y);
         setLeftCorner(topCornerX, topCornerY + this.height);
         setRightCorner(topCornerX + this.width, topCornerY);
     }
