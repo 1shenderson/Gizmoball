@@ -12,14 +12,14 @@ import model.gizmo.Gizmo;
 public class keyListen implements KeyListener {
 
 	private Board board;
-	private List<Object> triggerKey;
+	private List<ArrayList<Object>> triggerKey;
 	private List<Integer> keys = new ArrayList<Integer>();
 	private List<String> gizmoID = new ArrayList<String>();
 	private List<String> direction = new ArrayList<String>();
 	private List<Gizmo> giz = new ArrayList<Gizmo>();;
 
-	public keyListen(Board boar) {
-		board = boar;
+	public keyListen(Board board) {
+		this.board = board;
 	}
 
 	
@@ -30,10 +30,10 @@ public class keyListen implements KeyListener {
 		gizmoID.clear();
 		direction.clear();
 		keys.clear();
-		for (int i = 0; i < triggerKey.size()-2; i= i +3){
-			gizmoID.add((String) triggerKey.get(i));
-			direction.add((String) triggerKey.get(i+1));
-			keys.add((Integer) triggerKey.get(i+2));
+		for(ArrayList<Object> t: triggerKey){
+			gizmoID.add((String) t.get(0));
+			direction.add((String) t.get(1));
+			keys.add((Integer) t.get(2));
 		}
 		giz = board.getGizmoList();
 		int kID = e.getKeyCode();
@@ -63,12 +63,12 @@ public class keyListen implements KeyListener {
 		gizmoID.clear();
 		direction.clear();
 		keys.clear();
-		for (int i = 0; i < triggerKey.size()-2; i= i +3){
-			String dir = (String) triggerKey.get(i+1);
+		for(ArrayList<Object> t: triggerKey){
+			String dir = (String) t.get(1);
 			if (dir.equals("up")){
 				direction.add(dir);
-				gizmoID.add((String) triggerKey.get(i));
-				keys.add((Integer) triggerKey.get(i+2));
+				gizmoID.add((String) t.get(0));
+				keys.add((Integer) t.get(2));
 
 			}
 		}

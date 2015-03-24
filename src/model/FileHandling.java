@@ -6,7 +6,10 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Scanner;
 
 import model.gizmo.Absorber;
@@ -14,7 +17,7 @@ import model.gizmo.Gizmo;
 
 public class FileHandling {
 
-	public void save(ArrayList<Gizmo> gizmoList, ArrayList<Ball> ballsList, String fileName){
+	public void save(ArrayList<Gizmo> gizmoList, ArrayList<Ball> ballsList, List<ArrayList<Object>> triggersList, Map<String, Integer> rotateMap, String fileName){
 
 		String command = "";
 
@@ -31,27 +34,38 @@ public class FileHandling {
 			for(Gizmo g: gizmoList){
 				String gizmoType = g.getType();
 				String gizmoID = g.getID();
+				int x = g.getX() / 25;
+				int y = g.getY() / 25;
 				if(gizmoType.equals("Absorber")){
 					Absorber a = (Absorber) g;
-					int x = a.getX();
-					int y = a.getY();
-					int width = a.getWidth();
-					int height = a.getHeight();
+					int width = a.getWidth() / 25;
+					int height = a.getHeight() / 25;
 					command = gizmoType + " " + gizmoID + " " + x + " " + y + " " + width + " " + height;
 				}
-				else if(gizmoType.equals("KeyConnect")){
-					command = gizmoType + " " + gizmoID;
-				}
-				else if(gizmoType.equals("Connect")){
-					command = gizmoType + " " + gizmoID;
-				}
-				else if(!gizmoType.equals("Rotate")){
-					int x = g.getX();
-					int y = g.getY();
+				else{
 					command = gizmoType + " " + gizmoID + " " + x + " " + y;
 				}
 				pw.println(command);
 			}
+			for(ArrayList<Object> t: triggersList){
+				if(t.get(0).equals("KeyConnect")){
+					command = t.get(0) + " key " + t.get(1) + " " + t.get(2) + " " + t.get(3);
+				}
+				else if(t.get(0).equals("Connect")){
+					command = t.get(0) + " " + t.get(1) + " " + t.get(2);
+				}
+				pw.println(command);
+			}
+			Iterator<Entry<String, Integer>> it = rotateMap.entrySet().iterator();
+		    while (it.hasNext()) {
+		        Map.Entry<String, Integer> pair = (Map.Entry<String, Integer>)it.next();
+		        int size = (int) pair.getValue();
+		        for(int i = 0; i < size; i++){
+		        	command = "Rotate" + " " + pair.getKey();
+		        	pw.println(command);
+		        }
+		        it.remove();
+		    }
 			pw.close();
 		} catch (FileNotFoundException | UnsupportedEncodingException e) {
 			e.printStackTrace();

@@ -20,14 +20,25 @@ public class AbstractSquare extends AbstractGizmo {
     int topRightX;
     int topRightY;
     String gizmoType;
+    private int x;
+    private int y;
 
     public AbstractSquare(String gizmoType, String id, int x, int y) {
         super(gizmoType, id, x, y);
         this.width = 1;
         this.height = 1;
         setPoints(x, y);
-
+        this.x = x * L;
+        this.y = y * L;
         this.gizmoType = gizmoType;
+    }
+    
+    public int getX(){
+    	return x;
+    }
+    
+    public int getY(){
+    	return y;
     }
     
     void setPoints(int startX, int startY) {

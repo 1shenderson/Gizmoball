@@ -53,8 +53,12 @@ public class GizmoballGui implements Display {
 
         Font gf = new Font("Arial", Font.BOLD, 12);
 		Container contentPane = frame.getContentPane();
+        contentPane.addKeyListener(keyList);
+
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new BorderLayout());
+        buttonPanel.addKeyListener(keyList);
+
         modeButtonPanel = new JPanel();
         modeButtonPanel.addKeyListener(keyList);
 
@@ -68,6 +72,8 @@ public class GizmoballGui implements Display {
         buttonPanel.add(modeButtonPanel, BorderLayout.CENTER);
 		contentPane.add(buttonPanel, BorderLayout.LINE_START);
 		contentPane.add(boardView, BorderLayout.CENTER);
+        contentPane.addKeyListener(keyList);
+
 
         togglePlay();
 
@@ -140,6 +146,8 @@ public class GizmoballGui implements Display {
 
         setButtonPanel(buttonList);
         boardView.addMouseListener((MouseListener) listener);
+        boardView.addKeyListener(keyList);
+
         changeTitle("Build Mode");
 	}
 
@@ -171,6 +179,8 @@ public class GizmoballGui implements Display {
 
         button = new JButton("Load");
         buttonList.add(button);
+
+        modeButton.addKeyListener(keyList);
 
         setButtonPanel(buttonList);
         boardView.removeMouseListener((MouseListener) listener);
@@ -204,6 +214,7 @@ public class GizmoballGui implements Display {
         for (JButton b : buttons) {
             b.setFont(font);
             b.addActionListener(listener);
+            b.addKeyListener(keyList);
             b.setMaximumSize(new Dimension(100, 100));
             modeButtonPanel.add(b);
         }
