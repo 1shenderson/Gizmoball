@@ -26,6 +26,7 @@ public class FileHandling {
 				double xv = b.getXVelocity();
 				double yv = b.getYVelocity();
 				command = "Ball" + " " + b.getID() + " " + x + " " + y + " " + xv + " " + yv;
+				pw.println(command);
 			}
 			for(Gizmo g: gizmoList){
 				String gizmoType = g.getType();
@@ -63,7 +64,7 @@ public class FileHandling {
 
 		try {
 			Scanner sc = new Scanner(file);
-			while(sc.hasNextLine()){
+			while(sc.hasNext()){
 				ArrayList<Object> gizmoInfo = new ArrayList<Object>();
 				String type = sc.next();
 				String id = sc.next();
