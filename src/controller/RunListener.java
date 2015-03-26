@@ -5,7 +5,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-import javax.swing.Timer;
+import javax.swing.*;
 
 import view.Display;
 import view.GizmoballGui;
@@ -41,14 +41,15 @@ public class RunListener implements ActionListener, MouseListener {
             String command = e.getActionCommand();
             switch (command) {
                 // MODE CHANGES
-                case "SWITCH TO BUILD MODE":
+                case "<html>SWITCH TO<br>BUILD MODE</html>":
                     mode = Mode.build;
                     gui.toggleBuild();
                     timer.stop();
                     break;
-                case "SWITCH TO PLAY MODE":
+                case "<html>SWITCH TO<br>PLAY MODE</html>":
                     mode = Mode.play;
                     activeTool = null;
+                    gui.setSelectedButton(null);
                     gui.togglePlay();
                     break;
                 // PLAY MODE
@@ -61,15 +62,6 @@ public class RunListener implements ActionListener, MouseListener {
                 case "Tick":
                     board.tick();
                     break;
-                case "Save":
-                    board.saveBoard(gui.save());
-                    break;
-                case "Load":
-                    board.loadBoard(gui.load());
-                    break;
-                case "Quit":
-                    System.exit(0);
-                    break;
                 // BUILD MODE
                 case "Ball":
                 case "Square":
@@ -81,10 +73,18 @@ public class RunListener implements ActionListener, MouseListener {
                 case "Rotate":
                 case "Link":
                 case "Unlink":
-                case "Remove":
                 case "Move":
+                case "Delete":
+                    JButton button = ((JButton) e.getSource());
+                    gui.setSelectedButton(button);
                     activeTool = command;
                     System.out.println("Set tool to "+command);
+                    break;
+                case "Save":
+                    board.saveBoard(gui.save());
+                    break;
+                case "Load":
+                    board.loadBoard(gui.load());
                     break;
                 default:
                     throw new RuntimeException("Unrecognized command '" + command + "', add handling for this button.");

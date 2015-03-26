@@ -1,6 +1,7 @@
 package view;
 
 
+import javax.swing.*;
 import java.io.File;
 import java.util.Observer;
 
@@ -22,4 +23,6 @@ public interface Display extends Observer{
 	public void about();
 
 	public void exit();
+
+    public void setSelectedButton(JButton button);
 }

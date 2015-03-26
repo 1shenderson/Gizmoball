@@ -1,18 +1,15 @@
 package view;
 
-import java.awt.BorderLayout;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GridLayout;
+import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
 import java.io.File;
-import java.util.ArrayList;
+import java.io.IOException;
+import java.util.*;
 import java.util.List;
-import java.util.Observable;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import model.Board;
@@ -31,25 +28,25 @@ public class GizmoballGui implements Display {
 	private KeyListener keyList;
 	private BoardView boardView;
     private JButton modeButton;
+    private JButton selectedButton;
     private JPanel modeButtonPanel;
+    private Map<String, Image> imageList;
 
 	public GizmoballGui(Board board, int L) {
 		this.board = board;
         this.L = L;
 		listener = new RunListener(board, this);
 		keyList = new keyListen(board);
-
+        loadImages();
 	}
 
 	public void createAndShowGUI() {
-
-		frame = new JFrame("Hit load to select text file and hit start!");
+		frame = new JFrame("Gizmoball");
 		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		frame.addKeyListener(keyList);
 
 		// Board is passed the Model so it can act as Observer
-		boardView = new BoardView(500, 500, board);
-		boardView.addKeyListener(keyList);
+		boardView = new BoardView(20 * L, 20 * L, board);
 
         Font gf = new Font("Arial", Font.BOLD, 12);
 		Container contentPane = frame.getContentPane();
@@ -60,19 +57,19 @@ public class GizmoballGui implements Display {
         buttonPanel.addKeyListener(keyList);
 
         modeButtonPanel = new JPanel();
-        modeButtonPanel.addKeyListener(keyList);
+        modeButtonPanel.setFocusable(false);
 
         modeButton = new JButton();
         modeButton.setFont(gf);
         modeButton.addActionListener(listener);
         modeButton.setMaximumSize(new Dimension(200, 100));
-        modeButton.addKeyListener(keyList);
+        modeButton.setFocusable(false);
+        modeButton.setPreferredSize(new Dimension(128, 64));
 
-        buttonPanel.add(modeButton, BorderLayout.BEFORE_FIRST_LINE);
+        buttonPanel.add(modeButton, BorderLayout.LINE_START);
         buttonPanel.add(modeButtonPanel, BorderLayout.CENTER);
-		contentPane.add(buttonPanel, BorderLayout.LINE_START);
+		contentPane.add(buttonPanel, BorderLayout.AFTER_LAST_LINE);
 		contentPane.add(boardView, BorderLayout.CENTER);
-        contentPane.addKeyListener(keyList);
 
 
         togglePlay();
@@ -81,7 +78,55 @@ public class GizmoballGui implements Display {
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 	}
-	
+
+    public void loadImages() {
+        try {
+            Image image;
+            String imageName;
+            imageList = new HashMap<>();
+
+            imageName = "Absorber";
+            image = ImageIO.read(new File("images/"+imageName+".png"));
+            imageList.put(imageName, image);
+            imageName = "Ball";
+            image = ImageIO.read(new File("images/"+imageName+".png"));
+            imageList.put(imageName, image);
+            imageName = "Circle";
+            image = ImageIO.read(new File("images/"+imageName+".png"));
+            imageList.put(imageName, image);
+            imageName = "Delete";
+            image = ImageIO.read(new File("images/"+imageName+".png"));
+            imageList.put(imageName, image);
+            imageName = "Left Flipper";
+            image = ImageIO.read(new File("images/"+imageName+".png"));
+            imageList.put(imageName, image);
+            imageName = "Link";
+            image = ImageIO.read(new File("images/"+imageName+".png"));
+            imageList.put(imageName, image);
+            imageName = "Move";
+            image = ImageIO.read(new File("images/"+imageName+".png"));
+            imageList.put(imageName, image);
+            imageName = "Right Flipper";
+            image = ImageIO.read(new File("images/"+imageName+".png"));
+            imageList.put(imageName, image);
+            imageName = "Rotate";
+            image = ImageIO.read(new File("images/"+imageName+".png"));
+            imageList.put(imageName, image);
+            imageName = "Square";
+            image = ImageIO.read(new File("images/"+imageName+".png"));
+            imageList.put(imageName, image);
+            imageName = "Triangle";
+            image = ImageIO.read(new File("images/"+imageName+".png"));
+            imageList.put(imageName, image);
+            imageName = "Unlink";
+            image = ImageIO.read(new File("images/"+imageName+".png"));
+            imageList.put(imageName, image);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 	@Override
 	public File load(){
 		JFileChooser fc = new JFileChooser();
@@ -116,13 +161,18 @@ public class GizmoballGui implements Display {
 	public void toggleBuild() {
         // TODO Change the board to grid mode
 
-        ArrayList<JButton> buttonList = new ArrayList<>();
+        ArrayList<JComponent> buttonList = new ArrayList<>();
         modeButtonPanel.removeAll();
-        modeButtonPanel.setLayout(new GridLayout(4, 1));
-        JButton button;
+        modeButtonPanel.setLayout(new GridLayout(2, 10));
+        JComponent button;
 
-        modeButton.setText("SWITCH TO PLAY MODE");
+        modeButton.setText("<html>SWITCH TO<br>PLAY MODE</html>");
 
+        /* GridLayout first fills each row, before filling the next row. Because our layout is on the bottom, it we need
+           to fill each column first, then each row. GridLayout does not support that, so we'll just have to add these
+           buttons in a very specific order. */
+
+        // FIRST ROW - 4 placements, 1 space between sections, 1 storage
         button = new JButton("Ball");
         buttonList.add(button);
 
@@ -135,6 +185,25 @@ public class GizmoballGui implements Display {
         button = new JButton("Circle");
         buttonList.add(button);
 
+        button = new JLabel();
+        buttonList.add(button);
+
+        button = new JButton("Move");
+        buttonList.add(button);
+
+        button = new JButton("Link");
+        buttonList.add(button);
+
+        button = new JButton("Delete");
+        buttonList.add(button);
+
+        button = new JLabel();
+        buttonList.add(button);
+
+        button = new JButton("Save");
+        buttonList.add(button);
+
+        // SECOND ROW - 4 placements (one of them is a filler space), 1 space between sections, 1 storage
         button = new JButton("Absorber");
         buttonList.add(button);
 
@@ -144,7 +213,28 @@ public class GizmoballGui implements Display {
         button = new JButton("Right Flipper");
         buttonList.add(button);
 
-        setButtonPanel(buttonList);
+        button = new JLabel();
+        buttonList.add(button);
+
+        button = new JLabel();
+        buttonList.add(button);
+
+        button = new JButton("Rotate");
+        buttonList.add(button);
+
+        button = new JButton("Unlink");
+        buttonList.add(button);
+
+        button = new JLabel();
+        buttonList.add(button);
+
+        button = new JLabel();
+        buttonList.add(button);
+
+        button = new JButton("Load");
+        buttonList.add(button);
+
+        setButtonPanel(buttonList, new Dimension(32, 32));
         boardView.addMouseListener((MouseListener) listener);
         boardView.addKeyListener(keyList);
 
@@ -155,12 +245,12 @@ public class GizmoballGui implements Display {
 	public void togglePlay() {
         // TODO Change the board
 
-        ArrayList<JButton> buttonList = new ArrayList<>();
+        ArrayList<JComponent> buttonList = new ArrayList<>();
         modeButtonPanel.removeAll();
-        modeButtonPanel.setLayout(new GridLayout(4, 1));
+        modeButtonPanel.setLayout(new GridLayout(1, 3));
         JButton button;
 
-        modeButton.setText("SWITCH TO BUILD MODE");
+        modeButton.setText("<html>SWITCH TO<br>BUILD MODE</html>");
 
         button = new JButton("Start");
         buttonList.add(button);
@@ -171,18 +261,9 @@ public class GizmoballGui implements Display {
         button = new JButton("Tick");
         buttonList.add(button);
 
-        button = new JButton("Quit");
-        buttonList.add(button);
-
-        button = new JButton("Save");
-        buttonList.add(button);
-
-        button = new JButton("Load");
-        buttonList.add(button);
-
         modeButton.addKeyListener(keyList);
 
-        setButtonPanel(buttonList);
+        setButtonPanel(buttonList, new Dimension(64, 64));
         boardView.removeMouseListener((MouseListener) listener);
         changeTitle("Play Mode");
 	}
@@ -190,33 +271,57 @@ public class GizmoballGui implements Display {
 	@Override
 	public void help() {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void about() {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void exit() {
 		// TODO Auto-generated method stub
-		
 	}
+
+    public void setSelectedButton(JButton button) {
+        if (selectedButton != null) {
+            selectedButton.setSelected(false);
+        }
+        if (button != null) {
+            button.setSelected(true);
+            selectedButton = button;
+        }
+    }
 
     private void changeTitle(String s) {
         frame.setTitle("Gizmoball - "+s);
     }
 
-    private void setButtonPanel(List<JButton> buttons) {
+    private void setButtonPanel(List<JComponent> components, Dimension size) {
         Font font = new Font("Arial", Font.BOLD, 12);
-        for (JButton b : buttons) {
-            b.setFont(font);
-            b.addActionListener(listener);
-            b.addKeyListener(keyList);
-            b.setMaximumSize(new Dimension(100, 100));
-            modeButtonPanel.add(b);
+        for (JComponent comp : components) {
+            if (comp instanceof JButton) {
+                JButton button = (JButton) comp;
+                button.setToolTipText(button.getText());
+                button.addActionListener(listener);
+                // Check if the button has a corresponding image to replace the text
+                if (imageList.containsKey(button.getText())) {
+                    // Load the image from the image list
+                    Image image = imageList.get(button.getText());
+                    // Rescale the image to the button size
+                    image = image.getScaledInstance(size.width, size.height, Image.SCALE_SMOOTH);
+                    // Turn it into an icon
+                    ImageIcon icon = new ImageIcon(image);
+                    button.setIcon(icon);
+                    // Remove the text, manually set its action command instead (for the controller)
+                    button.setActionCommand(button.getText());
+                    button.setText("");
+                }
+            }
+            comp.setFont(font);
+            comp.setPreferredSize(size);
+            comp.setFocusable(false);
+            modeButtonPanel.add(comp);
         }
     }
 
