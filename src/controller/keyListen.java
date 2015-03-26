@@ -31,9 +31,10 @@ public class keyListen implements KeyListener {
 		direction.clear();
 		keys.clear();
 		for(ArrayList<Object> t: triggerKey){
-			gizmoID.add((String) t.get(0));
-			direction.add((String) t.get(1));
-			keys.add((Integer) t.get(2));
+			System.out.println(t);
+			gizmoID.add((String) t.get(1));
+			direction.add((String) t.get(2));
+			keys.add((Integer) t.get(3));
 		}
 		giz = board.getGizmoList();
 		int kID = e.getKeyCode();
@@ -64,12 +65,11 @@ public class keyListen implements KeyListener {
 		direction.clear();
 		keys.clear();
 		for(ArrayList<Object> t: triggerKey){
-			String dir = (String) t.get(1);
+			String dir = (String) t.get(2);
 			if (dir.equals("up")){
 				direction.add(dir);
-				gizmoID.add((String) t.get(0));
-				keys.add((Integer) t.get(2));
-
+				gizmoID.add((String) t.get(1));
+				keys.add((Integer) t.get(3));
 			}
 		}
 		giz = board.getGizmoList();

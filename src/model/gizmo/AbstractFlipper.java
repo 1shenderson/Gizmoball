@@ -129,9 +129,9 @@ public class AbstractFlipper extends AbstractGizmo {
 	@Override
 	public List<Circle> getCorners() {
 		List<Circle> circleList = new ArrayList<Circle>();
-		Circle circle = new Circle(x-6,y,12);
+		Circle circle = new Circle(x,y,6);
 		circleList.add(circle);
-		Circle circle2 = new Circle(x2-6,y2,12);
+		Circle circle2 = new Circle(x2,y2+3,6);
 		circleList.add(circle2);
 		return circleList;
 	}

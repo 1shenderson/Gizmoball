@@ -226,7 +226,7 @@ public class Model extends Observable implements Board {
         for(int i = 0; i < gizmoInfo.size(); i++){
         	ArrayList<Object> gizmoLoad = gizmoInfo.get(i);
         	if(gizmoLoad.get(0).equals("Ball")){
-        		addBall(new Ball((String) gizmoLoad.get(1), (double) gizmoLoad.get(2), (double) gizmoLoad.get(3), (double) gizmoLoad.get(4), (double) gizmoLoad.get(5)));
+        		addBall(new Ball((String) gizmoLoad.get(1), (double) gizmoLoad.get(2) * L, (double) gizmoLoad.get(3) * L, (double) gizmoLoad.get(4), (double) gizmoLoad.get(5)));
         	}
         	else if(gizmoLoad.get(0).equals("Rotate")){
         		rotate((String) gizmoLoad.get(1));
@@ -419,16 +419,11 @@ public class Model extends Observable implements Board {
 			if(gizmoTrig.getID().equals(gizmoTriggerID)){
 				for(Gizmo gizmo: gizmoList){
 					if(gizmo.getID().equals(gizmoID)){
-						gizmo.addTrigger(gizmoTrig);;
+						gizmo.addTrigger(gizmoTrig);
 					}
 				}
 			}
 		}
-		ArrayList<Object> triggerConnect = new ArrayList<Object>();
-		triggerConnect.add(gizmoType);
-		triggerConnect.add(gizmoID);
-		triggerConnect.add(gizmoTriggerID);
-		triggerList.add(triggerConnect);
 	}
 
 
@@ -439,7 +434,7 @@ public class Model extends Observable implements Board {
 			if(gizmoTrig.getID().equals(gizmoTriggerID)){
 				for(Gizmo gizmo: gizmoList){
 					if(gizmo.getID().equals(gizmoID)){
-						gizmo.removeTrigger(gizmoTrig);;
+						gizmo.removeTrigger(gizmoTrig);
 					}
 				}
 			}

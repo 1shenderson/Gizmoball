@@ -34,8 +34,20 @@ public class FileHandling {
 			for(Gizmo g: gizmoList){
 				String gizmoType = g.getType();
 				String gizmoID = g.getID();
-				int x = g.getX() / 25;
-				int y = g.getY() / 25;
+				int x;
+				int y;
+				if(gizmoType.equals("LeftFlipper")){
+					x = (g.getX() - 6) / 25;
+					y = g.getY() / 25;
+				}
+				else if(gizmoType.equals("RightFlipper")){
+					x = (g.getX() - 43) / 25;
+					y = g.getY() / 25;
+				}
+				else{
+					x = g.getX() / 25;
+					y = g.getY() / 25;
+				}
 				if(gizmoType.equals("Absorber")){
 					Absorber a = (Absorber) g;
 					int width = a.getWidth() / 25;
@@ -45,6 +57,7 @@ public class FileHandling {
 				else{
 					command = gizmoType + " " + gizmoID + " " + x + " " + y;
 				}
+				
 				pw.println(command);
 			}
 			for(ArrayList<Object> t: triggersList){
