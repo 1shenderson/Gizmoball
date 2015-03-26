@@ -388,6 +388,24 @@ public class Model extends Observable implements Board {
 		triggerKeys.add(keyID);
 		triggerList.add(triggerKeys);
 	}
+	
+	//addTriggerKey(triggerMap);
+    //addTriggerGizmo(connectMap);
+
+	
+	/*@Override
+	public void addTriggerKey(List<ArrayList<Object>> triggerMap) {
+		
+		for(ArrayList<Object> t : triggerMap){
+			for(ArrayList<Gizmo> g : gizmoList){
+				if(t.get(1).equals(g.get(1)){
+					found = true;
+				}
+			}
+		}
+					triggerList.add(triggerKeys);
+		}
+	}*/
 
 	@Override
 	public void removeTriggerKey(String gizmoID, int keyID, String keyDirection) {
