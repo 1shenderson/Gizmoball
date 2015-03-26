@@ -21,7 +21,7 @@ public class Model extends Observable implements Board {
 
 	private ArrayList<VerticalLine> lines;
 	private FileHandling file;
-    public int L;
+    public int L = 25;
     private double friction1;
     private double friction2;
     private double gravity;
@@ -31,8 +31,8 @@ public class Model extends Observable implements Board {
 	private List<ArrayList<Object>> triggerList;
 	private Map<String, Integer> rotateMap;
 
-	public Model(int L) {
-        this.L = L; // TODO Assign L through the constructor
+	public Model() {
+    //    this.L = L; // TODO Assign L through the constructor
         gravity = L * L;
         friction1 = 0.025;
         friction2 = 0.025 / L;
