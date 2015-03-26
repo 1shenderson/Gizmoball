@@ -226,7 +226,7 @@ public class Model extends Observable implements Board {
         for(int i = 0; i < gizmoInfo.size(); i++){
         	ArrayList<Object> gizmoLoad = gizmoInfo.get(i);
         	if(gizmoLoad.get(0).equals("Ball")){
-        		addBall(new Ball((String) gizmoLoad.get(0), (String) gizmoLoad.get(1), (double) gizmoLoad.get(2), (double) gizmoLoad.get(3), (double) gizmoLoad.get(4), (double) gizmoLoad.get(5)));
+        		addBall(new Ball((String) gizmoLoad.get(1), (double) gizmoLoad.get(2), (double) gizmoLoad.get(3), (double) gizmoLoad.get(4), (double) gizmoLoad.get(5)));
         	}
         	else if(gizmoLoad.get(0).equals("Rotate")){
         		rotate((String) gizmoLoad.get(1));
@@ -262,11 +262,15 @@ public class Model extends Observable implements Board {
         notifyObservers();
     }
 
-    public void addBall(String id, int x, int y) {
-        Ball ball = new Ball("", id, x*L + L/2, y*L + L/2, 0, 0);
+    public String addBall(String id, int x, int y) {
+        if (id == null) {
+            id = generateId("B");
+        }
+        Ball ball = new Ball(id, x*L + L/2, y*L + L/2, 0, 0);
         ballsList.add(ball);
         setChanged();
         notifyObservers();
+        return id;
     }
 
 	public List<Ball> getBallList(){
@@ -287,20 +291,21 @@ public class Model extends Observable implements Board {
         Gizmo gizmo;
         switch (gizmoType) {
             case "Square":
-                gizmo = new SquareBumper(gizmoType, gizmoID, x, y);
+                gizmo = new SquareBumper(gizmoType, gizmoID == null ? generateId("S") : gizmoID, x, y);
                 break;
             case "Triangle":
-                gizmo = new TriangleBumper(gizmoType, gizmoID, x, y);
-                rotateMap.put(gizmoID, 0);
+                String id = gizmoID == null ? generateId("T") : gizmoID;
+                gizmo = new TriangleBumper(gizmoType, id, x, y);
+                rotateMap.put(id, 0);
                 break;
             case "Circle":
-                gizmo = new CircleBumper(gizmoType, gizmoID, x, y);
+                gizmo = new CircleBumper(gizmoType, gizmoID == null ? generateId("C") : gizmoID, x, y);
                 break;
             case "RightFlipper":
-                gizmo = new FlipperRight(gizmoType, gizmoID, x, y);
+                gizmo = new FlipperRight(gizmoType, gizmoID == null ? generateId("RF") : gizmoID, x, y);
                 break;
             case "LeftFlipper":
-                gizmo = new FlipperLeft(gizmoType, gizmoID, x, y);
+                gizmo = new FlipperLeft(gizmoType, gizmoID == null ? generateId("LF") : gizmoID, x, y);
                 break;
             case "Absorber":
                 throw new IllegalArgumentException("Absorber  needs a width and a height as arguments in addition to the rest.");
@@ -310,6 +315,33 @@ public class Model extends Observable implements Board {
         gizmoList.add(gizmo);
         setChanged();
         notifyObservers();
+    }
+
+    private String generateId(String s) {
+        for (int i = 1; true; i++) {
+            String id = s + i;
+            if (getGizmo(id) == null && getBall(id) == null) {
+                return id;
+            }
+        }
+    }
+
+    private Gizmo getGizmo(String gizmoId) {
+        for (Gizmo gizmo : gizmoList) {
+            if (gizmo.getID().equals(gizmoId)) {
+                return gizmo;
+            }
+        }
+        return null;
+    }
+
+    private Ball getBall(String id) {
+        for (Ball ball : ballsList) {
+            if (ball.getID().equals(id)) {
+                return ball;
+            }
+        }
+        return null;
     }
     
     public void rotate(String id){
@@ -331,7 +363,7 @@ public class Model extends Observable implements Board {
     
     @Override
     public void addAbsorber(String gizmoType, String id, int x, int y, int width, int height) {
-        Absorber absorber = new Absorber(gizmoType, id, x, y, width, height, this);
+        Absorber absorber = new Absorber(gizmoType, id == null ? generateId("A") : id, x, y, width, height, this);
         gizmoList.add(absorber);
         setChanged();
         notifyObservers();
@@ -366,6 +398,14 @@ public class Model extends Observable implements Board {
 			}
 		}
 	}
+
+    public void setBallSpeed(String ballId, int velocityX, int velocityY) {
+        for (Ball ball : ballsList) {
+            if (ball.getID().equals(ballId)) {
+                ball.setVelo(new Vect(velocityX, velocityY));
+            }
+        }
+    }
 
 	@Override
 	public List<ArrayList<Object>> getTriggerKeys() {

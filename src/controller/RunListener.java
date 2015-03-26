@@ -113,21 +113,21 @@ public class RunListener implements ActionListener, MouseListener {
                 case "Square":
                 case "Circle":
                 case "Triangle":
-                    board.addGizmo(activeTool, "TEST", lastX, lastY); // TODO Make a proper ID
+                    board.addGizmo(activeTool, null, lastX, lastY); // TODO Make a proper ID
                     break;
                 case "Ball":
-                    board.addBall("TEST", x, y);
+                    board.addBall(null, x, y);
                     break;
                 case "Left Flipper":
-                    board.addGizmo("LeftFlipper", "TEST", lastX, lastY); // TODO Make a proper ID
+                    board.addGizmo("LeftFlipper", null, lastX, lastY); // TODO Make a proper ID
                     break;
                 case "Right Flipper":
-                    board.addGizmo("RightFlipper", "TEST", lastX, lastY); // TODO Make a proper ID
+                    board.addGizmo("RightFlipper", null, lastX, lastY); // TODO Make a proper ID
                     break;
             }
         } else {
             if (activeTool.equals("Absorber")) {
-                board.addAbsorber(activeTool, "TEST", lastX, lastY, x-lastX+1, y-lastY+1);
+                board.addAbsorber(activeTool, null, lastX, lastY, x-lastX+1, y-lastY+1);
             }
         }
     }

@@ -40,12 +40,12 @@ public interface Board {
 
 	public void removeTriggerKey(String gizmoID, int keyID, String keyDirection);
 
-	public void addBall(Ball ball);
-
 	public List<Gizmo> getGizmoList();
 
 	public List<Ball> getBallList();
 
-	public void addBall(String string, int x, int y);
+    public void setBallSpeed(String ballId, int velocityX, int velocityY);
+
+	public String addBall(String string, int x, int y);
 
 }

@@ -24,7 +24,7 @@ public class Ball {
 	private boolean stopped;
 
 	// x, y coordinates and x,y velocity
-	public Ball(String gizmoType, String id, double x, double y, double xv, double yv) {
+	public Ball(String id, double x, double y, double xv, double yv) {
 		xpos = x; // Centre coordinates
 		ypos = y;
 		this.id = id;

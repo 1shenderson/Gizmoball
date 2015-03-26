@@ -22,8 +22,6 @@ public class Absorber extends AbstractSquare {
      * @param y Position Y on the board
      * @param width Width in L. Has to be at least 1.
      * @param height Height in L. Has to be at least 1.
-     * @param velX Starting X velocity of ball spawned by this absorber
-     * @param velY Starting Y velocity of ball spawned by this absorber
      * @param parent Parent board containing the absorber
      * @param id ID of the gizmo
      */
@@ -59,11 +57,10 @@ public class Absorber extends AbstractSquare {
      */
     public void trigger() {
         if (absorbed > 0) {
-            double ballX = botRightX - 0.5 * L; // X position of ball to be spawned by the absorber
-            double ballY = topLeftY - 1 * L; // Y position of ball to be spawned by the absorber
-            Ball ball = new Ball("", "", ballX, ballY, velX, velY);
-            ball.setIgnoreAbsorber(true);
-            parent.addBall(ball);
+            double ballX = botRightX / L - 1; // X position of ball to be spawned by the absorber
+            double ballY = topLeftY / L - 1; // Y position of ball to be spawned by the absorber
+            String ballId = parent.addBall(null, (int) ballX, (int) ballY);
+            parent.setBallSpeed(ballId, (int) velX, (int) velY);
             absorbed--;
             // TODO Spawn the ball INSIDE of the absorber, not outside.
         }
