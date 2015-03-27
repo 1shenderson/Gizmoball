@@ -7,6 +7,7 @@ import java.util.List;
 
 import model.Board;
 import model.Model;
+import model.gizmo.Absorber;
 import model.gizmo.Gizmo;
 
 import org.junit.Test;
@@ -52,8 +53,23 @@ public class ModelTests {
 			assertEquals(gizmoList.get(4).getID(), "RF112");
 			assertEquals(Math.round(gizmoList.get(4).getX()/25), 12);
 			assertEquals(gizmoList.get(4).getY()/25, 2);
-			
-			
+		}
+	}
+	
+	@Test
+	public void addAbsorber() {
+		board.addAbsorber("Absorber", "A", 0, 19, 20, 20);
+		
+		gizmoList = board.getGizmoList();
+		
+		for (int i = 0; i < gizmoList.size(); i++) {
+			Absorber absorber = (Absorber) gizmoList.get(0);
+			assertEquals(gizmoList.get(0).getType(), "Absorber");
+			assertEquals(gizmoList.get(0).getID(), "A");
+			assertEquals(gizmoList.get(0).getX()/25, 0);
+			assertEquals(gizmoList.get(0).getY()/25, 19);
+			assertEquals(absorber.getWidth(), 20);
+			assertEquals(absorber.getHeight(), 20);
 		}
 	}
 
