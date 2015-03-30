@@ -106,4 +106,8 @@ public class Ball {
 		return startingYVelocity;
 	}
 
+	@Override
+	public String toString(){
+		return "Ball " + getID() + " " + getExactX()/25 + " " + getExactY()/25 + " " + getXVelocity() + " " + getYVelocity();
+	}
 }

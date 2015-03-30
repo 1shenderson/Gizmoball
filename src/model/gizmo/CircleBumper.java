@@ -74,6 +74,9 @@ public class CircleBumper extends AbstractGizmo {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-
+	
+	@Override
+	public String toString(){
+		return "Circle " + getID() + " " + getX()/25 + " " + getY()/25;
+	}
 }

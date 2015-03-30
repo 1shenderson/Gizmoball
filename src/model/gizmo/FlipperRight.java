@@ -81,4 +81,9 @@ public class FlipperRight extends AbstractFlipper {
 		}
 		getEndPoint();
 	}
+	
+	@Override
+	public String toString(){
+		return "RightFlipper " + getID() + " " + (getX() - 43) /25 + " " + getY()/25;
+	}
 }

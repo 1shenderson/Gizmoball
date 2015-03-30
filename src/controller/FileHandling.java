@@ -25,40 +25,11 @@ public class FileHandling {
 		try{
 			PrintWriter pw = new PrintWriter(fileName, "UTF-8");
 			for(Ball b: ballsList){
-				double x = b.getExactX();
-				double y = b.getExactY();
-				double xv = b.getXVelocity();
-				double yv = b.getYVelocity();
-				command = "Ball" + " " + b.getID() + " " + x + " " + y + " " + xv + " " + yv;
+				command = b.toString();
 				pw.println(command);
 			}
 			for(Gizmo g: gizmoList){
-				String gizmoType = g.getType();
-				String gizmoID = g.getID();
-				int x;
-				int y;
-				if(gizmoType.equals("LeftFlipper")){
-					x = (g.getX() - 6) / 25;
-					y = g.getY() / 25;
-				}
-				else if(gizmoType.equals("RightFlipper")){
-					x = (g.getX() - 43) / 25;
-					y = g.getY() / 25;
-				}
-				else{
-					x = g.getX() / 25;
-					y = g.getY() / 25;
-				}
-				if(gizmoType.equals("Absorber")){
-					Absorber a = (Absorber) g;
-					int width = a.getWidth() / 25;
-					int height = a.getHeight() / 25;
-					command = gizmoType + " " + gizmoID + " " + x + " " + y + " " + width + " " + height;
-				}
-				else{
-					command = gizmoType + " " + gizmoID + " " + x + " " + y;
-				}
-				
+				command = g.toString();
 				pw.println(command);
 			}
 			for(ArrayList<Object> t: triggersList){
@@ -71,17 +42,17 @@ public class FileHandling {
 				pw.println(command);
 			}
 			Iterator<Entry<String, Integer>> it = rotateMap.entrySet().iterator();
-		    while (it.hasNext()) {
-		        Map.Entry<String, Integer> pair = (Map.Entry<String, Integer>)it.next();
-		        int size = (int) pair.getValue();
-		        for(int i = 0; i < size; i++){
-		        	command = "Rotate" + " " + pair.getKey();
-		        	pw.println(command);
-		        }
-		        it.remove();
-		    }
-		    pw.println("Gravity " + gravity);
-		    pw.println("Friction " + friction1 + " " + friction2);
+			while (it.hasNext()) {
+				Map.Entry<String, Integer> pair = (Map.Entry<String, Integer>)it.next();
+				int size = (int) pair.getValue();
+				for(int i = 0; i < size; i++){
+					command = "Rotate" + " " + pair.getKey();
+					pw.println(command);
+				}
+				it.remove();
+			}
+			pw.println("Gravity " + gravity);
+			pw.println("Friction " + friction1 + " " + friction2);
 			pw.close();
 		} catch (FileNotFoundException | UnsupportedEncodingException e) {
 			e.printStackTrace();
@@ -98,7 +69,7 @@ public class FileHandling {
 				ArrayList<Object> gizmoInfo = new ArrayList<Object>();
 				String type = sc.next();
 				gizmoInfo.add(type);
-				
+
 				if(type.equals("Gravity")){
 					int grav = sc.nextInt();
 					gizmoInfo.add(grav);

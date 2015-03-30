@@ -65,4 +65,9 @@ public class Absorber extends AbstractSquare {
             // TODO Spawn the ball INSIDE of the absorber, not outside.
         }
     }
+    
+    @Override
+	public String toString(){
+		return "Absorber " + getID() + " " + getX()/25 + " " + getY()/25 + " " + getWidth() + " " + getHeight();
+	}
 }
