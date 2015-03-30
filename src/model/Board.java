@@ -3,6 +3,7 @@ package model;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Observer;
 
 import model.gizmo.Gizmo;
@@ -29,10 +30,8 @@ public interface Board {
 
 	void addAbsorber(String gizmoType, String id, int x, int y, int width,
 			int height);
-
-	public void saveBoard(String fileName);
 	
-	public void loadBoard(File load);
+	public void loadBoard(ArrayList<ArrayList<Object>> loadList);
 
 	public void addTriggerKey(String gizmoType, String gizmoID, int keyID, String keyDirection);
 
@@ -47,5 +46,13 @@ public interface Board {
     public void setBallSpeed(String ballId, int velocityX, int velocityY);
 
 	public String addBall(String string, int x, int y);
+
+	public double getGravity();
+
+	public double getFriction1();
+
+	public double getFriction2();
+
+	public Map<String, Integer> getRotateMap();
 
 }

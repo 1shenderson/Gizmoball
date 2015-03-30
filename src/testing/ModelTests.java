@@ -14,7 +14,7 @@ import org.junit.Test;
 
 public class ModelTests {
 	
-	Board board = new Model();
+	Board board = new Model(25);
 	List<Gizmo> gizmoList = new ArrayList<Gizmo>();
 
 	@Test

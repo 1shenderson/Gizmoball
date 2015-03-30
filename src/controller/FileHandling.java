@@ -1,5 +1,5 @@
 
-package model;
+package controller;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -12,12 +12,13 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Scanner;
 
+import model.Ball;
 import model.gizmo.Absorber;
 import model.gizmo.Gizmo;
 
 public class FileHandling {
 
-	public void save(ArrayList<Gizmo> gizmoList, ArrayList<Ball> ballsList, List<ArrayList<Object>> triggersList, Map<String, Integer> rotateMap, String fileName){
+	public void save(List<Gizmo> gizmoList, List<Ball> ballsList, List<ArrayList<Object>> triggersList, Map<String, Integer> rotateMap, String fileName, double gravity, double friction1, double friction2){
 
 		String command = "";
 
@@ -79,6 +80,8 @@ public class FileHandling {
 		        }
 		        it.remove();
 		    }
+		    pw.println("Gravity " + gravity);
+		    pw.println("Friction " + friction1 + " " + friction2);
 			pw.close();
 		} catch (FileNotFoundException | UnsupportedEncodingException e) {
 			e.printStackTrace();
@@ -94,8 +97,23 @@ public class FileHandling {
 			while(sc.hasNext()){
 				ArrayList<Object> gizmoInfo = new ArrayList<Object>();
 				String type = sc.next();
-				String id = sc.next();
 				gizmoInfo.add(type);
+				
+				if(type.equals("Gravity")){
+					int grav = sc.nextInt();
+					gizmoInfo.add(grav);
+					gizmoList.add(gizmoInfo);
+					continue;
+				}
+				else if(type.equals("Friction")){
+					int frict1 = sc.nextInt();
+					int frict2 = sc.nextInt();
+					gizmoInfo.add(frict1);
+					gizmoInfo.add(frict2);
+					gizmoList.add(gizmoInfo);
+					continue;
+				}
+				String id = sc.next();
 				gizmoInfo.add(id);
 
 				if(type.equals("Ball")){

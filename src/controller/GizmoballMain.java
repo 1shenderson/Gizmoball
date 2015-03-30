@@ -19,7 +19,7 @@ public class GizmoballMain {
 		} catch (Exception e) {
 			System.out.println("Look and Feel error in Main");
 		}
-		Model model = new Model();
+		Model model = new Model(L);
 		GizmoballGui gui = new GizmoballGui(model, L);
 		gui.createAndShowGUI();
 	}

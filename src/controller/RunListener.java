@@ -4,6 +4,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.File;
+import java.util.ArrayList;
 
 import javax.swing.*;
 
@@ -23,6 +25,9 @@ public class RunListener implements ActionListener, MouseListener {
     private Timer timer;
     private Board board;
     private Display gui;
+    private File file;
+    FileHandling fileHand = new FileHandling();
+    private String fileName;
     private String activeTool;
     private int lastX, lastY;
     private int L = 25;   // Physics constant
@@ -81,10 +86,14 @@ public class RunListener implements ActionListener, MouseListener {
                     System.out.println("Set tool to "+command);
                     break;
                 case "Save":
-                    board.saveBoard(gui.save());
+                    fileName = gui.save();
+                    fileHand.save(board.getGizmoList(), board.getBallList(), board.getTriggerKeys(), board.getRotateMap(), fileName, board.getGravity(), board.getFriction1(), board.getFriction2());
                     break;
                 case "Load":
-                    board.loadBoard(gui.load());
+                	file = gui.load();
+                	System.out.println(file.getAbsolutePath());
+                	ArrayList<ArrayList<Object>> loadList = fileHand.load(file);
+                    board.loadBoard(loadList);
                     break;
                 default:
                     throw new RuntimeException("Unrecognized command '" + command + "', add handling for this button.");
