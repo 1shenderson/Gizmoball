@@ -3,14 +3,17 @@ package controller;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Scanner;
+import java.util.Set;
 
 import model.Ball;
 import model.gizmo.Absorber;
@@ -62,68 +65,85 @@ public class FileHandling {
 	public ArrayList<ArrayList<Object>> load(File file){
 
 		ArrayList<ArrayList<Object>> gizmoList = new ArrayList<ArrayList<Object>>();
+		Set<String> idSet = new HashSet<String>();
 
 		try {
 			Scanner sc = new Scanner(file);
 			while(sc.hasNext()){
+				double grav, frict1, frict2, xExact, yExact, xv, yv;
+				int x, y, keyNumber, x2, y2;
+				String type, gizmoID, id, direction; 
 				ArrayList<Object> gizmoInfo = new ArrayList<Object>();
-				String type = sc.next();
+				type = sc.next();
 				gizmoInfo.add(type);
 
-				if(type.equals("Gravity")){
-					int grav = sc.nextInt();
+				switch(type){
+				case "Gravity":
+					grav = sc.nextDouble();
 					gizmoInfo.add(grav);
 					gizmoList.add(gizmoInfo);
 					continue;
-				}
-				else if(type.equals("Friction")){
-					int frict1 = sc.nextInt();
-					int frict2 = sc.nextInt();
+				case "Friction":
+					frict1 = sc.nextDouble();
+					frict2 = sc.nextDouble();
 					gizmoInfo.add(frict1);
 					gizmoInfo.add(frict2);
 					gizmoList.add(gizmoInfo);
 					continue;
+				default:
+					id = sc.next();
+					gizmoInfo.add(id);
 				}
-				String id = sc.next();
-				gizmoInfo.add(id);
-
-				if(type.equals("Ball")){
-					double x = sc.nextDouble();
-					double y = sc.nextDouble();
-					double xv = sc.nextDouble();
-					double yv = sc.nextDouble();
-					gizmoInfo.add(x);
-					gizmoInfo.add(y);
+				switch(type){
+				case "Rotate":
+					gizmoList.add(gizmoInfo);
+					continue;
+				case "Ball":
+					xExact = sc.nextDouble();
+					yExact = sc.nextDouble();
+					xv = sc.nextDouble();
+					yv = sc.nextDouble();
+					gizmoInfo.add(xExact);
+					gizmoInfo.add(yExact);
 					gizmoInfo.add(xv);
 					gizmoInfo.add(yv);
-				}
-				else if(type.equals("Absorber")){
-					int x = sc.nextInt();
-					int y = sc.nextInt();
-					int x2 = sc.nextInt();
-					int y2 = sc.nextInt();
+					break;
+				case "Absorber":
+					x = sc.nextInt();
+					y = sc.nextInt();
+					x2 = sc.nextInt();
+					y2 = sc.nextInt();
 					gizmoInfo.add(x);
 					gizmoInfo.add(y);
 					gizmoInfo.add(x2);
 					gizmoInfo.add(y2);
-				}
-				else if(type.equals("KeyConnect")){
-					int keyNumber = sc.nextInt();
-					String direction = sc.next();
-					String gizmoID = sc.next();
+					break;
+				case "KeyConnect":
+					keyNumber = sc.nextInt();
+					direction = sc.next();
+					gizmoID = sc.next();
 					gizmoInfo.add(keyNumber);
 					gizmoInfo.add(direction);
 					gizmoInfo.add(gizmoID);
-				}
-				else if(type.equals("Connect")){
-					String gizmoID = sc.next();
+					gizmoList.add(gizmoInfo);
+					continue;
+				case "Connect":
+					gizmoID = sc.next();
 					gizmoInfo.add(gizmoID);
-				}
-				else if(!type.equals("Rotate")){
-					int x = sc.nextInt();
-					int y = sc.nextInt();
+					gizmoList.add(gizmoInfo);
+					continue;
+				default:
+					x = sc.nextInt();
+					y = sc.nextInt();
 					gizmoInfo.add(x);
 					gizmoInfo.add(y);
+				}
+				try {
+					uniqueIDCheck(idSet, id);
+					idSet.add(id);
+				} catch (IOException e) {
+					System.out.println("Gizmo ID already exists for another gizmo, second gizmo with id: " + id + " will not be added.");
+					continue;
 				}
 				gizmoList.add(gizmoInfo);
 			}
@@ -132,5 +152,11 @@ public class FileHandling {
 			e.printStackTrace();
 		}
 		return gizmoList;
+	}
+
+	private void uniqueIDCheck(Set<String> idSet, String id) throws IOException{
+		if(idSet.contains(id)){
+			throw new IOException();
+		}
 	}
 }
