@@ -6,6 +6,9 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Stroke;
+import java.awt.geom.Line2D;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -31,6 +34,7 @@ public  class BoardView extends JPanel implements Observer {
 	protected int height;
 	protected Board board;
     protected int L;
+    private boolean gridEnabled = true;
 
 
 	public BoardView(int w, int h, Board board, int L) {
@@ -47,6 +51,11 @@ public  class BoardView extends JPanel implements Observer {
 	public Dimension getPreferredSize() {
 		return new Dimension(width, height);
 	}
+
+    public void setGridEnabled(boolean b) {
+        this.gridEnabled = b;
+        repaint();
+    }
 
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -101,6 +110,14 @@ public  class BoardView extends JPanel implements Observer {
 				g2.fillPolygon(xCoordinates, yCoordinates,xCoordinates.length);
 			}
 		}
+
+        if (gridEnabled) {
+            for (int i = 1; i < L; i++) {
+                g2.setColor(Color.BLACK);
+                g2.drawLine(0, i*L, width, i*L);
+                g2.drawLine(i*L, 0, i*L, height);
+            }
+        }
 
 	}
 

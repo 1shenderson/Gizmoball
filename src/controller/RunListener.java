@@ -143,7 +143,7 @@ public class RunListener implements ActionListener, MouseListener {
                 case "Rotate":
                     if (e.getButton() == MouseEvent.BUTTON1) {
                         board.rotate(board.getGizmoAtLocation(x, y).getID());
-                    } else if (e.getButton() == MouseEvent.BUTTON3) {
+                    } else if (e.getButton() == MouseEvent.BUTTON2) {
                         board.rotate(board.getGizmoAtLocation(x, y).getID());
                         board.rotate(board.getGizmoAtLocation(x, y).getID());
                         board.rotate(board.getGizmoAtLocation(x, y).getID());

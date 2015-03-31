@@ -237,7 +237,7 @@ public class GizmoballGui implements Display {
         setButtonPanel(buttonList, new Dimension(32, 32));
         boardView.addMouseListener((MouseListener) listener);
         boardView.addKeyListener(keyList);
-
+        boardView.setGridEnabled(true);
         changeTitle("Build Mode");
 	}
 
@@ -265,6 +265,7 @@ public class GizmoballGui implements Display {
 
         setButtonPanel(buttonList, new Dimension(64, 64));
         boardView.removeMouseListener((MouseListener) listener);
+        boardView.setGridEnabled(false);
         changeTitle("Play Mode");
 	}
 
