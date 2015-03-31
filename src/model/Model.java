@@ -28,6 +28,7 @@ public class Model extends Observable implements Board {
 	private ArrayList<Ball> ballsList;
 	private ArrayList<Gizmo> gizmoList;
 	private List<ArrayList<Object>> triggerList;
+	private List<ArrayList<Object>> connectList;
 	private Map<String, Integer> rotateMap;
 
 	public Model(int L) {
@@ -47,6 +48,7 @@ public class Model extends Observable implements Board {
 		gizmoList = new ArrayList<Gizmo>();
 
 		triggerList = new ArrayList<ArrayList<Object>>();
+		connectList = new ArrayList<ArrayList<Object>>();
 
 		rotateMap = new HashMap<String, Integer>();
 
@@ -153,6 +155,7 @@ public class Model extends Observable implements Board {
 			if (time < shortestTime) {
 				shortestTime = time;
 				newVelo = Geometry.reflectWall(line, currBall.getVelo(), 1.0);
+				target = gws;
 			}
 		}
 
@@ -223,10 +226,10 @@ public class Model extends Observable implements Board {
 				addAbsorber((String) gizmoLoad.get(0), (String) gizmoLoad.get(1), (int) gizmoLoad.get(2), (int) gizmoLoad.get(3), (int) gizmoLoad.get(4), (int) gizmoLoad.get(5));
 				continue;
 			case "KeyConnect":
-				addTriggerKey((String) gizmoLoad.get(0), (String) gizmoLoad.get(4), (int) gizmoLoad.get(2), (String)gizmoLoad.get(3));         	
+				addTriggerKey((String) gizmoLoad.get(0), (String) gizmoLoad.get(3), (int) gizmoLoad.get(1), (String)gizmoLoad.get(2));         	
 				continue;
 			case "Connect":
-				addTriggerGizmo((String) gizmoLoad.get(0), (String) gizmoLoad.get(2), (String) gizmoLoad.get(1));
+				addTriggerGizmo((String) gizmoLoad.get(0), (String) gizmoLoad.get(1), (String) gizmoLoad.get(2));
 				continue;
 			case "Gravity":
 				gravity = (int) gizmoLoad.get(1);
@@ -239,6 +242,7 @@ public class Model extends Observable implements Board {
 				addGizmo((String) gizmoLoad.get(0), (String) gizmoLoad.get(1), (int) gizmoLoad.get(2), (int) gizmoLoad.get(3));
 			}
 		}
+
 	}
 
 	public ArrayList<VerticalLine> getLines() {
@@ -382,24 +386,6 @@ public class Model extends Observable implements Board {
 		triggerList.add(triggerKeys);
 	}
 
-	//addTriggerKey(triggerMap);
-	//addTriggerGizmo(connectMap);
-
-
-	/*@Override
-	public void addTriggerKey(List<ArrayList<Object>> triggerMap) {
-
-		for(ArrayList<Object> t : triggerMap){
-			for(ArrayList<Gizmo> g : gizmoList){
-				if(t.get(1).equals(g.get(1)){
-					found = true;
-				}
-			}
-		}
-					triggerList.add(triggerKeys);
-		}
-	}*/
-
 	@Override
 	public void removeTriggerKey(String gizmoID, int keyID, String keyDirection) {
 		for(int i = 0; i < triggerList.size() - 1; i++){
@@ -422,19 +408,30 @@ public class Model extends Observable implements Board {
 	public List<ArrayList<Object>> getTriggerKeys() {
 		return triggerList;
 	}
-
-
+	
+	@Override
+	public List<ArrayList<Object>> getConnectList() {
+		return connectList;
+	}
+	
 	@Override
 	public void addTriggerGizmo(String gizmoType, String gizmoID, String gizmoTriggerID) {
+		ArrayList<Object> connect = new ArrayList<Object>();
+		gizmoList.add(gws);
 		for(Gizmo gizmoTrig: gizmoList){
 			if(gizmoTrig.getID().equals(gizmoTriggerID)){
 				for(Gizmo gizmo: gizmoList){
 					if(gizmo.getID().equals(gizmoID)){
 						gizmo.addTrigger(gizmoTrig);
+						connect.add(gizmoType);
+						connect.add(gizmoID);
+						connect.add(gizmoTriggerID);
+						connectList.add(connect);
 					}
 				}
 			}
 		}
+		gizmoList.remove(gizmoList.size()-1);
 	}
 
 

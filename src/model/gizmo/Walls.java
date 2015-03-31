@@ -20,7 +20,7 @@ public class Walls extends AbstractGizmo{
 	// Walls are the enclosing Rectangle - defined by top left corner and bottom
 	// right
 	public Walls(int x1, int y1, int x2, int y2) {
-		super("OuterWalls", "Walls", x1, y1);
+		super("Walls", "OuterWalls", x1, y1);
 		xpos1 = x1;
 		ypos1 = y1;
 		xpos2 = x2;

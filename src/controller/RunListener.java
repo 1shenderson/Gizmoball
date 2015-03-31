@@ -87,7 +87,7 @@ public class RunListener implements ActionListener, MouseListener {
                     break;
                 case "Save":
                     fileName = gui.save();
-                    fileHand.save(board.getGizmoList(), board.getBallList(), board.getTriggerKeys(), board.getRotateMap(), fileName, board.getGravity(), board.getFriction1(), board.getFriction2());
+                    fileHand.save(board.getGizmoList(), board.getBallList(), board.getTriggerKeys(), board.getConnectList(), board.getRotateMap(), fileName, board.getGravity(), board.getFriction1(), board.getFriction2());
                     break;
                 case "Load":
                 	file = gui.load();

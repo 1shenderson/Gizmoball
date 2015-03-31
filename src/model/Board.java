@@ -55,4 +55,6 @@ public interface Board {
 
 	public Map<String, Integer> getRotateMap();
 
+	public List<ArrayList<Object>> getConnectList();
+
 }

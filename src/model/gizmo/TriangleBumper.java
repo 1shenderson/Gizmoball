@@ -162,6 +162,16 @@ public class TriangleBumper extends AbstractGizmo {
 	}
 	
 	@Override
+    public void trigger(){
+		if (color == Color.BLUE){
+			color = Color.CYAN;
+		}
+		else {
+			color = Color.BLUE;
+		}
+    }
+	
+	@Override
 	public String toString(){
 		return "Triangle " + getID() + " " + getX()/25 + " " + getY()/25;
 	}

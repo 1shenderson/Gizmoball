@@ -21,7 +21,7 @@ import model.gizmo.Gizmo;
 
 public class FileHandling {
 
-	public void save(List<Gizmo> gizmoList, List<Ball> ballsList, List<ArrayList<Object>> triggersList, Map<String, Integer> rotateMap, String fileName, double gravity, double friction1, double friction2){
+	public void save(List<Gizmo> gizmoList, List<Ball> ballsList, List<ArrayList<Object>> triggersList, List<ArrayList<Object>> connectList, Map<String, Integer> rotateMap, String fileName, double gravity, double friction1, double friction2){
 
 		String command = "";
 
@@ -36,12 +36,11 @@ public class FileHandling {
 				pw.println(command);
 			}
 			for(ArrayList<Object> t: triggersList){
-				if(t.get(0).equals("KeyConnect")){
-					command = t.get(0) + " key " + t.get(1) + " " + t.get(2) + " " + t.get(3);
-				}
-				else if(t.get(0).equals("Connect")){
-					command = t.get(0) + " " + t.get(1) + " " + t.get(2);
-				}
+				command = t.get(0) + " key " + t.get(3) + " " + t.get(2) + " " + t.get(1);
+				pw.println(command);
+			}
+			for(ArrayList<Object> c: connectList){
+				command = c.get(0) + " " + c.get(1) + " " + c.get(2);
 				pw.println(command);
 			}
 			Iterator<Entry<String, Integer>> it = rotateMap.entrySet().iterator();
@@ -66,6 +65,7 @@ public class FileHandling {
 
 		ArrayList<ArrayList<Object>> gizmoList = new ArrayList<ArrayList<Object>>();
 		Set<String> idSet = new HashSet<String>();
+		idSet.add("OuterWalls");
 
 		try {
 			Scanner sc = new Scanner(file);
@@ -119,6 +119,7 @@ public class FileHandling {
 					gizmoInfo.add(y2);
 					break;
 				case "KeyConnect":
+					gizmoInfo.remove(1);
 					keyNumber = sc.nextInt();
 					direction = sc.next();
 					gizmoID = sc.next();
@@ -142,7 +143,12 @@ public class FileHandling {
 					uniqueIDCheck(idSet, id);
 					idSet.add(id);
 				} catch (IOException e) {
-					System.out.println("Gizmo ID already exists for another gizmo, second gizmo with id: " + id + " will not be added.");
+					if(id.equals("OuterWalls")){
+						System.out.println("OuterWalls is a special identifier and cannot be used for other gizmos. The gizmo was not added.");
+					}
+					else{
+						System.out.println("Gizmo ID already exists for another gizmo, second gizmo with id: " + id + " will not be added.");	
+					}
 					continue;
 				}
 				gizmoList.add(gizmoInfo);
