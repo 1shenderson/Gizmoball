@@ -27,7 +27,6 @@ public abstract class AbstractFlipper extends AbstractGizmo {
 	private boolean active = false;
 	private int angularVelocity = 1080;
 
-
 	public AbstractFlipper(String gizmoType, String id, int x, int y) {
 		super(gizmoType, id, x, y);
 		this.x = (x * L) + 6;
@@ -51,11 +50,11 @@ public abstract class AbstractFlipper extends AbstractGizmo {
 		y2 = (int) yrad;
 		x2 = (int) xrad;
 	}
-	
+
     public int getX(){
     	return x;
     }
-	
+
     public int getY(){
     	return y;
     }

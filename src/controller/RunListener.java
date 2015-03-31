@@ -32,6 +32,7 @@ public class RunListener implements ActionListener, MouseListener {
     private String activeTool;
     private int lastX, lastY;
     private int L = 25;   // Physics constant
+    private String selectedGizmo;
 
     public RunListener(Board board, GizmoballGui gui) {
         this.board = board;
@@ -45,6 +46,7 @@ public class RunListener implements ActionListener, MouseListener {
             board.tick();
         } else {
             String command = e.getActionCommand();
+            selectedGizmo = null;
             switch (command) {
                 // MODE CHANGES
                 case "<html>SWITCH TO<br>BUILD MODE</html>":
@@ -77,7 +79,6 @@ public class RunListener implements ActionListener, MouseListener {
                 case "Left Flipper":
                 case "Right Flipper":
                 case "Rotate":
-                case "Link":
                 case "Unlink":
                 case "Move":
                 case "Delete":
@@ -95,15 +96,28 @@ public class RunListener implements ActionListener, MouseListener {
                 	ArrayList<ArrayList<Object>> loadList = fileHand.load(file);
                     board.loadBoard(loadList);
                     break;
+                case "Link":
+                    int choice = gui.showLinkWindow();
+                    if (choice == 0) {
+                        // User wants to link gizmo to gizmo
+                        linkToGizmo();
+                    } else {
+                        // User wants to link key to gizmo
+                        linkToKey();
+                    }
+                    break;
                 default:
                     throw new RuntimeException("Unrecognized command '" + command + "', add handling for this button.");
-
             }
         }
     }
 
-    @Override
-    public void mouseClicked(MouseEvent e) {
+    private void linkToGizmo() {
+        gui.changeTitle("Build Mode - Select the gizmo act as a trigger");
+        activeTool = "LinkGizmo";
+    }
+
+    private void linkToKey() {
 
     }
 
@@ -115,6 +129,9 @@ public class RunListener implements ActionListener, MouseListener {
 
     @Override
     public void mouseReleased(MouseEvent e) {
+        if (activeTool == null) {
+            return;
+        }
         int x = e.getX() / L,
             y = e.getY() / L;
         if (lastX == x && lastY == y) {
@@ -122,17 +139,16 @@ public class RunListener implements ActionListener, MouseListener {
                 case "Square":
                 case "Circle":
                 case "Triangle":
-                    board.addGizmo(activeTool, null, lastX, lastY); // TODO Make a proper ID
-                    System.out.printf("RunListen: %d, %d    ", lastX, lastY);
+                    board.addGizmo(activeTool, null, lastX, lastY);
                     break;
                 case "Ball":
                     board.addBall(null, x, y);
                     break;
                 case "Left Flipper":
-                    board.addGizmo("LeftFlipper", null, lastX, lastY); // TODO Make a proper ID
+                    board.addGizmo("LeftFlipper", null, lastX, lastY);
                     break;
                 case "Right Flipper":
-                    board.addGizmo("RightFlipper", null, lastX, lastY); // TODO Make a proper ID
+                    board.addGizmo("RightFlipper", null, lastX - 1, lastY);
                     break;
                 case "Delete":
                     Gizmo gizmo = board.getGizmoAtLocation(x, y);
@@ -147,6 +163,20 @@ public class RunListener implements ActionListener, MouseListener {
                         board.rotate(board.getGizmoAtLocation(x, y).getID());
                         board.rotate(board.getGizmoAtLocation(x, y).getID());
                         board.rotate(board.getGizmoAtLocation(x, y).getID());
+                    }
+                    break;
+                case "LinkGizmo":
+                    if (selectedGizmo == null) {
+                        selectedGizmo = board.getGizmoAtLocation(x, y).getID();
+                        gui.changeTitle("Build Mode - Select the gizmo to be triggered");
+                    } else {
+                        Gizmo g = board.getGizmoAtLocation(x, y);
+                        if (g != null) {
+                            board.linkGizmos(g.getID(), selectedGizmo);
+                            gui.changeTitle("Build Mode");
+                            activeTool = null;
+                            gui.setSelectedButton(null);
+                        }
                     }
             }
         } else {
@@ -164,13 +194,7 @@ public class RunListener implements ActionListener, MouseListener {
         }
     }
 
-    @Override
-    public void mouseEntered(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-
-    }
+    public void mouseClicked(MouseEvent e) {}
+    public void mouseEntered(MouseEvent e) {}
+    public void mouseExited(MouseEvent e) {}
 }

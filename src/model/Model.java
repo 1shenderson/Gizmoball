@@ -282,7 +282,6 @@ public class Model extends Observable implements Board {
 		switch (gizmoType) {
 		case "Square":
 			gizmo = new SquareBumper(gizmoType, gizmoID == null ? generateId("S") : gizmoID, x, y);
-            System.out.printf("Model.addGizmo: %d, %d    ", x, y);
 			break;
 		case "Triangle":
 			String id = gizmoID == null ? generateId("T") : gizmoID;
@@ -317,13 +316,21 @@ public class Model extends Observable implements Board {
 
     public Gizmo getGizmoAtLocation(int x, int y) {
         for (Gizmo gizmo : gizmoList) {
-            System.out.printf("\nFound gizmo %s at (%d, %d)", gizmo.getType(), gizmo.getX(), gizmo.getY());
             if (gizmo instanceof Absorber) {
                 Absorber absorber = (Absorber) gizmo;
                 int width = absorber.getWidth();
                 int height = absorber.getHeight();
                 if (x >= absorber.getX() && x <= absorber.getX() + width
                         && y >= absorber.getY() && y <= absorber.getY() + height) {
+                    return gizmo;
+                }
+            } else if (gizmo instanceof AbstractFlipper) {
+                // Have to make up here for large "getX()" and "getY" discrepancies between the gizmos...
+                int flipperX = (int)(Math.floor(1.0 * gizmo.getX() / L));
+                int flipperY = (int)(Math.floor(1.0 * gizmo.getY() / L));
+                if (gizmo instanceof FlipperLeft && x >= flipperX && x <= flipperX + 1 && y >= flipperY && y <= flipperY + 1) {
+                    return gizmo;
+                } else if (gizmo instanceof FlipperRight && x <= flipperX && x >= flipperX - 1 && y >= flipperY && y <= flipperY + 1) {
                     return gizmo;
                 }
             } else if (x == gizmo.getX() && y == gizmo.getY()) {
@@ -453,8 +460,15 @@ public class Model extends Observable implements Board {
 		gizmoList.remove(gizmoList.size()-1);
 	}
 
+    @Override
+    public void linkGizmos(String gizmoId, String gizmoTriggerId) {
+        Gizmo triggered = getGizmo(gizmoId);
+        Gizmo trigger = getGizmo(gizmoTriggerId);
+        trigger.addTrigger(triggered);
+    }
 
-	@Override
+
+    @Override
 	public void removeTriggerGizmo(String gizmoID, String gizmoTriggerID) {
 
 		for(Gizmo gizmoTrig: gizmoList){

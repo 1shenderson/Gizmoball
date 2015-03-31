@@ -36,7 +36,6 @@ public abstract class AbstractGizmo implements Gizmo {
         this.gizmoType = gizmoType;
         this.xPos = x;
         this.yPos = y;
-        System.out.printf("AbstractGizmo: %d, %d", xPos, yPos);
     }
 
     @Override

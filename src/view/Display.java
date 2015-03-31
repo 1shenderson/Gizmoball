@@ -24,5 +24,9 @@ public interface Display extends Observer{
 
 	public void exit();
 
+    public int showLinkWindow();
+
     public void setSelectedButton(JButton button);
+
+    public void changeTitle(String title);
 }

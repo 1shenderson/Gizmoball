@@ -20,6 +20,8 @@ public interface Board {
 
 	public void addTriggerGizmo(String gizmoType, String gizmoID, String gizmoTriggerID);
 
+    public void linkGizmos(String gizmoId, String gizmoTriggerId);
+
 	public void removeTriggerGizmo(String gizmoID, String gizmoTriggerID);
 
 	public int[][] getMap();

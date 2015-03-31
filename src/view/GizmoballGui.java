@@ -284,6 +284,17 @@ public class GizmoballGui implements Display {
 		// TODO Auto-generated method stub
 	}
 
+    public int showLinkWindow() {
+        Object[] options = {"Another Gizmo", "A Key"};
+        return JOptionPane.showOptionDialog(frame, "What would you like to trigger the selected gizmo?",
+               "Gizmo Link Options",
+               JOptionPane.YES_NO_OPTION,
+               JOptionPane.QUESTION_MESSAGE,
+               null,
+               options,
+               options[1]);
+    }
+
     public void setSelectedButton(JButton button) {
         if (selectedButton != null) {
             selectedButton.setSelected(false);
@@ -294,7 +305,7 @@ public class GizmoballGui implements Display {
         }
     }
 
-    private void changeTitle(String s) {
+    public void changeTitle(String s) {
         frame.setTitle("Gizmoball - "+s);
     }
 
