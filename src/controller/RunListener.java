@@ -91,7 +91,6 @@ public class RunListener implements ActionListener, MouseListener {
                     break;
                 case "Load":
                 	file = gui.load();
-                	System.out.println(file.getAbsolutePath());
                 	ArrayList<ArrayList<Object>> loadList = fileHand.load(file);
                     board.loadBoard(loadList);
                     break;

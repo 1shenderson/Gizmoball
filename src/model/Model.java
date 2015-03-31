@@ -24,7 +24,7 @@ public class Model extends Observable implements Board {
 	private double friction1;
 	private double friction2;
 	private double gravity;
-	private Walls gws;
+	private Gizmo gws;
 	private ArrayList<Ball> ballsList;
 	private ArrayList<Gizmo> gizmoList;
 	private List<ArrayList<Object>> triggerList;
@@ -147,7 +147,7 @@ public class Model extends Observable implements Board {
 		double time = 0.0;
 
 		// Time to collide with 4 walls
-		ArrayList<LineSegment> lss = gws.getLineSegments();
+		List<LineSegment> lss = gws.getSides();
 		for (LineSegment line : lss) {
 			time = Geometry.timeUntilWallCollision(line, ballCircle, ballVelocity);
 			if (time < shortestTime) {
