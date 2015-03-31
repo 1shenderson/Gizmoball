@@ -51,10 +51,7 @@ public class Model extends Observable implements Board {
 		connectList = new ArrayList<ArrayList<Object>>();
 
 		rotateMap = new HashMap<String, Integer>();
-
 	}
-
-
 
 	public void tick() {
 		double moveTime = 1.0 / 60;
@@ -259,7 +256,7 @@ public class Model extends Observable implements Board {
 		notifyObservers();
 	}
 
-	public String addBall(String id, int x, int y) {
+	public String addBall(String id, double x, double y) {
 		if (id == null) {
 			id = generateId("B");
 		}

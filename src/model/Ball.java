@@ -32,7 +32,7 @@ public class Ball {
 		startingYVelocity = yv;
 		colour = Color.BLUE;
 		velocity = new Vect(xv, yv);
-		radius = 7; // TODO Change constant 7 to quarter of L as per specification
+		radius = 0.25 * 25;
 		stopped = false;
         ignoreAbsorber = false;
 	}

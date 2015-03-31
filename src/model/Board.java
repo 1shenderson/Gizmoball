@@ -45,7 +45,7 @@ public interface Board {
 
     public void setBallSpeed(String ballId, int velocityX, int velocityY);
 
-	public String addBall(String string, int x, int y);
+	public String addBall(String string, double x, double y);
 
 	public double getGravity();
 
