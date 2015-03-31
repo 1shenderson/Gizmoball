@@ -2,6 +2,7 @@ package testing;
 
 import static org.junit.Assert.*;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,13 +15,17 @@ import model.gizmo.Gizmo;
 
 import org.junit.Test;
 
+import controller.FileHandling;
+
 public class ModelTests {
-	
+
 	Board board = new Model(25);
+	FileHandling file = new FileHandling();
 	List<Gizmo> gizmoList = new ArrayList<Gizmo>();
 	List<Ball> ballList = new ArrayList<Ball>();
 	List<ArrayList<Object>> triggerList = new ArrayList<ArrayList<Object>>();
-
+	ArrayList<ArrayList<Object>> loadList = new ArrayList<ArrayList<Object>>();
+	
 	@Test
 	public void testAddGizmo() {
 		board.addGizmo("Triangle", "T", 19, 0);
@@ -33,7 +38,6 @@ public class ModelTests {
 		board.addGizmo("Circle", null, 5, 4);
 		board.addGizmo("LeftFlipper", null, 12, 5);
 		board.addGizmo("RightFlipper", null, 15, 6);
-		board.addGizmo("Triangle", "T", 19, 0); //should assert false?
 		
 		double delta = 0.1;
 		gizmoList = board.getGizmoList();
@@ -50,7 +54,6 @@ public class ModelTests {
 			Gizmo cir1 = gizmoList.get(7);
 			AbstractFlipper leftFlipper1 = (AbstractFlipper) gizmoList.get(8);
 			AbstractFlipper rightFlipper1 = (AbstractFlipper) gizmoList.get(9);
-			Gizmo tri2 = gizmoList.get(10);
 			
 			assertEquals(tri0.getType(), "Triangle");
 			assertEquals(tri0.getID(), "T");
@@ -111,12 +114,6 @@ public class ModelTests {
 			assertEquals(rightFlipper1.getY()/25, 6);
 			assertEquals(rightFlipper1.getWidth(), 12.5, delta);
 			assertEquals(rightFlipper1.getLength(), 37.5, delta);
-			
-			//should assert false, duplicate ID + coords:
-			assertEquals(tri2.getType(), "Triangle");
-			assertEquals(tri2.getID(), "T");
-			assertEquals(tri2.getX()/25, 19);
-			assertEquals(tri2.getY()/25, 0);
 		}
 	}
 	
@@ -168,22 +165,37 @@ public class ModelTests {
 		}
 	}
 	
-/*	@Test
+	@Test
 	public void testAddTriggerGizmo() {
 		
-	}*/
+	}
 	
-/*	@Test
+	@Test
 	public void testAddTriggerKey() {
 		board.addGizmo("RightFlipper", "RF112", 11, 2);
+		gizmoList = board.getGizmoList();
 		board.addTriggerKey("Key", "RF112", 87, "down");
 		board.addTriggerKey("Key", "RF112", 87, "up");
 		
-		gizmoList = board.getGizmoList();
 		triggerList = board.getTriggerKeys();
 		for (int i = 0; i < triggerList.size(); i++) {
-			
+			Gizmo rFlip = gizmoList.get(0);
+			assertEquals(triggerList.get(0).get(1), rFlip.getID());
 		}
-	}*/
-
+	}
+	
+	@Test
+	public void testLoadBoard() {
+		File gizmoFile = new File("Gizmo.txt");
+		loadList = file.load(gizmoFile);
+		board.loadBoard(loadList);
+		board.addGizmo("Triangle", "T2", 1, 1);
+		gizmoList = board.getGizmoList();
+		for (int i = 0; i < gizmoList.size(); i++) {
+			assertEquals(gizmoList.get(0).getID(), "T");
+			assertNotEquals(gizmoList.get(1).getID(), "T");
+			assertEquals(gizmoList.get(1).getID(), "T2");
+			assertNotEquals(gizmoList.get(2).getID(), "T2");
+		}	
+	}
 }
