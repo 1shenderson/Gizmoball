@@ -33,14 +33,6 @@ public class AbstractSquare extends AbstractGizmo {
         this.gizmoType = gizmoType;
     }
     
-    public int getX(){
-    	return x;
-    }
-    
-    public int getY(){
-    	return y;
-    }
-    
     void setPoints(int startX, int startY) {
     	this.topLeftX = startX * L;
         this.topLeftY = startY * L;
@@ -114,6 +106,7 @@ public class AbstractSquare extends AbstractGizmo {
 		return yPos;
 	}
 
-
-
+    public Gizmo moveTo(int x, int y) {
+        return new AbstractSquare(gizmoType, id, x, y);
+    }
 }

@@ -30,13 +30,15 @@ public  class BoardView extends JPanel implements Observer {
 	protected int width;
 	protected int height;
 	protected Board board;
+    protected int L;
 
 
-	public BoardView(int w, int h, Board board) {
+	public BoardView(int w, int h, Board board, int L) {
+        this.L = L;
 		// Observe changes in Model
 		board.addObserver(this);
-		width = w;
-		height = h;
+		width = w * L;
+		height = h * L;
 		this.board = board;
 		this.setBorder(BorderFactory.createLineBorder(Color.black));
 	}
@@ -71,8 +73,8 @@ public  class BoardView extends JPanel implements Observer {
 			if (sides.isEmpty()){
 				CircleBumper circle = (CircleBumper) gizmo;
 				g2.setColor(gizmo.getColour());
-				int x = (int) (gizmo.getX());
-				int y = (int) (gizmo.getY());
+				int x = (int) (gizmo.getX() * L);
+				int y = (int) (gizmo.getY() * L);
 				int width = (int) (2 * circle.getRadius());
 				g2.fillOval(x, y, width, width);
 			}

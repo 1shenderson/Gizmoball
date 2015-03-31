@@ -11,7 +11,7 @@ import physics.LineSegment;
  * Contains code that both flippers have in common
  * @author Grzegorz Sebastian Korkosz
  */
-public class AbstractFlipper extends AbstractGizmo {
+public abstract class AbstractFlipper extends AbstractGizmo {
 
 	private List<Gizmo> triggerList = new ArrayList<Gizmo>();
 	private double width = 12.5;

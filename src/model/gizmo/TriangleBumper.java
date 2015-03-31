@@ -60,15 +60,6 @@ public class TriangleBumper extends AbstractGizmo {
 		}
 	}
 
-    @Override
-    public int getX(){
-    	return x;
-    }
-
-    public int getY(){
-    	return y;
-    }
-
     public int[] getAllXPos(){
     	int[] xCoordinates = {cornerABC.getPointX(), cornerBCA.getPointX(), cornerCAB.getPointX()};
     	return xCoordinates;
@@ -175,6 +166,11 @@ public class TriangleBumper extends AbstractGizmo {
 	public String toString(){
 		return "Triangle " + getID() + " " + getX()/25 + " " + getY()/25;
 	}
+
+    @Override
+    public Gizmo moveTo(int x, int y) {
+        return new TriangleBumper(gizmoType, id, x, y);
+    }
 
 
 }

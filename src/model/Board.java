@@ -28,6 +28,8 @@ public interface Board {
 
 	public void addGizmo(String gizmoType, String gizmoID, int x, int y);
 
+    public void addGizmo(Gizmo gizmo);
+
 	void addAbsorber(String gizmoType, String id, int x, int y, int width,
 			int height);
 	
@@ -38,6 +40,10 @@ public interface Board {
 	public List<ArrayList<Object>> getTriggerKeys();
 
 	public void removeTriggerKey(String gizmoID, int keyID, String keyDirection);
+
+    public void rotate(String gizmoId);
+
+    public Gizmo getGizmoAtLocation(int x, int y);
 
 	public List<Gizmo> getGizmoList();
 

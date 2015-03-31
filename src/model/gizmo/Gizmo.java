@@ -48,4 +48,6 @@ public interface Gizmo {
 	public int getx2();
 
 	public int gety2();
+
+    public Gizmo moveTo(int x, int y);
 }

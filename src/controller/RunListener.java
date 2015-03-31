@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 import javax.swing.*;
 
+import model.gizmo.Gizmo;
 import view.Display;
 import view.GizmoballGui;
 import model.Board;
@@ -122,6 +123,7 @@ public class RunListener implements ActionListener, MouseListener {
                 case "Circle":
                 case "Triangle":
                     board.addGizmo(activeTool, null, lastX, lastY); // TODO Make a proper ID
+                    System.out.printf("RunListen: %d, %d    ", lastX, lastY);
                     break;
                 case "Ball":
                     board.addBall(null, x, y);
@@ -132,10 +134,32 @@ public class RunListener implements ActionListener, MouseListener {
                 case "Right Flipper":
                     board.addGizmo("RightFlipper", null, lastX, lastY); // TODO Make a proper ID
                     break;
+                case "Delete":
+                    Gizmo gizmo = board.getGizmoAtLocation(x, y);
+                    if (gizmo != null) {
+                        board.removeGizmo(gizmo.getID());
+                    }
+                    break;
+                case "Rotate":
+                    if (e.getButton() == MouseEvent.BUTTON1) {
+                        board.rotate(board.getGizmoAtLocation(x, y).getID());
+                    } else if (e.getButton() == MouseEvent.BUTTON3) {
+                        board.rotate(board.getGizmoAtLocation(x, y).getID());
+                        board.rotate(board.getGizmoAtLocation(x, y).getID());
+                        board.rotate(board.getGizmoAtLocation(x, y).getID());
+                    }
             }
         } else {
             if (activeTool.equals("Absorber")) {
                 board.addAbsorber(activeTool, null, lastX, lastY, x-lastX+1, y-lastY+1);
+            } else if (activeTool.equals("Move")) {
+                System.out.printf("\nUsing move from (%d, %d) to (%d, %d)", lastX, lastY, x, y);
+                if (board.getGizmoAtLocation(x, y) == null && board.getGizmoAtLocation(lastX, lastY) != null) {
+                    Gizmo gizmo = board.getGizmoAtLocation(lastX, lastY);
+                    gizmo = gizmo.moveTo(x, y);
+                    board.removeGizmo(gizmo.getID());
+                    board.addGizmo(gizmo);
+                }
             }
         }
     }

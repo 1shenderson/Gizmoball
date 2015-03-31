@@ -6,11 +6,7 @@ import java.util.List;
 import physics.Circle;
 import physics.LineSegment;
 
-/**
- * @author Murray Wood Demonstration of MVC and MIT Physics Collisions 2014
- */
-
-public class Walls extends AbstractGizmo{
+public class Walls extends AbstractGizmo {
 
 	private int xpos1;
 	private int ypos1;
@@ -59,4 +55,7 @@ public class Walls extends AbstractGizmo{
 		return null;
 	}
 
+    public Gizmo moveTo(int x, int y) {
+        return null;    // Walls can't be moved
+    }
 }

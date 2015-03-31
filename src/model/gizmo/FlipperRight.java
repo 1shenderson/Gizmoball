@@ -86,4 +86,9 @@ public class FlipperRight extends AbstractFlipper {
 	public String toString(){
 		return "RightFlipper " + getID() + " " + (getX() - 43) /25 + " " + getY()/25;
 	}
+
+    @Override
+    public Gizmo moveTo(int x, int y) {
+        return new FlipperRight(gizmoType, id, x, y);
+    }
 }

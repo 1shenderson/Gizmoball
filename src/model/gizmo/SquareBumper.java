@@ -24,5 +24,10 @@ public class SquareBumper extends AbstractSquare {
     @Override
 	public String toString(){
 		return "Square " + getID() + " " + getX()/25 + " " + getY()/25;
-	}    
+	}
+
+    @Override
+    public Gizmo moveTo(int x, int y) {
+        return new SquareBumper(gizmoType, id, x, y);
+    }
 }

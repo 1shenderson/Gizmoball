@@ -70,4 +70,9 @@ public class Absorber extends AbstractSquare {
 	public String toString(){
 		return "Absorber " + getID() + " " + getX()/25 + " " + getY()/25 + " " + getWidth() + " " + getHeight();
 	}
+
+    @Override
+    public Gizmo moveTo(int x, int y) {
+        return null;    // Absorber can't be moved (because of different possible sizes, it could clip into walls)
+    }
 }

@@ -54,8 +54,6 @@ public class Model extends Observable implements Board {
 
 	}
 
-
-
 	public void tick() {
 		double moveTime = 1.0 / 60;
 		for (int i = 0; i < ballsList.size(); i++){
@@ -70,11 +68,8 @@ public class Model extends Observable implements Board {
 					}
 					ball = movelBallForTime(ball, moveTime);
 				} else {
-					//                    System.out.printf("\n\nCOLLISION DETECTED");    // TODO Remove debug
-					//                    debugPrintVelocity("before", ball.getVelo());   // TODO Remove debug
 					// We've got a collision in tuc
 					ball = movelBallForTime(ball, tuc);
-					//                    debugPrintVelocity("during", ball.getVelo());   // TODO Remove debug
 					cd = timeUntilCollision(ball); // Update the velocity of the ball, since it changed
 					// Post collision velocity ...
 					if (cd.getGizmo() != null) {
@@ -93,7 +88,6 @@ public class Model extends Observable implements Board {
 						gizmo.sendTrigger();
 					}
 					ball.setVelo(cd.getVelo());
-					//                    debugPrintVelocity("after", ball.getVelo());    // TODO Remove debug
 				}
 				// Ball position changed
 				this.setChanged();
@@ -289,6 +283,7 @@ public class Model extends Observable implements Board {
 		switch (gizmoType) {
 		case "Square":
 			gizmo = new SquareBumper(gizmoType, gizmoID == null ? generateId("S") : gizmoID, x, y);
+            System.out.printf("Model.addGizmo: %d, %d    ", x, y);
 			break;
 		case "Triangle":
 			String id = gizmoID == null ? generateId("T") : gizmoID;
@@ -309,10 +304,35 @@ public class Model extends Observable implements Board {
 		default:
 			throw new IllegalArgumentException("Unrecognized gizmo type" + gizmoType + " passed as an argument to addGizmo");
 		}
-		gizmoList.add(gizmo);
-		setChanged();
-		notifyObservers();
+        if (getGizmoAtLocation(x, y) == null) {
+            gizmoList.add(gizmo);
+            setChanged();
+            notifyObservers();
+        }
 	}
+
+    @Override
+    public void addGizmo(Gizmo gizmo) {
+        gizmoList.add(gizmo);
+    }
+
+    public Gizmo getGizmoAtLocation(int x, int y) {
+        for (Gizmo gizmo : gizmoList) {
+            System.out.printf("\nFound gizmo %s at (%d, %d)", gizmo.getType(), gizmo.getX(), gizmo.getY());
+            if (gizmo instanceof Absorber) {
+                Absorber absorber = (Absorber) gizmo;
+                int width = absorber.getWidth();
+                int height = absorber.getHeight();
+                if (x >= absorber.getX() && x <= absorber.getX() + width
+                        && y >= absorber.getY() && y <= absorber.getY() + height) {
+                    return gizmo;
+                }
+            } else if (x == gizmo.getX() && y == gizmo.getY()) {
+                return gizmo;
+            }
+        }
+        return null;
+    }
 
 	private String generateId(String s) {
 		for (int i = 1; true; i++) {
@@ -342,20 +362,15 @@ public class Model extends Observable implements Board {
 	}
 
 	public void rotate(String id){
-		for(Gizmo gizmo: gizmoList){
-			if(gizmo.getID().equals(id)){
-				gizmo.rotateRight();
-				int value = rotateMap.get(id);
-				rotateMap.remove(id);
-				if(value < 3){
-					rotateMap.put(id, value+=1);
-				}
-				else {
-					rotateMap.put(id, 0);
-				}
-				break;
-			}
-		}
+        Gizmo gizmo =  getGizmo(id);
+        if (gizmo != null) {
+            gizmo.rotateRight();
+            int value = rotateMap.get(id);
+            rotateMap.remove(id);
+            rotateMap.put(id, value+=1 % 4);
+            setChanged();
+            notifyObservers();
+        }
 	}
 
 	@Override
@@ -373,7 +388,12 @@ public class Model extends Observable implements Board {
 
 	@Override
 	public void removeGizmo(String gizmoID) {
-		// TODO Code for removing a gizmo with a certain ID
+		Gizmo gizmo = getGizmo(gizmoID);
+        if (gizmo != null) {
+            gizmoList.remove(gizmo);
+            setChanged();
+            notifyObservers();
+        }
 	}
 
 	@Override

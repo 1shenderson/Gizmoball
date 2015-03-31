@@ -46,7 +46,7 @@ public class GizmoballGui implements Display {
 		frame.addKeyListener(keyList);
 
 		// Board is passed the Model so it can act as Observer
-		boardView = new BoardView(20 * L, 20 * L, board);
+		boardView = new BoardView(20, 20, board, L);
 
         Font gf = new Font("Arial", Font.BOLD, 12);
 		Container contentPane = frame.getContentPane();

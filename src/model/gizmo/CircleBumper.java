@@ -23,21 +23,12 @@ public class CircleBumper extends AbstractGizmo {
         this.y = y * L;
     }
 
-    @Override
-    public int getX(){
-    	return x;
-    }
-    @Override
-    public int getY(){
-    	return y;
-    }
-
     public int getRadius() {
         return radius;
     }
 
     public Circle getCircle() {
-        return new Circle(this.getX() + getRadius(), this.getY() + getRadius(), radius);
+        return new Circle(this.getX() * L + getRadius(), this.getY() * L + getRadius(), radius);
     }
 
 	@Override
@@ -79,4 +70,9 @@ public class CircleBumper extends AbstractGizmo {
 	public String toString(){
 		return "Circle " + getID() + " " + getX()/25 + " " + getY()/25;
 	}
+
+    @Override
+    public Gizmo moveTo(int x, int y) {
+        return new CircleBumper(gizmoType, id, x, y);
+    }
 }

@@ -17,16 +17,16 @@ import java.util.List;
 public abstract class AbstractGizmo implements Gizmo {
     int L;
     Color color;
-    private String id;
-    private String gizmoType;
+    String id;
+     String gizmoType;
     private Vect vector;
     private List<Gizmo> triggerList;
-    private int xPos;
-    private int yPos;
+    int xPos;
+    int yPos;
 
     public AbstractGizmo(String gizmoType, String id, int x, int y) {
         if (x < 0 || y < 0) {
-            throw new IllegalArgumentException((x<0?"x":"y") + " is less than 0 in "
+            throw new IllegalArgumentException((x < 0 ? "x" : "y") + " is less than 0 in "
                     + this.getClass() + " constructor");
         }
         this.L = 25; // TODO Change from constant 25 to a variable in constructor
@@ -36,6 +36,7 @@ public abstract class AbstractGizmo implements Gizmo {
         this.gizmoType = gizmoType;
         this.xPos = x;
         this.yPos = y;
+        System.out.printf("AbstractGizmo: %d, %d", xPos, yPos);
     }
 
     @Override
