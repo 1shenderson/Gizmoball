@@ -40,6 +40,16 @@ public class GizmoballGui implements Display {
         loadImages();
 	}
 
+    public void listenForBindings(boolean b) {
+        if (b) {
+            frame.removeKeyListener(keyList);
+            frame.addKeyListener((KeyListener) listener);
+        } else {
+            frame.removeKeyListener((KeyListener) listener);
+            frame.addKeyListener(keyList);
+        }
+    }
+
 	public void createAndShowGUI() {
 		frame = new JFrame("Gizmoball");
 		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -293,6 +303,19 @@ public class GizmoballGui implements Display {
                null,
                options,
                options[1]);
+    }
+
+    public int showKeyWindow() {
+        System.out.println("GOT HERE");
+        Object[] options = {"Key LIFT", "Key PRESS"};
+        return JOptionPane.showOptionDialog(frame, "<HTML>Would you like the trigger to happen when you're" +
+                        "<BR>LIFTING the key or PRESSING it?</HTML>",
+                "Gizmo Key Link Options",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                options,
+                options[0]);
     }
 
     public void setSelectedButton(JButton button) {

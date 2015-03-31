@@ -26,6 +26,10 @@ public interface Display extends Observer{
 
     public int showLinkWindow();
 
+    public int showKeyWindow();
+
+    public void listenForBindings(boolean b);
+
     public void setSelectedButton(JButton button);
 
     public void changeTitle(String title);

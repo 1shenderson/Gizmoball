@@ -1,9 +1,6 @@
 package controller;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 import java.io.File;
 import java.util.ArrayList;
 
@@ -18,7 +15,7 @@ import model.Board;
  * @author Murray Wood Demonstration of MVC and MIT Physics Collisions 2014
  */
 
-public class RunListener implements ActionListener, MouseListener {
+public class RunListener implements ActionListener, MouseListener, KeyListener {
     private enum Mode {
         build, play
     }
@@ -32,7 +29,7 @@ public class RunListener implements ActionListener, MouseListener {
     private String activeTool;
     private int lastX, lastY;
     private int L = 25;   // Physics constant
-    private String selectedGizmo;
+    private Gizmo selectedGizmo;
 
     public RunListener(Board board, GizmoballGui gui) {
         this.board = board;
@@ -47,6 +44,7 @@ public class RunListener implements ActionListener, MouseListener {
         } else {
             String command = e.getActionCommand();
             selectedGizmo = null;
+            gui.listenForBindings(false);
             switch (command) {
                 // MODE CHANGES
                 case "<html>SWITCH TO<br>BUILD MODE</html>":
@@ -100,25 +98,18 @@ public class RunListener implements ActionListener, MouseListener {
                     int choice = gui.showLinkWindow();
                     if (choice == 0) {
                         // User wants to link gizmo to gizmo
-                        linkToGizmo();
+                        gui.changeTitle("Select gizmo to be triggered");
+                        activeTool = "LinkGizmo";
                     } else {
                         // User wants to link key to gizmo
-                        linkToKey();
+                        activeTool = "LinkKey";
+                        gui.changeTitle("Select gizmo to be triggered");
                     }
                     break;
                 default:
                     throw new RuntimeException("Unrecognized command '" + command + "', add handling for this button.");
             }
         }
-    }
-
-    private void linkToGizmo() {
-        gui.changeTitle("Build Mode - Select the gizmo act as a trigger");
-        activeTool = "LinkGizmo";
-    }
-
-    private void linkToKey() {
-
     }
 
     @Override
@@ -167,16 +158,22 @@ public class RunListener implements ActionListener, MouseListener {
                     break;
                 case "LinkGizmo":
                     if (selectedGizmo == null) {
-                        selectedGizmo = board.getGizmoAtLocation(x, y).getID();
-                        gui.changeTitle("Build Mode - Select the gizmo to be triggered");
+                        selectedGizmo = board.getGizmoAtLocation(x, y);
+                        gui.changeTitle("Select the gizmo to act as a trigger");
                     } else {
                         Gizmo g = board.getGizmoAtLocation(x, y);
                         if (g != null) {
-                            board.linkGizmos(g.getID(), selectedGizmo);
+                            board.linkGizmos(selectedGizmo.getID(), g.getID());
                             gui.changeTitle("Build Mode");
                             activeTool = null;
                             gui.setSelectedButton(null);
                         }
+                    }
+                case "LinkKey":
+                    if (selectedGizmo == null) {
+                        selectedGizmo = board.getGizmoAtLocation(x, y);
+                        gui.changeTitle("Press the key you'd like trigger the gizmo");
+                        gui.listenForBindings(true);
                     }
             }
         } else {
@@ -197,4 +194,26 @@ public class RunListener implements ActionListener, MouseListener {
     public void mouseClicked(MouseEvent e) {}
     public void mouseEntered(MouseEvent e) {}
     public void mouseExited(MouseEvent e) {}
+    public void keyTyped(KeyEvent e) {}
+    public void keyPressed(KeyEvent e) {
+        if (activeTool.equals("LinkKey") && selectedGizmo != null) {
+            int choice = gui.showKeyWindow();
+            if (choice == 0) {
+                // User choice key UP
+                board.addTriggerKey(selectedGizmo.getType(), selectedGizmo.getID(), e.getKeyCode(), "up");
+                activeTool = null;
+                gui.setSelectedButton(null);
+                gui.changeTitle("Build Mode");
+                gui.listenForBindings(false);
+            } else if (choice == 1) {
+                // User choice key DOWN
+                board.addTriggerKey(selectedGizmo.getType(), selectedGizmo.getID(), e.getKeyCode(), "down");
+                activeTool = null;
+                gui.setSelectedButton(null);
+                gui.changeTitle("Build Mode");
+                gui.listenForBindings(false);
+            }
+        }
+    }
+    public void keyReleased(KeyEvent e) {}
 }
