@@ -44,8 +44,4 @@ public interface Gizmo {
 	public String getType();
 	
 	public void trigger(boolean b);
-
-	public int getx2();
-
-	public int gety2();
 }

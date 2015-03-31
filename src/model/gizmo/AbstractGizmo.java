@@ -103,16 +103,6 @@ public abstract class AbstractGizmo implements Gizmo {
     public void trigger(boolean t) {
         // Do nothing by default, override if gizmo can be triggered.
     }
-    
-	public int getx2() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	public int gety2() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
 	
     @Override
     public void sendTrigger() {

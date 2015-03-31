@@ -148,18 +148,6 @@ public class TriangleBumper extends AbstractGizmo {
 	public String getType() {
 		return gizmoType;
 	}
-
-	@Override
-	public int getx2() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int gety2() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
 	
 	@Override
     public void trigger(){

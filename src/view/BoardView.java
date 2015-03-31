@@ -77,18 +77,19 @@ public  class BoardView extends JPanel implements Observer {
 				g2.fillOval(x, y, width, width);
 			}
 			// flippers
-			else if (gizmo.getType().equals("RightFlipper") ||gizmo.getType().equals("LeftFlipper") ){
+			else if (gizmo.getType().equals("RightFlipper") || gizmo.getType().equals("LeftFlipper") ){
+				AbstractFlipper flip = (AbstractFlipper) gizmo;
 				g2.setColor(gizmo.getColour());
 				int x = (int) gizmo.getX();
 				int y = (int) gizmo.getY();
 				Stroke s = new BasicStroke(12.5f, BasicStroke.CAP_ROUND, 0);
 				g2.setStroke(s);
-				g2.drawLine(x, y, gizmo.getx2(), gizmo.gety2());
+				g2.drawLine(x, y, flip.getx2(), flip.gety2());
 				s = new BasicStroke(1.0f,0,0);
 				g2.setStroke(s);
 				g2.setColor(gizmo.getColour());
 				g2.fillOval(x-6, y-6, 12, 15);
-				g2.fillOval(gizmo.getx2() - 6 , gizmo.gety2() - 6,12, 15);
+				g2.fillOval(flip.getx2() - 6 , flip.gety2() - 6,12, 15);
 			}
 			else
 			{
