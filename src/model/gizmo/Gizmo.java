@@ -44,10 +44,4 @@ public interface Gizmo {
 	public String getType();
 	
 	public void trigger(boolean b);
-
-	public int getx2();
-
-	public int gety2();
-
-    public Gizmo moveTo(int x, int y);
 }

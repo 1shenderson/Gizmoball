@@ -59,7 +59,7 @@ public class Absorber extends AbstractSquare {
         if (absorbed > 0) {
             double ballX = botRightX / L - 1; // X position of ball to be spawned by the absorber
             double ballY = topLeftY / L - 1; // Y position of ball to be spawned by the absorber
-            String ballId = parent.addBall(null, (int) ballX, (int) ballY);
+            String ballId = parent.addBall(null, ballX, ballY);
             parent.setBallSpeed(ballId, (int) velX, (int) velY);
             absorbed--;
             // TODO Spawn the ball INSIDE of the absorber, not outside.
