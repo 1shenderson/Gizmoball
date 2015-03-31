@@ -68,7 +68,7 @@ public class Absorber extends AbstractSquare {
     
     @Override
 	public String toString(){
-		return "Absorber " + getID() + " " + getX()/25 + " " + getY()/25 + " " + getWidth() + " " + getHeight();
+		return "Absorber " + getID() + " " + getX() + " " + getY() + " " + getWidth() + " " + getHeight();
 	}
 
     @Override
