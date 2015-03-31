@@ -68,7 +68,7 @@ public class CircleBumper extends AbstractGizmo {
 	
 	@Override
 	public String toString(){
-		return "Circle " + getID() + " " + getX()/25 + " " + getY()/25;
+		return "Circle " + getID() + " " + getX() + " " + getY();
 	}
 
     @Override

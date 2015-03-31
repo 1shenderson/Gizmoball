@@ -225,11 +225,11 @@ public class Model extends Observable implements Board {
 				addTriggerGizmo((String) gizmoLoad.get(0), (String) gizmoLoad.get(1), (String) gizmoLoad.get(2));
 				continue;
 			case "Gravity":
-				gravity = (int) gizmoLoad.get(1);
+				gravity = (double) gizmoLoad.get(1);
 				continue;
 			case "Friction":
-				friction1 = (int) gizmoLoad.get(1);
-				friction2 = (int) gizmoLoad.get(2);
+				friction1 = (double) gizmoLoad.get(1);
+				friction2 = (double) gizmoLoad.get(2);
 				continue;
 			default:
 				addGizmo((String) gizmoLoad.get(0), (String) gizmoLoad.get(1), (int) gizmoLoad.get(2), (int) gizmoLoad.get(3));

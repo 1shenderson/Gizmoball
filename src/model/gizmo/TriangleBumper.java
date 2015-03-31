@@ -152,7 +152,7 @@ public class TriangleBumper extends AbstractGizmo {
 	
 	@Override
 	public String toString(){
-		return "Triangle " + getID() + " " + getX()/25 + " " + getY()/25;
+		return "Triangle " + getID() + " " + getX() + " " + getY();
 	}
 
     @Override
