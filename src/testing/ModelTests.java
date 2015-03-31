@@ -24,6 +24,7 @@ public class ModelTests {
 	List<Gizmo> gizmoList = new ArrayList<Gizmo>();
 	List<Ball> ballList = new ArrayList<Ball>();
 	List<ArrayList<Object>> triggerList = new ArrayList<ArrayList<Object>>();
+	List<ArrayList<Object>> connectList = new ArrayList<ArrayList<Object>>();
 	ArrayList<ArrayList<Object>> loadList = new ArrayList<ArrayList<Object>>();
 	
 	@Test
@@ -57,18 +58,18 @@ public class ModelTests {
 			
 			assertEquals(tri0.getType(), "Triangle");
 			assertEquals(tri0.getID(), "T");
-			assertEquals(tri0.getX()/25, 19);
-			assertEquals(tri0.getY()/25, 0);
+			assertEquals(tri0.getX(), 19);
+			assertEquals(tri0.getY(), 0);
 			
 			assertEquals(sq0.getType(), "Square");
 			assertEquals(sq0.getID(), "S02");
-			assertEquals(sq0.getX()/25, 0);
-			assertEquals(sq0.getY()/25, 2);
+			assertEquals(sq0.getX(), 0);
+			assertEquals(sq0.getY(), 2);
 					
 			assertEquals(cir0.getType(), "Circle");
 			assertEquals(cir0.getID(), "C43");
-			assertEquals(cir0.getX()/25, 4);
-			assertEquals(cir0.getY()/25, 3);
+			assertEquals(cir0.getX(), 4);
+			assertEquals(cir0.getY(), 3);
 			
 			assertEquals(leftFlipper0.getType(), "LeftFlipper");
 			assertEquals(leftFlipper0.getID(), "LF92");
@@ -88,18 +89,18 @@ public class ModelTests {
 			
 			assertEquals(tri1.getType(), "Triangle");
 			assertEquals(tri1.getID(), "T1");
-			assertEquals(tri1.getX()/25, 10);
-			assertEquals(tri1.getY()/25, 1);
+			assertEquals(tri1.getX(), 10);
+			assertEquals(tri1.getY(), 1);
 			
 			assertEquals(sq1.getType(), "Square");
 			assertEquals(sq1.getID(), "S1");
-			assertEquals(sq1.getX()/25, 5);
-			assertEquals(sq1.getY()/25, 2);
+			assertEquals(sq1.getX(), 5);
+			assertEquals(sq1.getY(), 2);
 			
 			assertEquals(cir1.getType(), "Circle");
 			assertEquals(cir1.getID(), "C1");
-			assertEquals(cir1.getX()/25, 5);
-			assertEquals(cir1.getY()/25, 4);
+			assertEquals(cir1.getX(), 5);
+			assertEquals(cir1.getY(), 4);
 			
 			assertEquals(leftFlipper1.getType(), "LeftFlipper");
 			assertEquals(leftFlipper1.getID(), "LF1");
@@ -128,16 +129,16 @@ public class ModelTests {
 			Absorber absorber = (Absorber) gizmoList.get(0);
 			assertEquals(absorber.getType(), "Absorber");
 			assertEquals(absorber.getID(), "A");
-			assertEquals(absorber.getX()/25, 0);
-			assertEquals(absorber.getY()/25, 19);
+			assertEquals(absorber.getX(), 0);
+			assertEquals(absorber.getY(), 19);
 			assertEquals(absorber.getWidth(), 20);
 			assertEquals(absorber.getHeight(), 20);
 			
 			Absorber absorber1 = (Absorber) gizmoList.get(1);
 			assertEquals(absorber1.getType(), "Absorber");
 			assertEquals(absorber1.getID(), "A1");
-			assertEquals(absorber1.getX()/25, 0);
-			assertEquals(absorber1.getY()/25, 19);
+			assertEquals(absorber1.getX(), 0);
+			assertEquals(absorber1.getY(), 19);
 			assertEquals(absorber1.getWidth(), 1);
 			assertEquals(absorber1.getHeight(), 1);
 		}
@@ -167,7 +168,17 @@ public class ModelTests {
 	
 	@Test
 	public void testAddTriggerGizmo() {
+		board.addGizmo("Circle", "C1", 5, 5);
+		board.addGizmo("LeftFlipper", "LF87", 8, 7);
+		gizmoList = board.getGizmoList();
+		board.addTriggerGizmo("Connect", "C1", "LF87");
+		connectList = board.getConnectList();
 		
+		for (int i = 0; i < connectList.size(); i++) {
+	//		Gizmo circle = gizmoList.get(0);
+			Gizmo leftFlip = gizmoList.get(1);
+			assertEquals(connectList.get(0).get(2), leftFlip.getID());
+		}
 	}
 	
 	@Test
@@ -184,6 +195,26 @@ public class ModelTests {
 		}
 	}
 	
+/*	@Test
+	public void testRemoveTriggerKey() {
+		board.addGizmo("RightFlipper", "RF112", 11, 2);
+		gizmoList = board.getGizmoList();
+		board.addTriggerKey("Key", "RF112", 87, "down");
+		board.addTriggerKey("Key", "RF112", 87, "up");
+		System.out.println(triggerList);
+		board.removeTriggerKey("RF112", 87, "down");
+		board.removeTriggerKey("Key", 87, "up");
+		System.out.println(triggerList);
+		triggerList = board.getTriggerKeys();
+		for (int i = 0; i < triggerList.size(); i++) {
+			board.removeTriggerKey("RF112", 87, "down");
+			board.removeTriggerKey("RF112", 87, "up");
+			System.out.println(triggerList);
+			Gizmo rFlip = gizmoList.get(0);
+			assertEquals(triggerList.get(0), null);
+		}
+	}*/
+	
 	@Test
 	public void testLoadBoard() {
 		File gizmoFile = new File("Gizmo.txt");
@@ -199,3 +230,4 @@ public class ModelTests {
 		}	
 	}
 }
+
