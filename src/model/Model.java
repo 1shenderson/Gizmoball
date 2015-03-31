@@ -388,11 +388,6 @@ public class Model extends Observable implements Board {
 	}
 
 	@Override
-	public void removeGizmo(int x, int y) {
-		// TODO Code for removing a gizmo from a location
-	}
-
-	@Override
 	public void removeGizmo(String gizmoID) {
 		Gizmo gizmo = getGizmo(gizmoID);
         if (gizmo != null) {
@@ -467,20 +462,18 @@ public class Model extends Observable implements Board {
         trigger.addTrigger(triggered);
     }
 
-
     @Override
-	public void removeTriggerGizmo(String gizmoID, String gizmoTriggerID) {
-
-		for(Gizmo gizmoTrig: gizmoList){
-			if(gizmoTrig.getID().equals(gizmoTriggerID)){
-				for(Gizmo gizmo: gizmoList){
-					if(gizmo.getID().equals(gizmoID)){
-						gizmo.removeTrigger(gizmoTrig);
-					}
-				}
-			}
-		}
-	}
+    public void removeLinks(String gizmoId) {
+        for (Gizmo gizmo : gizmoList) {
+            for (int i = 0; i < gizmo.getTriggers().size(); i++) {
+                Gizmo trigger = gizmo.getTriggers().get(i);
+                if (trigger.getID().equals(gizmoId)) {
+                    gizmo.removeTrigger(trigger);
+                    i--;
+                }
+            }
+        }
+    }
 
 	@Override
 	public int[][] getMap() {

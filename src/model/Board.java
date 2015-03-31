@@ -14,15 +14,13 @@ public interface Board {
 
 	public void trigger(int keyID);
 
-	public void removeGizmo(int x, int y);
-
 	public void removeGizmo(String gizmoID);
 
 	public void addTriggerGizmo(String gizmoType, String gizmoID, String gizmoTriggerID);
 
     public void linkGizmos(String gizmoId, String gizmoTriggerId);
 
-	public void removeTriggerGizmo(String gizmoID, String gizmoTriggerID);
+    public void removeLinks(String gizmoId);
 
 	public int[][] getMap();
 

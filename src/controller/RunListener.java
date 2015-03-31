@@ -175,6 +175,12 @@ public class RunListener implements ActionListener, MouseListener, KeyListener {
                         gui.changeTitle("Press the key you'd like trigger the gizmo");
                         gui.listenForBindings(true);
                     }
+                case "Unlink":
+                    Gizmo g = board.getGizmoAtLocation(x, y);
+                    if (g != null) {
+                        board.removeLinks(g.getID());
+                    }
+                    break;
             }
         } else {
             if (activeTool.equals("Absorber")) {
