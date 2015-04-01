@@ -92,6 +92,7 @@ public class GizmoballGui implements Display {
 		frame = new JFrame("Gizmoball");
 		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		frame.addKeyListener(keyList);
+		frame.setResizable(false);
 
 		// Board is passed the Model so it can act as Observer
 		boardView = new BoardView(20, 20, board, L);
