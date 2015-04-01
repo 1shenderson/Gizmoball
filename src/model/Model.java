@@ -65,10 +65,10 @@ public class Model extends Observable implements Board {
 					if (ball.ignoreAbsorber()) {
 						ball.setIgnoreAbsorber(false);
 					}
-					ball = movelBallForTime(ball, moveTime);
+					ball = movelBallForTime(ball, moveTime, false);
 				} else {
 					// We've got a collision in tuc
-					ball = movelBallForTime(ball, tuc);
+					ball = movelBallForTime(ball, tuc, true);
 					cd = timeUntilCollision(ball); // Update the velocity of the ball, since it changed
 					// Post collision velocity ...
 					if (cd.getGizmo() != null) {
@@ -106,7 +106,7 @@ public class Model extends Observable implements Board {
 		System.out.printf("\nVelocity %-7s  X: %+-8.2f Y: %+-8.2f", stage, velo.x(), velo.y());
 	}
 
-	private Ball movelBallForTime(Ball ball, double time) {
+	private Ball movelBallForTime(Ball ball, double time, boolean contact) {
 		// Initiate position variables
 		double newX = 0.0;
 		double newY = 0.0;
@@ -121,6 +121,9 @@ public class Model extends Observable implements Board {
 		// Find out where the ball should end up next frame
 		newX = ball.getExactX() + (xVel * time);
 		newY = ball.getExactY() + (yVel * time);
+		if (contact){
+	        newY = Math.round(newY * 100)/100;
+	    }
 		// Set new velocity values
 		ball.setVelo(new Vect(xVel, yVel));
 		// Set new position values

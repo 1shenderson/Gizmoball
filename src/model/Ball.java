@@ -32,7 +32,7 @@ public class Ball {
 		startingYVelocity = yv;
 		colour = Color.BLUE;
 		velocity = new Vect(xv, yv);
-		radius = 0.25 * 25;
+		radius = 7;
 		stopped = false;
         ignoreAbsorber = false;
 	}
@@ -54,7 +54,7 @@ public class Ball {
 	}
 
 	public Circle getCircle() {
-		return new Circle(xpos + radius, ypos + radius, radius);
+		return new Circle(xpos , ypos , radius);
 	}
 
     public void setIgnoreAbsorber(boolean b) {
