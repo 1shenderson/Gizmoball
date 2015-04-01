@@ -259,11 +259,14 @@ public class Model extends Observable implements Board {
 		if (id == null) {
 			id = generateId("B");
 		}
-		Ball ball = new Ball(id, x*L + L/2, y*L + L/2, 0, 0);
-		ballsList.add(ball);
-		setChanged();
-		notifyObservers();
-		return id;
+		if(getGizmoAtLocation((int) x, (int) y) == null){
+			Ball ball = new Ball(id, x*L + L/2, y*L + L/2, 0, 0);
+			ballsList.add(ball);
+			setChanged();
+			notifyObservers();
+			return id;
+		}
+		return null;
 	}
 
 	public List<Ball> getBallList(){
@@ -305,10 +308,19 @@ public class Model extends Observable implements Board {
 		default:
 			throw new IllegalArgumentException("Unrecognized gizmo type" + gizmoType + " passed as an argument to addGizmo");
 		}
+		boolean valid = true;
         if (getGizmoAtLocation(x, y) == null) {
-            gizmoList.add(gizmo);
-            setChanged();
-            notifyObservers();
+        	for(Gizmo g: gizmoList){
+        		if(g.getX() == x && g.getY() == y){
+        			valid = false;
+        			break;
+        		}
+        	}
+        	if(valid){
+        		gizmoList.add(gizmo);
+        		setChanged();
+        		notifyObservers();
+        	}
         }
 	}
 
