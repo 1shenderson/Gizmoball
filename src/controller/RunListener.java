@@ -47,11 +47,13 @@ public class RunListener implements ActionListener, MouseListener, KeyListener {
             gui.listenForBindings(false);
             switch (command) {
                 // MODE CHANGES
+                case "Build Mode":
                 case "<html>SWITCH TO<br>BUILD MODE</html>":
                     mode = Mode.build;
                     gui.toggleBuild();
                     timer.stop();
                     break;
+                case "Play Mode":
                 case "<html>SWITCH TO<br>PLAY MODE</html>":
                     mode = Mode.play;
                     activeTool = null;
@@ -105,6 +107,12 @@ public class RunListener implements ActionListener, MouseListener, KeyListener {
                         activeTool = "LinkKey";
                         gui.changeTitle("Select gizmo to be triggered");
                     }
+                    break;
+                case "About":
+                    gui.showAbout();
+                    break;
+                case "OK":
+                    gui.closeAbout();
                     break;
                 default:
                     throw new RuntimeException("Unrecognized command '" + command + "', add handling for this button.");

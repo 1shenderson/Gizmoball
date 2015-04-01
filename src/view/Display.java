@@ -9,20 +9,15 @@ public interface Display extends Observer{
 
 	public void toggleBuild();
 
-    /**
-     * Toggles the play mode. Changes the display to real-time,
-     */
 	public void togglePlay();
 
 	public File load();
 
 	public String save();
 
-	public void help();
+	public void showAbout();
 
-	public void about();
-
-	public void exit();
+    public void closeAbout();
 
     public int showLinkWindow();
 

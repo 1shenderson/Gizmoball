@@ -31,6 +31,9 @@ public class GizmoballGui implements Display {
     private JButton selectedButton;
     private JPanel modeButtonPanel;
     private Map<String, Image> imageList;
+    private JMenuItem menuPlayMode;
+    private JMenuItem menuBuildMode;
+    private JFrame aboutWindow;
 
 	public GizmoballGui(Board board, int L) {
 		this.board = board;
@@ -48,6 +51,41 @@ public class GizmoballGui implements Display {
             frame.removeKeyListener((KeyListener) listener);
             frame.addKeyListener(keyList);
         }
+    }
+
+    private void buildMenuBar() {
+        JMenuBar menuBar = new JMenuBar();
+        JMenu subMenu;
+        JMenuItem menuItem;
+        JSeparator separator = new JSeparator();
+        // GAME SUBMENU
+        subMenu = new JMenu("Game");
+        // Build Mode
+        menuBuildMode = new JMenuItem("Build Mode");
+        menuBuildMode.addActionListener(listener);
+        subMenu.add(menuBuildMode);
+        // Play Mode
+        menuPlayMode = new JMenuItem("Play Mode");
+        menuPlayMode.addActionListener(listener);
+        subMenu.add(menuPlayMode);
+        subMenu.add(separator);
+        // Save
+        menuItem = new JMenuItem("Save");
+        menuItem.addActionListener(listener);
+        subMenu.add(menuItem);
+        // Load
+        menuItem = new JMenuItem("Load");
+        menuItem.addActionListener(listener);
+        subMenu.add(menuItem);
+        menuBar.add(subMenu);
+        // ABOUT SUBMENU
+        subMenu = new JMenu("About");
+        menuItem = new JMenuItem("About");
+        menuItem.addActionListener(listener);
+        subMenu.add(menuItem);
+        menuBar.add(subMenu);
+
+        frame.setJMenuBar(menuBar);
     }
 
 	public void createAndShowGUI() {
@@ -81,8 +119,8 @@ public class GizmoballGui implements Display {
 		contentPane.add(buttonPanel, BorderLayout.AFTER_LAST_LINE);
 		contentPane.add(boardView, BorderLayout.CENTER);
 
-
-        togglePlay();
+        buildMenuBar();
+        toggleBuild();
 
 		frame.pack();
 		frame.setLocationRelativeTo(null);
@@ -174,7 +212,7 @@ public class GizmoballGui implements Display {
         ArrayList<JComponent> buttonList = new ArrayList<>();
         modeButtonPanel.removeAll();
         modeButtonPanel.setLayout(new GridLayout(2, 10));
-        JComponent button;
+        JComponent component;
 
         modeButton.setText("<html>SWITCH TO<br>PLAY MODE</html>");
 
@@ -183,71 +221,61 @@ public class GizmoballGui implements Display {
            buttons in a very specific order. */
 
         // FIRST ROW - 4 placements, 1 space between sections, 1 storage
-        button = new JButton("Ball");
-        buttonList.add(button);
+        component = new JButton("Ball");
+        buttonList.add(component);
 
-        button = new JButton("Square");
-        buttonList.add(button);
+        component = new JButton("Square");
+        buttonList.add(component);
 
-        button = new JButton("Triangle");
-        buttonList.add(button);
+        component = new JButton("Triangle");
+        buttonList.add(component);
 
-        button = new JButton("Circle");
-        buttonList.add(button);
+        component = new JButton("Circle");
+        buttonList.add(component);
 
-        button = new JLabel();
-        buttonList.add(button);
+        component = new JLabel();
+        buttonList.add(component);
 
-        button = new JButton("Move");
-        buttonList.add(button);
+        component = new JButton("Move");
+        buttonList.add(component);
 
-        button = new JButton("Link");
-        buttonList.add(button);
+        component = new JButton("Link");
+        buttonList.add(component);
 
-        button = new JButton("Delete");
-        buttonList.add(button);
-
-        button = new JLabel();
-        buttonList.add(button);
-
-        button = new JButton("Save");
-        buttonList.add(button);
+        component = new JButton("Delete");
+        buttonList.add(component);
 
         // SECOND ROW - 4 placements (one of them is a filler space), 1 space between sections, 1 storage
-        button = new JButton("Absorber");
-        buttonList.add(button);
+        component = new JButton("Absorber");
+        buttonList.add(component);
 
-        button = new JButton("Left Flipper");
-        buttonList.add(button);
+        component = new JButton("Left Flipper");
+        buttonList.add(component);
 
-        button = new JButton("Right Flipper");
-        buttonList.add(button);
+        component = new JButton("Right Flipper");
+        buttonList.add(component);
 
-        button = new JLabel();
-        buttonList.add(button);
+        component = new JLabel();
+        buttonList.add(component);
 
-        button = new JLabel();
-        buttonList.add(button);
+        component = new JLabel();
+        buttonList.add(component);
 
-        button = new JButton("Rotate");
-        buttonList.add(button);
+        component = new JButton("Rotate");
+        buttonList.add(component);
 
-        button = new JButton("Unlink");
-        buttonList.add(button);
+        component = new JButton("Unlink");
+        buttonList.add(component);
 
-        button = new JLabel();
-        buttonList.add(button);
-
-        button = new JLabel();
-        buttonList.add(button);
-
-        button = new JButton("Load");
-        buttonList.add(button);
+        component = new JLabel();
+        buttonList.add(component);
 
         setButtonPanel(buttonList, new Dimension(32, 32));
         boardView.addMouseListener((MouseListener) listener);
         boardView.addKeyListener(keyList);
         boardView.setGridEnabled(true);
+        menuBuildMode.setEnabled(false);
+        menuPlayMode.setEnabled(true);
         changeTitle("Build Mode");
 	}
 
@@ -276,23 +304,93 @@ public class GizmoballGui implements Display {
         setButtonPanel(buttonList, new Dimension(64, 64));
         boardView.removeMouseListener((MouseListener) listener);
         boardView.setGridEnabled(false);
+        menuBuildMode.setEnabled(true);
+        menuPlayMode.setEnabled(false);
         changeTitle("Play Mode");
 	}
 
 	@Override
-	public void help() {
-		// TODO Auto-generated method stub
+	public void showAbout() {
+        if (aboutWindow == null) {
+            aboutWindow = new JFrame("About Gizmoball");
+            JPanel panel = new JPanel(new BorderLayout());
+            JTextArea textArea = new JTextArea();
+            aboutWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            aboutWindow.setContentPane(panel);
+            JButton button = new JButton("OK");
+            button.addActionListener(listener);
+            textArea.setEditable(false);
+            textArea.setLineWrap(true);
+            textArea.setWrapStyleWord(true);
+            textArea.setText("Designed by Sebastian Korkosz, Scott Henderson, Alan Wong, Andrew Mortimer and Craig " +
+                    "Chalmers.\n" +
+                    "\n" +
+                    "We created this game as an assignment for CS308 Building Software Systems at the University of " +
+                    "Strathclyde\n" +
+                    "\n\n" +
+                    "Q. How do I create a board? A. Select ‘build mode’ then you have the option of loading in a saved " +
+                    "gizmoball format file or creating your own board.\n" +
+                    "\n" +
+                    "Q. How do I load in a file?\n" +
+                    "A. From build mode, select ‘load’ then go through your file directories and select the file you " +
+                    "wish to load. Then change to play mode and select play and the board will be loaded in. \n" +
+                    "\n" +
+                    "Q. How do I create a custom board?\n" +
+                    "A. When in build mode, to add a circle, triangle, square or flipper gizmo, select the gizmo you wish " +
+                    "to add, then click on the grid position you wish to add the gizmo. To add an absorber, click on the " +
+                    "absorber then on the grid, click the position of a corner then drag the mouse to another corner and " +
+                    "release the mouse to draw the absorber in that area. To add a ball you can select a ball then the grid " +
+                    "position you want the ball to be placed.\n" +
+                    "\n" +
+                    "Q. How do I move a gizmo already on the board?\n" +
+                    "A. Select the move option and then the gizmo you wish to move. Click on it’s new position on the " +
+                    "grid.\n" +
+                    "\n" +
+                    "Q. How do I rotate a gizmo?\n" +
+                    "A. The only gizmo, which can be rotated, are triangles, you can rotate a triangle by selecting " +
+                    "triangle, then the rotate button, this rotates the triangle. You can then add it to the board. \n" +
+                    "\n" +
+                    "Q. How do I delete a gizmo?\n" +
+                    "A. Select the delete option then the gizmo you wish to delete.\n" +
+                    "\n" +
+                    "Q. How do I connect a gizmo to a key?\n" +
+                    "A. Select the connect option followed by the gizmo you wish to have the key correspond to. Then enter " +
+                    "the key for the gizmo. This gizmo will now be triggered when the key is pressed.\n" +
+                    "\n" +
+                    "Q. How do I connect a gizmo to a gizmo? \n" +
+                    "A. Select the connect option followed by the gizmo you wish to have the gizmo correspond to. Then \n" +
+                    "select the other gizmo. The first gizmo selected will now be triggered when the other gizmo is \n" +
+                    "triggered.\n" +
+                    "\n" +
+                    "Q. How do I save a game?\n" +
+                    "A. When in build mode, select save game, then give the game a name and select an appropriate place " +
+                    "in your file directory system. \n" +
+                    "\n" +
+                    "Q. How do I play the game?\n" +
+                    "A. Once you have your board set up, select ‘play mode’ and then click on start to begin the game. ");
+
+
+            JScrollPane scrollPane = new JScrollPane(textArea);
+            scrollPane.setPreferredSize(new Dimension(500, 700));
+            scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+            scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+            panel.add(scrollPane, BorderLayout.CENTER);
+            panel.add(button, BorderLayout.AFTER_LAST_LINE);
+            aboutWindow.pack();
+            aboutWindow.setLocationRelativeTo(null);
+            aboutWindow.setVisible(true);
+        } else {
+            aboutWindow.toFront();
+        }
 	}
 
-	@Override
-	public void about() {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void exit() {
-		// TODO Auto-generated method stub
-	}
+    public void closeAbout() {
+        if (aboutWindow != null) {
+            aboutWindow.setVisible(false);
+            aboutWindow.dispose();
+            aboutWindow = null;
+        }
+    }
 
     public int showLinkWindow() {
         Object[] options = {"Another Gizmo", "A Key"};
