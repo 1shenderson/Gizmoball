@@ -98,9 +98,6 @@ public  class BoardView extends JPanel implements Observer {
 				g2.drawLine(x, y, flip.getx2(), flip.gety2());
 				s = new BasicStroke(1.0f,0,0);
 				g2.setStroke(s);
-				g2.setColor(gizmo.getColour());
-				g2.fillOval(x-6, y-6, 12, 15);
-				g2.fillOval(flip.getx2() - 6 , flip.gety2() - 6,12, 15);
 			}
 			else
 			{
