@@ -23,6 +23,8 @@ public interface Board {
     public void removeLinks(String gizmoId);
 
 	public int[][] getMap();
+	
+	public void clearAll();
 
 	public void addObserver(Observer o);
 

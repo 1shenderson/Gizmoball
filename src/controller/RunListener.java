@@ -92,6 +92,7 @@ public class RunListener implements ActionListener, MouseListener, KeyListener {
 				fileHand.save(board.getGizmoList(), board.getBallList(), board.getTriggerKeys(), board.getConnectList(), board.getRotateMap(), fileName, board.getGravity(), board.getFriction1(), board.getFriction2());
 				break;
 			case "Load":
+				board.clearAll();
 				file = gui.load();
 				ArrayList<ArrayList<Object>> loadList = fileHand.load(file);
 				board.loadBoard(loadList);

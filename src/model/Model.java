@@ -52,6 +52,14 @@ public class Model extends Observable implements Board {
 
 		rotateMap = new HashMap<String, Integer>();
 	}
+	@Override
+	public void clearAll() {
+		ballsList.clear();
+		triggerList.clear();
+		connectList.clear();
+		gizmoList.clear();
+		rotateMap.clear();
+	}
 
 	public void tick() {
 		double moveTime = 1.0 / 60;
@@ -493,6 +501,8 @@ public class Model extends Observable implements Board {
 			}
 		}
 	}
+	
+
 
 	@Override
 	public int[][] getMap() {

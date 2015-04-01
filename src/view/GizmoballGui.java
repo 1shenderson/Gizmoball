@@ -182,6 +182,7 @@ public class GizmoballGui implements Display {
 		fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 		int returnVal = fc.showOpenDialog(null);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
+			//.removeAll();
 	       return fc.getSelectedFile();
 		}
 		return null;
@@ -283,7 +284,6 @@ public class GizmoballGui implements Display {
 	@Override
 	public void togglePlay() {
         // TODO Change the board
-
         ArrayList<JComponent> buttonList = new ArrayList<>();
         modeButtonPanel.removeAll();
         modeButtonPanel.setLayout(new GridLayout(1, 3));
