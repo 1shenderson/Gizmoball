@@ -42,6 +42,10 @@ public class Absorber extends AbstractSquare {
         
         this.addTrigger(this);  // TODO Remove this test method. At the moment it will trigger itself when hit.
     }
+    
+    public int getWidth(){
+    	return width;
+    }
 
     /**
      * Increments the number of absorbed balls.

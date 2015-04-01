@@ -49,20 +49,18 @@ public class FlipperRight extends AbstractFlipper {
 //		setAngle(currentAngle);
 //	}
 
-	public void trigger(){
-		if (getActive()){
-			if (getAngle() > 270){
-				setAngle(getAngle() - 10);
-				if (getAngle() < 270){
-					setAngle(270);
-				}
+		public void trigger(){
+			if (getActive()){
+				setAngle(360);
+				setActive(false);
 			}
+			else {
+				setAngle(270);
+				setActive(true);
+			}
+			getEndPoint();
 		}
-		else {
-			setAngle(360);
-		}
-		getEndPoint();
-	}
+
 
 
 	public void trigger(boolean t) {

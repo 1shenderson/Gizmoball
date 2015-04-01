@@ -38,7 +38,7 @@ public class Model extends Observable implements Board {
 		friction2 = 0.025 / L;
 
 		ballsList = new ArrayList<Ball>();
-		
+
 		// Wall size is 20 by 20 squares (each square is L in width and L in height)
 		gws = new Walls(0, 0, (int) (20 * L), (int) (20 * L));
 
@@ -122,8 +122,8 @@ public class Model extends Observable implements Board {
 		newX = ball.getExactX() + (xVel * time);
 		newY = ball.getExactY() + (yVel * time);
 		if (contact){
-	        newY = Math.round(newY * 100)/100;
-	    }
+			newY = Math.round(newY * 100)/100;
+		}
 		// Set new velocity values
 		ball.setVelo(new Vect(xVel, yVel));
 		// Set new position values
@@ -309,51 +309,53 @@ public class Model extends Observable implements Board {
 			throw new IllegalArgumentException("Unrecognized gizmo type" + gizmoType + " passed as an argument to addGizmo");
 		}
 		boolean valid = true;
-        if (getGizmoAtLocation(x, y) == null) {
-        	for(Gizmo g: gizmoList){
-        		if(g.getX() == x && g.getY() == y){
-        			valid = false;
-        			break;
-        		}
-        	}
-        	if(valid){
-        		gizmoList.add(gizmo);
-        		setChanged();
-        		notifyObservers();
-        	}
-        }
+		if(x < 20 && y < 20){
+			if (getGizmoAtLocation(x, y) == null) {
+				for(Gizmo g: gizmoList){
+					if(g.getX() == x && g.getY() == y){
+						valid = false;
+						break;
+					}
+				}
+				if(valid){
+					gizmoList.add(gizmo);
+					setChanged();
+					notifyObservers();
+				}
+			}
+		}
 	}
 
-    @Override
-    public void addGizmo(Gizmo gizmo) {
-        gizmoList.add(gizmo);
-    }
+	@Override
+	public void addGizmo(Gizmo gizmo) {
+		gizmoList.add(gizmo);
+	}
 
-    public Gizmo getGizmoAtLocation(int x, int y) {
-        for (Gizmo gizmo : gizmoList) {
-            if (gizmo instanceof Absorber) {
-                Absorber absorber = (Absorber) gizmo;
-                int width = absorber.getWidth();
-                int height = absorber.getHeight();
-                if (x >= absorber.getX() && x <= absorber.getX() + width
-                        && y >= absorber.getY() && y <= absorber.getY() + height) {
-                    return gizmo;
-                }
-            } else if (gizmo instanceof AbstractFlipper) {
-                // Have to make up here for large "getX()" and "getY" discrepancies between the gizmos...
-                int flipperX = (int)(Math.floor(1.0 * gizmo.getX() / L));
-                int flipperY = (int)(Math.floor(1.0 * gizmo.getY() / L));
-                if (gizmo instanceof FlipperLeft && x >= flipperX && x <= flipperX + 1 && y >= flipperY && y <= flipperY + 1) {
-                    return gizmo;
-                } else if (gizmo instanceof FlipperRight && x <= flipperX && x >= flipperX - 1 && y >= flipperY && y <= flipperY + 1) {
-                    return gizmo;
-                }
-            } else if (x == gizmo.getX() && y == gizmo.getY()) {
-                return gizmo;
-            }
-        }
-        return null;
-    }
+	public Gizmo getGizmoAtLocation(int x, int y) {
+		for (Gizmo gizmo : gizmoList) {
+			if (gizmo instanceof Absorber) {
+				Absorber absorber = (Absorber) gizmo;
+				int width = absorber.getWidth();
+				int height = absorber.getHeight();
+				if (x >= absorber.getX() && x <= absorber.getX() + width
+						&& y >= absorber.getY() && y <= absorber.getY() + height) {
+					return gizmo;
+				}
+			} else if (gizmo instanceof AbstractFlipper) {
+				// Have to make up here for large "getX()" and "getY" discrepancies between the gizmos...
+				int flipperX = (int)(Math.floor(1.0 * gizmo.getX() / L));
+				int flipperY = (int)(Math.floor(1.0 * gizmo.getY() / L));
+				if (gizmo instanceof FlipperLeft && x >= flipperX && x <= flipperX + 1 && y >= flipperY && y <= flipperY + 1) {
+					return gizmo;
+				} else if (gizmo instanceof FlipperRight && x <= flipperX && x >= flipperX - 1 && y >= flipperY && y <= flipperY + 1) {
+					return gizmo;
+				}
+			} else if (x == gizmo.getX() && y == gizmo.getY()) {
+				return gizmo;
+			}
+		}
+		return null;
+	}
 
 	private String generateId(String s) {
 		for (int i = 1; true; i++) {
@@ -383,33 +385,35 @@ public class Model extends Observable implements Board {
 	}
 
 	public void rotate(String id){
-        Gizmo gizmo =  getGizmo(id);
-        if (gizmo != null) {
-            gizmo.rotateRight();
-            int value = rotateMap.get(id);
-            rotateMap.remove(id);
-            rotateMap.put(id, value+=1 % 4);
-            setChanged();
-            notifyObservers();
-        }
+		Gizmo gizmo =  getGizmo(id);
+		if (gizmo != null) {
+			gizmo.rotateRight();
+			int value = rotateMap.get(id);
+			rotateMap.remove(id);
+			rotateMap.put(id, value+=1 % 4);
+			setChanged();
+			notifyObservers();
+		}
 	}
 
 	@Override
 	public void addAbsorber(String gizmoType, String id, int x, int y, int width, int height) {
 		Absorber absorber = new Absorber(gizmoType, id == null ? generateId("A") : id, x, y, width, height, this);
-		gizmoList.add(absorber);
-		setChanged();
-		notifyObservers();
+		if(x + width < 21 && y + height < 21 && x < 20 && y < 20){
+			gizmoList.add(absorber);
+			setChanged();
+			notifyObservers();
+		}
 	}
 
 	@Override
 	public void removeGizmo(String gizmoID) {
 		Gizmo gizmo = getGizmo(gizmoID);
-        if (gizmo != null) {
-            gizmoList.remove(gizmo);
-            setChanged();
-            notifyObservers();
-        }
+		if (gizmo != null) {
+			gizmoList.remove(gizmo);
+			setChanged();
+			notifyObservers();
+		}
 	}
 
 	@Override
@@ -444,12 +448,12 @@ public class Model extends Observable implements Board {
 	public List<ArrayList<Object>> getTriggerKeys() {
 		return triggerList;
 	}
-	
+
 	@Override
 	public List<ArrayList<Object>> getConnectList() {
 		return connectList;
 	}
-	
+
 	@Override
 	public void addTriggerGizmo(String gizmoType, String gizmoID, String gizmoTriggerID) {
 		ArrayList<Object> connect = new ArrayList<Object>();
@@ -470,47 +474,47 @@ public class Model extends Observable implements Board {
 		gizmoList.remove(gizmoList.size()-1);
 	}
 
-    @Override
-    public void linkGizmos(String gizmoId, String gizmoTriggerId) {
-        Gizmo triggered = getGizmo(gizmoId);
-        Gizmo trigger = getGizmo(gizmoTriggerId);
-        trigger.addTrigger(triggered);
-    }
+	@Override
+	public void linkGizmos(String gizmoId, String gizmoTriggerId) {
+		Gizmo triggered = getGizmo(gizmoId);
+		Gizmo trigger = getGizmo(gizmoTriggerId);
+		trigger.addTrigger(triggered);
+	}
 
-    @Override
-    public void removeLinks(String gizmoId) {
-        for (Gizmo gizmo : gizmoList) {
-            for (int i = 0; i < gizmo.getTriggers().size(); i++) {
-                Gizmo trigger = gizmo.getTriggers().get(i);
-                if (trigger.getID().equals(gizmoId)) {
-                    gizmo.removeTrigger(trigger);
-                    i--;
-                }
-            }
-        }
-    }
+	@Override
+	public void removeLinks(String gizmoId) {
+		for (Gizmo gizmo : gizmoList) {
+			for (int i = 0; i < gizmo.getTriggers().size(); i++) {
+				Gizmo trigger = gizmo.getTriggers().get(i);
+				if (trigger.getID().equals(gizmoId)) {
+					gizmo.removeTrigger(trigger);
+					i--;
+				}
+			}
+		}
+	}
 
 	@Override
 	public int[][] getMap() {
 		// TODO Code for returning the map. NOTE: I think this is redundant as we don't store gizmos in an array.
 		return new int[0][];
 	}
-	
+
 	@Override
 	public Map<String, Integer> getRotateMap(){
 		return rotateMap;
-		
+
 	}
 	@Override
 	public double getGravity(){
 		return gravity;
 	}
-	
+
 	@Override
 	public double getFriction1(){
 		return friction1;
 	}
-	
+
 	@Override
 	public double getFriction2(){
 		return friction2;
