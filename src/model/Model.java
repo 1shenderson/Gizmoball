@@ -407,7 +407,7 @@ public class Model extends Observable implements Board {
 	@Override
 	public void addAbsorber(String gizmoType, String id, int x, int y, int width, int height) {
 		Absorber absorber = new Absorber(gizmoType, id == null ? generateId("A") : id, x, y, width, height, this);
-		if(x + width < 21 && y + height < 21 && x < 20 && y < 20){
+		if(x < 21 && y < 21 && width < 21 && height < 21){
 			gizmoList.add(absorber);
 			setChanged();
 			notifyObservers();

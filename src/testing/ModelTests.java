@@ -224,9 +224,9 @@ public class ModelTests {
 		gizmoList = board.getGizmoList();
 		for (int i = 0; i < gizmoList.size(); i++) {
 			assertEquals(gizmoList.get(0).getID(), "T");
-			assertNotEquals(gizmoList.get(1).getID(), "T");
+			assertTrue(!gizmoList.get(1).getID().equals("T"));
 			assertEquals(gizmoList.get(1).getID(), "T2");
-			assertNotEquals(gizmoList.get(2).getID(), "T2");
+			assertTrue(!gizmoList.get(2).getID().equals("T2"));
 		}	
 	}
 }
